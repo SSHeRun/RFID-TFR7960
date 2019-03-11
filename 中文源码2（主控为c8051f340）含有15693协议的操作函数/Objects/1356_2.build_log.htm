@@ -1,0 +1,66 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.20.0.39
+Copyright (C) 2016 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: SS HeRun,  , LIC=BU301-CQUT3-ZHF8H-WD637-4SU4Z-9GYWY
+ 
+Tool Versions:
+Toolchain:       PK51 Prof. Developers Kit  Version: 9.56.0.0
+Toolchain Path:  C:\Keil_v5\C51\BIN
+C Compiler:      C51.exe V9.56.0.0
+Assembler:       A51.exe V8.2.5.0
+Linker/Locator:  BL51.exe V6.22
+Library Manager: LIB51.exe V4.30.1.0
+Hex Converter:   OH51.exe V2.7.0.0
+CPU DLL:         S8051.DLL V3.106.0.0
+Dialog DLL:      DCYG.DLL V2.74.0.0 
+<h2>Project:</h2>
+C:\Users\圣三一\Documents\Tencent Files\1440401918\FileRecv\EMRFID-ZHJX-1 RFID综合教学平台发货光盘 V1.0.1（201201129） (3)\13562\1356_2.uvproj
+Project File Date:  11/05/2018
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+compiling anticollision.c...
+anticollision.c(568): warning C280: 'temp2': unreferenced local variable
+anticollision.c(782): warning C316: unterminated conditionals
+compiling automatic.c...
+automatic.c(29): warning C280: 'j': unreferenced local variable
+automatic.c(29): warning C280: 'temp2': unreferenced local variable
+compiling communicate.c...
+communicate.c(156): warning C312: misplaced endif control
+compiling hardware.c...
+compiling host.c...
+host.c(49): warning C294: unreachable code
+compiling main.c...
+linking...
+*** WARNING L13: RECURSIVE CALL TO SEGMENT
+    SEGMENT: ?PR?_INVENTORYREQUEST?ANTICOLLISION
+    CALLER:  ?PR?_INVENTORYREQUEST1?ANTICOLLISION
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_CSTRING?HOST
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_READCONT?COMMUNICATE
+    CALLER1: ?PR?PORT_0?COMMUNICATE
+    CALLER2: ?PR?TIMER0HANDLER?HARDWARE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_READSINGLE?COMMUNICATE
+    CALLER1: ?PR?PORT_0?COMMUNICATE
+    CALLER2: ?C_C51STARTUP
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_READCONT?COMMUNICATE
+    CALLER1: ?PR?TIMER0HANDLER?HARDWARE
+    CALLER2: ?C_C51STARTUP
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_DIRECTCOMMAND?COMMUNICATE
+    CALLER1: ?PR?PORT_0?COMMUNICATE
+    CALLER2: ?C_C51STARTUP
+Program Size: data=9.0 xdata=518 code=6559
+creating hex file from ".\Objects\1356_2"...
+".\Objects\1356_2" - 0 Error(s), 12 Warning(s).
+Build Time Elapsed:  00:00:11
+</pre>
+</body>
+</html>

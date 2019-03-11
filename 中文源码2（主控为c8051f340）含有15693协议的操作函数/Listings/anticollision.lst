@@ -1,0 +1,867 @@
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE ANTICOLLISION
+OBJECT MODULE PLACED IN .\Objects\anticollision.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE anticollision.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(
+                    -.\Listings\anticollision.lst) TABS(2) OBJECT(.\Objects\anticollision.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+             -**************
+   2          * 文 件 名：ANTICOLLISION.C
+   3          * 功    能：ISO15693协议卡片操作函数。包括仿冲撞处理等。
+   4          *           本文件包含了ISO15693协议的演示函数。
+   5          *           注意：在传输和接收过程中，均需要通过FIFO操作。
+   6          * 作    者：EMDOOR
+   7          * 日    期：2011-9-29
+   8          **********************************************************************************************************
+             -***************/
+   9          #include <anticollision.h>
+  10          
+  11          #ifndef  DBG
+  12          #define DBG  0
+  13          #define LEDOFF    P2 = 0X04
+  14          #define LEDON     P2 = 0XFB
+  15          unsigned char Found_tag;                            //定义是否检测到卡片全局变量
+  16          unsigned char rssival;                              //定义检测到的卡片接收信号强度值
+  17          
+  18          //C8051F与STM32间通信协议数据结构的定义
+  19          
+  20          //----------------------------------------------------------------
+  21          //*发送帧
+  22          //----------------------------------------------------------------
+  23          struct uartsend
+  24          {
+  25            
+  26            unsigned char header;//帧头
+  27          
+  28            unsigned char length;//帧长
+  29          
+  30            unsigned char seq;//帧序列号
+  31          
+  32            unsigned char format;//帧格式
+  33          
+  34            unsigned char tag_it;//标签协议
+  35          
+  36            unsigned char id_data[8];//数据
+  37          
+  38            unsigned char par_bit;//校验位
+  39          
+  40            unsigned char tail;//帧尾
+  41            
+  42          } uartsend_protocol;
+  43          
+  44          //----------------------------------------------------------------
+  45          
+  46          
+  47          /*********************************************************************************************************
+             -*********
+  48          * 函数名称：EnableSlotCounter()
+  49          * 功    能：使能槽计数功能。
+  50          * 入口参数：无
+  51          * 出口参数：无     
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 2   
+
+  52          * 说    明：该函数使能槽计数功能，用于多个槽时。
+  53          **********************************************************************************************************
+             -*********/
+  54          void EnableSlotCounter(void)
+  55          {
+  56   1          buf[41] = IRQMask;                              //下个计数槽
+  57   1          buf[40] = IRQMask;
+  58   1          ReadSingle(&buf[41], 1);                        //读取缓冲区数据
+  59   1          buf[41] |= 0X01;                                //在缓冲区寄存器0x41位置设置BIT0有效
+  60   1          WriteSingle(&buf[40], 2);
+  61   1      }
+  62          
+  63          /*********************************************************************************************************
+             -*********
+  64          * 函数名称：DisableSlotCounter()
+  65          * 功    能：禁止槽计数功能。
+  66          * 入口参数：无
+  67          * 出口参数：无     
+  68          * 说    明：该函数使槽计数功能停止。
+  69          **********************************************************************************************************
+             -*********/
+  70          void DisableSlotCounter(void)
+  71          {
+  72   1          buf[41] = IRQMask;                              //下个计数槽
+  73   1          buf[40] = IRQMask;
+  74   1          ReadSingle(&buf[41], 1);                        //读取缓冲区数据
+  75   1          buf[41] &= 0xfe;                                //在缓冲区寄存器0x41位置设置BIT0无效
+  76   1          WriteSingle(&buf[40], 2);
+  77   1      }
+  78          
+  79          /*********************************************************************************************************
+             -*********
+  80          * 函数名称：InventoryRequest()
+  81          * 功    能：ISO15693协议卡片总量请求命令。
+  82          * 入口参数：*mask       标记命令
+  83          *           lenght      命令长度
+  84          * 出口参数：无     
+  85          * 说    明：执行该函数可以使ISO15693协议标准总量命令循环16时间槽或者1个时间槽.
+  86          *           其中：0x14表示16槽；0x17表示1个槽。
+  87          *           注意：在脱机模式下，接收到UID码将被显示到LCM图形显示屏上。
+  88          **********************************************************************************************************
+             -*********/
+  89          void InventoryRequest(unsigned char *mask, unsigned char lenght)
+  90          {
+  91   1          unsigned char i = 1, j=3, command[2], NoSlots;
+  92   1          unsigned char *PslotNo, slotNo[17];
+  93   1          unsigned char NewMask[8], NewLenght, masksize;
+  94   1          int size;
+  95   1      //    int counter,temp;
+  96   1          unsigned int k = 0;
+  97   1      
+  98   1          buf[0] = ModulatorControl;                      // 调制和系统时钟控制：0x21 - 6.78MHz OOK(100%)
+  99   1          buf[1] = 0x21;
+ 100   1          WriteSingle(buf, 2);
+ 101   1       
+ 102   1       /* 如果使用SPI串行模式的低数据率，那么 RXNoResponseWaitTime 需要被重新设置 */
+ 103   1      /*====================================================================================================*/
+ 104   1        
+ 105   1              if((flags & 0x02) == 0x00)                  //低数据比特率
+ 106   1              {
+ 107   2                  buf[0] = RXNoResponseWaitTime;
+ 108   2                  buf[1] = 0x2F;
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 3   
+
+ 109   2                  WriteSingle(buf, 2);
+ 110   2              }
+ 111   1              else                                        //高数据比特率
+ 112   1              {
+ 113   2                  buf[0] = RXNoResponseWaitTime;
+ 114   2                  buf[1] = 0x13;
+ 115   2                  WriteSingle(buf, 2);
+ 116   2              }
+ 117   1       /*====================================================================================================*/
+ 118   1          
+ 119   1          slotNo[0] = 0x00;
+ 120   1      
+ 121   1          if((flags & 0x20) == 0x00)                      //位5标志位指示槽的数量
+ 122   1          {                       
+ 123   2              NoSlots = 17;                               //位5为0x00，表示选择16槽模式
+ 124   2              EnableSlotCounter();
+ 125   2          }
+ 126   1          else                                            //如果位5不为0x00，表示选择1个槽模式
+ 127   1              NoSlots = 2;
+ 128   1      
+ 129   1          PslotNo = &slotNo[0];                           //槽数量指针
+ 130   1          
+ 131   1          /* 如果lenght是4或者8，那么masksize 标记大小值为 1  */
+ 132   1          /* 如果lenght是12或者16，那么masksize 标记大小值为 2，并依次类推 */
+ 133   1          /*====================================================================================================
+             -*/
+ 134   1          masksize = (((lenght >> 2) + 1) >> 1);      
+ 135   1          /*====================================================================================================
+             -*/
+ 136   1          
+ 137   1          size = masksize + 3;                            // mask value + mask lenght + command code + flags
+ 138   1      
+ 139   1          buf[0] = 0x8f;
+ 140   1          buf[1] = 0x91;                                  //发送带CRC校验
+ 141   1          buf[2] = 0x3d;                                  //连续写模式
+ 142   1          buf[3] = (char) (size >> 8);
+ 143   1          buf[4] = (char) (size << 4);
+ 144   1          buf[5] = flags;                                 //ISO15693 协议标志flags
+ 145   1          buf[6] = 0x01;                                  //仿冲撞命令值
+ 146   1      
+ 147   1          /* 可以在此加入AFI应用族标识符 */
+ 148   1      
+ 149   1          buf[7] = lenght;                                //标记长度 masklenght
+ 150   1          if(lenght > 0)
+ 151   1          {
+ 152   2              for(i = 0; i < masksize; i++) 
+ 153   2                  buf[i + 8] = *(mask + i);
+ 154   2          }                   
+ 155   1      
+ 156   1          command[0] = IRQStatus;
+ 157   1          command[1] = IRQMask;                           //虚拟读(Dummy read)
+ 158   1          ReadCont(command, 1);
+ 159   1      
+ 160   1          Timer0_Delay(20);                    //计时时间为 20ms
+ 161   1          IRQCLR();                                       //清中断标志位
+ 162   1          IRQON();                                        //中断开启
+ 163   1      
+ 164   1          RAWwrite(&buf[0], masksize + 8);                //将数据写入到FIFO缓冲区中
+ 165   1      
+ 166   1          i_reg = 0x01;                                   //设置中断标志值
+ 167   1          StartCounter();                                   //开始以递增模式计时
+ 168   1          PCON |=0X01;                                           //等待TX发送结束
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 4   
+
+ 169   1      
+ 170   1          for(i = 1; i < NoSlots; i++)                    //寻卡循环1个槽或者16个槽
+ 171   1          {       
+ 172   2              /* 初始化全局计数器 */
+ 173   2              /*================================================================================================
+             -====*/
+ 174   2              RXTXstate = 1;                              //设置标志位，其接收位存储于buf[1]起始位置
+ 175   2              Timer0_Delay(20);                //计时时间为 20ms                      
+ 176   2              StartCounter();                               //开始以递增模式计时
+ 177   2              k = 0;
+ 178   2              PCON |=0X01;
+ 179   2              /*================================================================================================
+             -====*/
+ 180   2              
+ 181   2              while(i_reg == 0x01)                        //等待RX接收结束
+ 182   2              {           
+ 183   3                  k++;
+ 184   3      
+ 185   3                  if(k == 0xFFF0)
+ 186   3                  {
+ 187   4                     i_reg = 0x00;
+ 188   4                     RXErrorFlag = 0x00;
+ 189   4                      break;
+ 190   4                  }
+ 191   3              }
+ 192   2              command[0] = RSSILevels;                    //读取信号强度值 RSSI
+ 193   2              ReadSingle(command, 1);
+ 194   2      
+ 195   2              if(i_reg == 0xFF)                           //如果字节已经是最后字节，接收到UID数据
+ 196   2              {     
+ 197   3            
+ 198   3      //          Found_tag = 1；
+ 199   3                int counter,temp;
+ 200   3                LEDON;
+ 201   3                uartsend_protocol.header = 0X5A;
+ 202   3                uartsend_protocol.length = 0X15;
+ 203   3                uartsend_protocol.seq = 0x00;
+ 204   3                uartsend_protocol.format = 0x01;
+ 205   3                uartsend_protocol.tag_it = 0x02;
+ 206   3               
+ 207   3                      for(j = 10,counter=0; j>=3,counter<8; j--,counter++)
+ 208   3                          {
+ 209   4                              uartsend_protocol.id_data[counter] = buf[j];               //发送ISO15693 UID码
+ 210   4                          }
+ 211   3      
+ 212   3                uartsend_protocol.par_bit = uartsend_protocol.header^uartsend_protocol.length;
+ 213   3                  uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.seq;
+ 214   3                uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.format;
+ 215   3                  uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.tag_it;
+ 216   3                for(temp=0;temp<8;temp++)
+ 217   3                {
+ 218   4                uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.id_data[temp];
+ 219   4                }
+ 220   3                uartsend_protocol.tail = 0xA5;
+ 221   3      
+ 222   3                sendchar(uartsend_protocol.header);
+ 223   3                sendchar(uartsend_protocol.length);
+ 224   3                  sendchar(uartsend_protocol.seq);
+ 225   3                sendchar(uartsend_protocol.format);
+ 226   3                sendchar(uartsend_protocol.tag_it);
+ 227   3      
+ 228   3                for(j=0;j<8;j++)
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 5   
+
+ 229   3                {
+ 230   4                send_byte(uartsend_protocol.id_data[j]);
+ 231   4                }
+ 232   3                sendchar(uartsend_protocol.par_bit);
+ 233   3                sendchar(uartsend_protocol.tail);
+ 234   3                send_crlf();
+ 235   3          #if  DBG
+                          sendchar(',');
+                          send_byte(command[0]);               //发送RSSI接收信号强度
+                          sendchar(']');
+                    
+                  #endif
+ 241   3          
+ 242   3            delay_ms(30) ;      
+ 243   3            LEDOFF;
+ 244   3           
+ 245   3            }
+ 246   2              else if(i_reg == 0x02)                      //如果有冲撞发生
+ 247   2              {  
+ 248   3          #if DBG
+                              sendchar('[');
+                              sendchar('z');                      //发送 z
+                              sendchar(',');
+                              send_byte(command[0]);               //发送RSSI接收信号强度
+                              sendchar(']');
+              
+                  #endif
+ 256   3                      PslotNo++;
+ 257   3                     *PslotNo = i;
+ 258   3      
+ 259   3            
+ 260   3              }
+ 261   2              else if(i_reg == 0x00)                      //如果定时时间到，中断发生
+ 262   2              { 
+ 263   3      
+ 264   3          #if DBG           
+                             sendchar('[');
+                             sendchar(',');
+                             send_byte(command[0]);               //发送RSSI接收信号强度
+                             sendchar(']'); 
+                  #endif               
+ 270   3              }
+ 271   2              else
+ 272   2                  ;
+ 273   2      
+ 274   2              command[0] = Reset;                         //在接收下一个槽之前，使用直接命令复位FIFO
+ 275   2              DirectCommand(command);
+ 276   2      
+ 277   2              if((NoSlots == 17) && (i < 16))             //如果在16个槽模式下，未循环16个槽，则需要发送EOF命令(
+             -下个槽)
+ 278   2              {                   
+ 279   3                  command[0] = StopDecoders;
+ 280   3                  DirectCommand(command);                 //停止解碼
+ 281   3                  command[0] = RunDecoders;               
+ 282   3                  DirectCommand(command);             
+ 283   3                  command[0] = TransmitNextSlot;
+ 284   3                  DirectCommand(command);                 //传送下一个槽
+ 285   3              }
+ 286   2              else if((NoSlots == 17) && (i == 16))       //如果在16个槽模式下，循环了16个槽，则需要发送停止槽计
+             -数命令
+ 287   2              {                   
+ 288   3                  DisableSlotCounter();                   //停止槽计数
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 6   
+
+ 289   3              }
+ 290   2              else if(NoSlots == 2)                       //如果是单个槽模式，则跳出本 for 循环
+ 291   2                  break;
+ 292   2          }   /* for */
+ 293   1      
+ 294   1          NewLenght = lenght + 4;                         //标记长度为4比特位倍数
+ 295   1          masksize = (((NewLenght >> 2) + 1) >> 1) - 1;
+ 296   1      
+ 297   1          /* 如果是16个槽模式，及槽指针不为0x00, 则递归调用本函数，再次寻找卡片 */
+ 298   1          /*====================================================================================================
+             -*/
+ 299   1          while((*PslotNo != 0x00) && (NoSlots == 17)) 
+ 300   1          {   
+ 301   2              *PslotNo = *PslotNo - 1;
+ 302   2              for(i = 0; i < 8; i++) NewMask[i] = *(mask + i);            //首先将标记值拷贝到新标记数组中
+ 303   2      
+ 304   2              if((NewLenght & 0x04) == 0x00) *PslotNo = *PslotNo << 4;
+ 305   2      
+ 306   2              NewMask[masksize] |= *PslotNo;                              //标记值被改变
+ 307   2              InventoryRequest1(&NewMask[0], NewLenght);                   //递归调用 InventoryRequest 函数
+ 308   2              PslotNo--;     
+ 309   2                                                    //槽递减
+ 310   2          }   /* while */
+ 311   1          /*====================================================================================================
+             -*/
+ 312   1          
+ 313   1          IRQOFF();    
+ 314   1                                                       //仿冲撞过程结束，关闭中断
+ 315   1      }   /* InventoryRequest */
+ 316          
+ 317          /*********************************************************************************************************
+             -*********
+ 318          * 函数名称：InventoryRequest1()
+ 319          * 功    能：ISO15693协议卡片总量请求命令。
+ 320          * 入口参数：*mask       标记命令
+ 321          *           lenght      命令长度
+ 322          * 出口参数：无     
+ 323          * 说    明：执行该函数可以使ISO15693协议标准总量命令循环16时间槽或者1个时间槽.
+ 324          *           其中：0x14表示16槽；0x17表示1个槽。
+ 325          *           注意：在脱机模式下，接收到UID码将被显示到LCM图形显示屏上。
+ 326          **********************************************************************************************************
+             -*********/
+ 327          void InventoryRequest1(unsigned char *mask, unsigned char lenght)
+ 328          {
+ 329   1          unsigned char i = 1, j=3, command[2], NoSlots;
+ 330   1          unsigned char *PslotNo, slotNo[17];
+ 331   1          unsigned char NewMask[8], NewLenght, masksize;
+ 332   1          int size;
+ 333   1      //    int counter,temp;
+ 334   1          unsigned int k = 0;
+ 335   1      
+ 336   1          buf[0] = ModulatorControl;                      // 调制和系统时钟控制：0x21 - 6.78MHz OOK(100%)
+ 337   1          buf[1] = 0x21;
+ 338   1          WriteSingle(buf, 2);
+ 339   1       
+ 340   1       /* 如果使用SPI串行模式的低数据率，那么 RXNoResponseWaitTime 需要被重新设置 */
+ 341   1      /*====================================================================================================*/
+ 342   1        
+ 343   1              if((flags & 0x02) == 0x00)                  //低数据比特率
+ 344   1              {
+ 345   2                  buf[0] = RXNoResponseWaitTime;
+ 346   2                  buf[1] = 0x2F;
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 7   
+
+ 347   2                  WriteSingle(buf, 2);
+ 348   2              }
+ 349   1              else                                        //高数据比特率
+ 350   1              {
+ 351   2                  buf[0] = RXNoResponseWaitTime;
+ 352   2                  buf[1] = 0x13;
+ 353   2                  WriteSingle(buf, 2);
+ 354   2              }
+ 355   1       /*====================================================================================================*/
+ 356   1          
+ 357   1          slotNo[0] = 0x00;
+ 358   1      
+ 359   1          if((flags & 0x20) == 0x00)                      //位5标志位指示槽的数量
+ 360   1          {                       
+ 361   2              NoSlots = 17;                               //位5为0x00，表示选择16槽模式
+ 362   2              EnableSlotCounter();
+ 363   2          }
+ 364   1          else                                            //如果位5不为0x00，表示选择1个槽模式
+ 365   1              NoSlots = 2;
+ 366   1      
+ 367   1          PslotNo = &slotNo[0];                           //槽数量指针
+ 368   1          
+ 369   1          /* 如果lenght是4或者8，那么masksize 标记大小值为 1  */
+ 370   1          /* 如果lenght是12或者16，那么masksize 标记大小值为 2，并依次类推 */
+ 371   1          /*====================================================================================================
+             -*/
+ 372   1          masksize = (((lenght >> 2) + 1) >> 1);      
+ 373   1          /*====================================================================================================
+             -*/
+ 374   1          
+ 375   1          size = masksize + 3;                            // mask value + mask lenght + command code + flags
+ 376   1      
+ 377   1          buf[0] = 0x8f;
+ 378   1          buf[1] = 0x91;                                  //发送带CRC校验
+ 379   1          buf[2] = 0x3d;                                  //连续写模式
+ 380   1          buf[3] = (char) (size >> 8);
+ 381   1          buf[4] = (char) (size << 4);
+ 382   1          buf[5] = flags;                                 //ISO15693 协议标志flags
+ 383   1          buf[6] = 0x01;                                  //仿冲撞命令值
+ 384   1      
+ 385   1          /* 可以在此加入AFI应用族标识符 */
+ 386   1      
+ 387   1          buf[7] = lenght;                                //标记长度 masklenght
+ 388   1          if(lenght > 0)
+ 389   1          {
+ 390   2              for(i = 0; i < masksize; i++) 
+ 391   2                  buf[i + 8] = *(mask + i);
+ 392   2          }                   
+ 393   1      
+ 394   1          command[0] = IRQStatus;
+ 395   1          command[1] = IRQMask;                           //虚拟读(Dummy read)
+ 396   1          ReadCont(command, 1);
+ 397   1      
+ 398   1          Timer0_Delay(20);                    //计时时间为 20ms
+ 399   1          IRQCLR();                                       //清中断标志位
+ 400   1          IRQON();                                        //中断开启
+ 401   1      
+ 402   1          RAWwrite(&buf[0], masksize + 8);                //将数据写入到FIFO缓冲区中
+ 403   1      
+ 404   1          i_reg = 0x01;                                   //设置中断标志值
+ 405   1          StartCounter();                                   //开始以递增模式计时
+ 406   1          PCON |=0X01;                                           //等待TX发送结束
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 8   
+
+ 407   1      
+ 408   1          for(i = 1; i < NoSlots; i++)                    //寻卡循环1个槽或者16个槽
+ 409   1          {       
+ 410   2              /* 初始化全局计数器 */
+ 411   2              /*================================================================================================
+             -====*/
+ 412   2              RXTXstate = 1;                              //设置标志位，其接收位存储于buf[1]起始位置
+ 413   2              Timer0_Delay(20);                //计时时间为 20ms                      
+ 414   2              StartCounter();                               //开始以递增模式计时
+ 415   2              k = 0;
+ 416   2              PCON |=0X01;
+ 417   2              /*================================================================================================
+             -====*/
+ 418   2              
+ 419   2              while(i_reg == 0x01)                        //等待RX接收结束
+ 420   2              {           
+ 421   3                  k++;
+ 422   3      
+ 423   3                  if(k == 0xFFF0)
+ 424   3                  {
+ 425   4                     i_reg = 0x00;
+ 426   4                     RXErrorFlag = 0x00;
+ 427   4                      break;
+ 428   4                  }
+ 429   3              }
+ 430   2              command[0] = RSSILevels;                    //读取信号强度值 RSSI
+ 431   2              ReadSingle(command, 1);
+ 432   2      
+ 433   2              if(i_reg == 0xFF)                           //如果字节已经是最后字节，接收到UID数据
+ 434   2              {     
+ 435   3            
+ 436   3      //          Found_tag = 1；
+ 437   3                int counter,temp;
+ 438   3                LEDON;
+ 439   3                uartsend_protocol.header = 0X5A;
+ 440   3                uartsend_protocol.length = 0X15;
+ 441   3                uartsend_protocol.seq = 0x00;
+ 442   3                uartsend_protocol.format = 0x01;
+ 443   3                uartsend_protocol.tag_it = 0x02;
+ 444   3               
+ 445   3                      for(j = 10,counter=0; j>=3,counter<8; j--,counter++)
+ 446   3                          {
+ 447   4                              uartsend_protocol.id_data[counter] = buf[j];               //发送ISO15693 UID码
+ 448   4                          }
+ 449   3      
+ 450   3                uartsend_protocol.par_bit = uartsend_protocol.header^uartsend_protocol.length;
+ 451   3                  uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.seq;
+ 452   3                uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.format;
+ 453   3                  uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.tag_it;
+ 454   3                for(temp=0;temp<8;temp++)
+ 455   3                {
+ 456   4                uartsend_protocol.par_bit = uartsend_protocol.par_bit^uartsend_protocol.id_data[temp];
+ 457   4                }
+ 458   3                uartsend_protocol.tail = 0xA5;
+ 459   3      
+ 460   3                sendchar(uartsend_protocol.header);
+ 461   3                sendchar(uartsend_protocol.length);
+ 462   3                  sendchar(uartsend_protocol.seq);
+ 463   3                sendchar(uartsend_protocol.format);
+ 464   3                sendchar(uartsend_protocol.tag_it);
+ 465   3      
+ 466   3                for(j=0;j<8;j++)
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 9   
+
+ 467   3                {
+ 468   4                send_byte(uartsend_protocol.id_data[j]);
+ 469   4                }
+ 470   3                sendchar(uartsend_protocol.par_bit);
+ 471   3                sendchar(uartsend_protocol.tail);
+ 472   3                send_crlf();
+ 473   3          #if  DBG
+                          sendchar(',');
+                          send_byte(command[0]);               //发送RSSI接收信号强度
+                          sendchar(']');
+                    
+                  #endif
+ 479   3          
+ 480   3            delay_ms(30) ;      
+ 481   3            LEDOFF;
+ 482   3           
+ 483   3            }
+ 484   2              else if(i_reg == 0x02)                      //如果有冲撞发生
+ 485   2              {  
+ 486   3          #if DBG
+                              sendchar('[');
+                              sendchar('z');                      //发送 z
+                              sendchar(',');
+                              send_byte(command[0]);               //发送RSSI接收信号强度
+                              sendchar(']');
+              
+                  #endif
+ 494   3                      PslotNo++;
+ 495   3                     *PslotNo = i;
+ 496   3      
+ 497   3            
+ 498   3              }
+ 499   2              else if(i_reg == 0x00)                      //如果定时时间到，中断发生
+ 500   2              { 
+ 501   3      
+ 502   3          #if DBG           
+                             sendchar('[');
+                             sendchar(',');
+                             send_byte(command[0]);               //发送RSSI接收信号强度
+                             sendchar(']'); 
+                  #endif               
+ 508   3              }
+ 509   2              else
+ 510   2                  ;
+ 511   2      
+ 512   2              command[0] = Reset;                         //在接收下一个槽之前，使用直接命令复位FIFO
+ 513   2              DirectCommand(command);
+ 514   2      
+ 515   2              if((NoSlots == 17) && (i < 16))             //如果在16个槽模式下，未循环16个槽，则需要发送EOF命令(
+             -下个槽)
+ 516   2              {                   
+ 517   3                  command[0] = StopDecoders;
+ 518   3                  DirectCommand(command);                 //停止解碼
+ 519   3                  command[0] = RunDecoders;               
+ 520   3                  DirectCommand(command);             
+ 521   3                  command[0] = TransmitNextSlot;
+ 522   3                  DirectCommand(command);                 //传送下一个槽
+ 523   3              }
+ 524   2              else if((NoSlots == 17) && (i == 16))       //如果在16个槽模式下，循环了16个槽，则需要发送停止槽计
+             -数命令
+ 525   2              {                   
+ 526   3                  DisableSlotCounter();                   //停止槽计数
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 10  
+
+ 527   3              }
+ 528   2              else if(NoSlots == 2)                       //如果是单个槽模式，则跳出本 for 循环
+ 529   2                  break;
+ 530   2          }   /* for */
+ 531   1      
+ 532   1          NewLenght = lenght + 4;                         //标记长度为4比特位倍数
+ 533   1          masksize = (((NewLenght >> 2) + 1) >> 1) - 1;
+ 534   1      
+ 535   1          /* 如果是16个槽模式，及槽指针不为0x00, 则递归调用本函数，再次寻找卡片 */
+ 536   1          /*====================================================================================================
+             -*/
+ 537   1          while((*PslotNo != 0x00) && (NoSlots == 17)) 
+ 538   1          {   
+ 539   2              *PslotNo = *PslotNo - 1;
+ 540   2              for(i = 0; i < 8; i++) NewMask[i] = *(mask + i);            //首先将标记值拷贝到新标记数组中
+ 541   2      
+ 542   2              if((NewLenght & 0x04) == 0x00) *PslotNo = *PslotNo << 4;
+ 543   2      
+ 544   2              NewMask[masksize] |= *PslotNo;                              //标记值被改变
+ 545   2              InventoryRequest(&NewMask[0], NewLenght);                   //递归调用 InventoryRequest 函数
+ 546   2              PslotNo--;     
+ 547   2                                                    //槽递减
+ 548   2          }   /* while */
+ 549   1          /*====================================================================================================
+             -*/
+ 550   1          
+ 551   1          IRQOFF();    
+ 552   1                                                       //仿冲撞过程结束，关闭中断
+ 553   1      }   /* InventoryRequest */
+ 554          
+ 555          /*********************************************************************************************************
+             -*********
+ 556          * ????:RequestCommand()
+ 557          * ?    ?:????????????????????????
+ 558          * ????:*pbuf           ???
+ 559          *           lenght          ????
+ 560          *           brokenBits      ?????????
+ 561          *           noCRC           ???CRC??
+ 562          * ????:1     
+ 563          * ?    ?:??????????,???1,??????????,???0?????,????
+ 564          **********************************************************************************************************
+             -*********/
+ 565          unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned char brokenBits, char noC
+             -RC)
+ 566          {
+ 567   1          unsigned char index, j, command;                //????
+ 568   1          unsigned char temp2;
+ 569   1          
+ 570   1          RXTXstate = lenght;                             
+ 571   1      
+ 572   1          *pbuf = 0x8f;
+ 573   1          if(noCRC) 
+ 574   1              *(pbuf + 1) = 0x90;                         //????CRC??
+ 575   1          else
+ 576   1              *(pbuf + 1) = 0x91;                         //???CRC??
+ 577   1          
+ 578   1          *(pbuf + 2) = 0x3d;
+ 579   1          *(pbuf + 3) = RXTXstate >> 4;
+ 580   1          *(pbuf + 4) = (RXTXstate << 4) | brokenBits;
+ 581   1      
+ 582   1          if(lenght > 12)
+ 583   1              lenght = 12;
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 11  
+
+ 584   1      
+ 585   1          if(lenght == 0x00 && brokenBits != 0x00)
+ 586   1          {
+ 587   2              lenght = 1;
+ 588   2              RXTXstate = 1;
+ 589   2          }
+ 590   1      
+ 591   1          RAWwrite(pbuf, lenght + 5);                     //????FIFO??????
+ 592   1      
+ 593   1          IRQCLR();                                       //??????
+ 594   1          IRQON();
+ 595   1      
+ 596   1          RXTXstate = RXTXstate - 12;
+ 597   1          index = 17;
+ 598   1      
+ 599   1          i_reg = 0x01;
+ 600   1          while(RXTXstate > 0)
+ 601   1          {
+ 602   2      //        LPM0;                                       //???????,?????
+ 603   2             PCON |=0X01;                                           //等待TX发送结束
+ 604   2              if(RXTXstate > 9)                           //?RXTXstate?????????????????9
+ 605   2              {                       
+ 606   3                  lenght = 10;                            //???10,????FIFO??9????1???????
+ 607   3              }
+ 608   2              else if(RXTXstate < 1)                      //??????1,?????????????FIFO?,??????
+ 609   2              {
+ 610   3                  break;
+ 611   3              }
+ 612   2              else                                        //???????????
+ 613   2              {
+ 614   3                  lenght = RXTXstate + 1;         
+ 615   3              }   /* if */
+ 616   2      
+ 617   2              buf[index - 1] = FIFO;                      //?FIFO??????9??????????,?????
+ 618   2              WriteCont(&buf[index - 1], lenght);
+ 619   2              RXTXstate = RXTXstate - 9;                  //?9????FIFO?
+ 620   2              index = index + 9;
+ 621   2          }   /* while */
+ 622   1      
+ 623   1          RXTXstate = 1;                                  //?????,???????buf[1]????
+ 624   1      
+ 625   1          while(i_reg == 0x01)                            //??????
+ 626   1          {
+ 627   2      //        CounterSet();                               //?????
+ 628   2              Timer0_Delay(60);
+ 629   2      //        CountValue = 0xF000;                        //???? 60ms
+ 630   2      //        StartCounter();                               //?????????
+ 631   2      //        LPM0;
+ 632   2             PCON |=0X01;                                           //等待TX发送结束
+ 633   2          }
+ 634   1      
+ 635   1          i_reg = 0x01;
+ 636   1          Timer0_Delay(60);
+ 637   1      //    CounterSet();                                   //?????
+ 638   1      //    CountValue = 0xF000;                            //???? 60ms
+ 639   1          StartCounter();                                   //?????????
+ 640   1      
+ 641   1          /* ?????????,???????????? */
+ 642   1          /*====================================================================================================
+             -*/
+ 643   1          if((((buf[5] & 0x06) == 0x06) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] 
+             -== 0x29)))
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 12  
+
+ 644   1          || (buf[5] == 0x00 && ((buf[6] & 0xF0) == 0x20 || (buf[6] & 0xF0) == 0x30 || (buf[6] & 0xF0) == 0x40))
+             -)
+ 645   1          {
+ 646   2              delay_ms(20);
+ 647   2              command = Reset;
+ 648   2              DirectCommand(&command);
+ 649   2              command = TransmitNextSlot;
+ 650   2              DirectCommand(&command);
+ 651   2          }   /* if */
+ 652   1          /*====================================================================================================
+             -*/
+ 653   1          
+ 654   1          while(i_reg == 0x01)                            //??????
+ 655   1          { 
+ 656   2          }
+ 657   1          
+ 658   1      //    if(POLLING)                                     //???????????????
+ 659   1      //    {
+ 660   1      //        if(Found_tag)
+ 661   1      //        {
+ 662   1      //            if(i_reg == 0xFF)                       //?????
+ 663   1      //            {
+ 664   1      //                if((buf[1]) == 0x00)                //???? 
+ 665   1      //                {
+ 666   1      //                    Display_Char(6, 13, (unsigned char *)CO);           //??OK
+ 667   1      //                    Display_Char(6, 14, (unsigned char *)CK);
+ 668   1      //                    Beep_Waring(1, Beep15693); 
+ 669   1      //                }
+ 670   1      //                else                                //????
+ 671   1      //                {
+ 672   1      //                    Display_Char(6,10,(unsigned char *)Num+0x0E*0x10);  //??ERROR
+ 673   1      //                    Display_Char(6, 11, (unsigned char *)CR);
+ 674   1      //                    Display_Char(6, 12, (unsigned char *)CR);
+ 675   1      //                    Display_Char(6, 13, (unsigned char *)CO);
+ 676   1      //                    Display_Char(6, 14, (unsigned char *)CR);
+ 677   1      //                    Beep_Waring(3, Beep15693);      //?????????
+ 678   1      //                }
+ 679   1      //            }
+ 680   1      //        }
+ 681   1      //        
+ 682   1      //          switch(test_no)
+ 683   1      //        {
+ 684   1      //            case 0:                                 //????
+ 685   1      //                break;
+ 686   1      //            case 1:                                 //????
+ 687   1                      for(j = 2; j < RXTXstate; j++)
+ 688   1                      {   //???????
+ 689   2                          send_byte(buf[j]);
+ 690   2                      }                                   
+ 691   1      //                break;
+ 692   1      //            case 2:                                 //?AFI
+ 693   1      //                break;
+ 694   1      //            case 3:                                 //?DSFID
+ 695   1      //                break;
+ 696   1      //            case 4:                                 //??????
+ 697   1      //                for(j = 11, temp2 = 9; j < RXTXstate - 1; j++, temp2 += 2)
+ 698   1      //                {   //????????????
+ 699   1      //                    Display_Char(2, temp2-1, (unsigned char *)(Num + (buf[j] >> 4) * 0x10));
+ 700   1      //                    Display_Char(2, temp2, (unsigned char *)(Num+(buf[j] & 0x0F) * 0x10));
+ 701   1      //                }                                 
+ 702   1      //                break;
+ 703   1      //            case 5:                                 //???????
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 13  
+
+ 704   1      //                 for(j = 2, temp2 = 15; j < RXTXstate; j++, temp2 -= 2)
+ 705   1      //                {   //?????????
+ 706   1      //                    Display_Char(2, temp2 - 1, (unsigned char *)(Num + (buf[j] >> 4) * 0x10));
+ 707   1      //                    Display_Char(2, temp2, (unsigned char *)(Num+(buf[j] & 0x0F) * 0x10));
+ 708   1      //                }                                   
+ 709   1      //                break;
+ 710   1      //            default:break;
+ 711   1      //        }
+ 712   1      //    }
+ 713   1          
+ 714   1        
+ 715   1          
+ 716   1      //     if(!POLLING)
+ 717   1      //    {
+ 718   1      //        switch(noCRC)                               //????CRC??
+ 719   1      //        {
+ 720   1      //            case 0:
+ 721   1      //            if(i_reg == 0xFF)                       //?????
+ 722   1      //            {       
+ 723   1      //                kputchar('[');                      //??[]
+ 724   1      //                for(j = 1; j < RXTXstate; j++)
+ 725   1      //                {
+ 726   1      //                    Put_byte(buf[j]);
+ 727   1      //                }   /* for */
+ 728   1      
+ 729   1      //                kputchar(']');
+ 730   1      //                return(0);
+ 731   1      //            }
+ 732   1      //            else if(i_reg == 0x02)                  //????
+ 733   1      //            {      
+ 734   1      //                kputchar('[');                      //??[z]
+ 735   1      //                kputchar('z');
+ 736   1      //                kputchar(']');
+ 737   1      //                return(0);
+ 738   1      //            }
+ 739   1      //            else if(i_reg == 0x00)                  //?????
+ 740   1      //            {      
+ 741   1      //                kputchar('[');
+ 742   1      //                kputchar(']');
+ 743   1      //                return(1);
+ 744   1      //            }
+ 745   1      //            else
+ 746   1      //            ;
+ 747   1      //            break;
+ 748   1      
+ 749   1      //            case 1:
+ 750   1      //            if(i_reg == 0xFF)                       //?????
+ 751   1      //                        {
+ 752   1      //                kputchar('(');                      //??()
+ 753   1      //                for(j = 1; j < RXTXstate; j++)
+ 754   1      //                {
+ 755   1      //                    Put_byte(buf[j]);
+ 756   1      //                }   /* for */
+ 757   1      
+ 758   1      //                kputchar(')');
+ 759   1      //                return(0);
+ 760   1      //            }
+ 761   1      //            else if(i_reg == 0x02)                  //????
+ 762   1      //            {        
+ 763   1      //                kputchar('(');                      //??(z)
+ 764   1      //                kputchar('z');
+ 765   1      //                kputchar(')');
+C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     11/17/2018 14:25:52 PAGE 14  
+
+ 766   1      //                return(0);
+ 767   1      //            }
+ 768   1      //            else if(i_reg == 0x00)                  //?????
+ 769   1      //            {   
+ 770   1      //                kputchar('(');
+ 771   1      //                kputchar(')');
+ 772   1      //                return(1);
+ 773   1      //            }
+ 774   1      //            else
+ 775   1      //            ;
+ 776   1      //            break;
+ 777   1      //        }   /* switch */
+ 778   1      //    }
+ 779   1          
+ 780   1          IRQOFF();                                       //????
+ 781   1          return(1);                                      //????????,?? 1
+ 782   1      }   /* RequestCommand */
+*** WARNING C280 IN LINE 568 OF anticollision.c: 'temp2': unreferenced local variable
+*** WARNING C316 IN LINE 782 OF anticollision.c: unterminated conditionals
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2809    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     17     100
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

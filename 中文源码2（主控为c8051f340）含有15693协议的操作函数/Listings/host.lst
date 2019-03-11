@@ -1,0 +1,205 @@
+C51 COMPILER V9.56.0.0   HOST                                                              11/17/2018 14:25:57 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE HOST
+OBJECT MODULE PLACED IN .\Objects\host.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE host.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\host.lst) TABS(2) OBJECT(.\Objects\host.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+             -***********
+   2          * 文 件 名：HOST.C
+   3          * 功    能：串口相关的功能函数以及设置
+   4          *
+   5          * 作    者：EMDOOR
+   6          * 日    期：2011-9-29
+   7          **********************************************************************************************************
+             -***********/
+   8          #include <C8051F340.h>
+   9          #include <hardware.h>
+  10          #include <communicate.h>
+  11          #include <anticollision.h>
+  12          #include <globals.h>
+  13          #include <host.h>
+  14          
+  15          unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
+  16          
+  17          //unsigned char   Firstdata = 1;                      //设置串口同步标志位
+  18          
+  19          #define BAUDRATE           115200      // UART波特率设置
+  20          #define SYSCLK             12000000    // 内部的晶振频率
+  21          
+  22          /*********************************************************************************************************
+             -*********
+  23          * 函数名称：PORT_Init()
+  24          * 功    能：串口初始化设置函数
+  25          * 入口参数：无
+  26          * 出口参数：无   
+  27          *****************************0.***************************************************************************
+             -***********/
+  28          void PORT_Init (void)
+  29          {  
+  30   1         
+  31   1         P0MDOUT   = 0x10;
+  32   1         XBR0      = 0x01;
+  33   1         XBR1      = 0x40;
+  34   1      }
+  35          
+  36          
+  37          void UART0_Init(void)
+  38          { 
+  39   1          SCON0 = 0x10;   //8位数据位，1位停止位，使能接收                   
+  40   1       
+  41   1         if (SYSCLK/BAUDRATE/2/256 < 1)
+  42   1         {
+  43   2            TH1 = -(SYSCLK/BAUDRATE/2);
+  44   2            CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+  45   2            CKCON |=  0x08;
+  46   2         } 
+  47   1         else if (SYSCLK/BAUDRATE/2/256 < 4)
+  48   1         {
+  49   2            TH1 = -(SYSCLK/BAUDRATE/2/4);
+  50   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
+C51 COMPILER V9.56.0.0   HOST                                                              11/17/2018 14:25:57 PAGE 2   
+
+  51   2            CKCON |=  0x09;
+  52   2         }
+  53   1         else if (SYSCLK/BAUDRATE/2/256 < 12)
+  54   1         {
+  55   2            TH1 = -(SYSCLK/BAUDRATE/2/12);
+  56   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 00
+  57   2         } else
+  58   1         {
+  59   2            TH1 = -(SYSCLK/BAUDRATE/2/48);
+  60   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 10
+  61   2            CKCON |=  0x02;
+  62   2         }
+  63   1      
+  64   1         TL1 = TH1;                          // init Timer1
+  65   1         TMOD &= ~0xf0;                      // TMOD: timer 1 in 8-bit autoreload
+  66   1         TMOD |=  0x20;
+  67   1         TR1 = 1;                            // START Timer1
+  68   1         TI0 = 1;                            // Indicate TX0 ready
+  69   1      }
+  70          
+  71          
+  72          
+  73          /*********************************************************************************************************
+             -*********
+  74          * 函数名称：sendchar()
+  75          * 功    能：向计算器上位机发送一个字符函数
+  76          * 入口参数：TXchar    将要被发送的字符
+  77          * 出口参数：无
+  78          * 说    明：无   
+  79          **********************************************************************************************************
+             -*********/
+  80          sendchar(char TXchar)
+  81          {
+  82   1           
+  83   1            if (TXchar == '\n')  {                // check for newline character
+  84   2               while (!TI0);                 // wait until UART0 is ready to transmit
+  85   2               TI0 = 0;                      // clear interrupt flag
+  86   2               SBUF0 = 0x0d;                 // output carriage return command
+  87   2            }
+  88   1            while (!TI0);                    // wait until UART0 is ready to transmit
+  89   1            TI0 = 0;
+  90   1          SBUF0 = TXchar;                         // clear interrupt flag
+  91   1            return (SBUF0);              // output <c> using UART 0
+  92   1      }
+  93          
+  94          
+  95          /*********************************************************************************************************
+             -*********
+  96          * 函数名称：send_crlf()
+  97          * 功    能：向计算器上位机发送一个回车+换行符号
+  98          * 入口参数：无
+  99          * 出口参数：无
+ 100          * 说    明：无   
+ 101          **********************************************************************************************************
+             -*********/
+ 102          void send_crlf(void)
+ 103          {
+ 104   1          sendchar('\r');                                 //发送回车符号
+ 105   1          sendchar('\n');                                 //发送换行符号
+ 106   1      }
+ 107          
+ 108          /*********************************************************************************************************
+C51 COMPILER V9.56.0.0   HOST                                                              11/17/2018 14:25:57 PAGE 3   
+
+             -*********
+ 109          * 函数名称：send_cstring()
+ 110          * 功    能：向计算器上位机发送一字符串
+ 111          * 入口参数：*pstr       将要被发送的字符串
+ 112          * 出口参数：无
+ 113          * 说    明：无   
+ 114          **********************************************************************************************************
+             -*********/
+ 115          void send_cstring(char *pstr)
+ 116          {
+ 117   1          while(*pstr != '\0')                            //查询是否到达字符串尾
+ 118   1          {
+ 119   2              sendchar(*pstr++);                          //发送字符
+ 120   2          }
+ 121   1      }
+ 122          
+ 123          /*********************************************************************************************************
+             -*********
+ 124          * 函数名称：Nibble2Ascii()
+ 125          * 功    能：半位字节转化成ASCII十六进制码
+ 126          * 入口参数：anibble         将要被转换字节
+ 127          * 出口参数：AsciiOut        转换后的ASCII十六进制码值
+ 128          * 说    明：无   
+ 129          **********************************************************************************************************
+             -*********/
+ 130          unsigned char Nibble2Ascii(unsigned char anibble)
+ 131          {
+ 132   1          unsigned char AsciiOut = anibble;               //定义转换后的变量AsciiOut，并赋值
+ 133   1      
+ 134   1          if(anibble > 9)                                 //如果被转换的半位字节为A-F，则需要加0x07
+ 135   1              AsciiOut = AsciiOut + 0x07;
+ 136   1      
+ 137   1          AsciiOut = AsciiOut + 0x30;                     //其他情况则在转换结果基础上增加偏移量0x30
+ 138   1      
+ 139   1          return(AsciiOut);                               //返回转换后的值
+ 140   1      }
+ 141          
+ 142          /*********************************************************************************************************
+             -*********
+ 143          * 函数名称：Put_byte()
+ 144          * 功    能：发送字节函数半位字节转化成ASCII十六进制码
+ 145          * 入口参数：abyte         将要被发送字节
+ 146          * 出口参数：无      
+ 147          * 说    明：该函数调用两次Nibble2Ascii，将一个字节拆分成高低四位，先转换再次序发送。
+ 148          **********************************************************************************************************
+             -*********/
+ 149          void send_byte(unsigned char abyte)
+ 150          {
+ 151   1          unsigned char temp1, temp2;
+ 152   1      
+ 153   1          temp1 = (abyte >> 4) & 0x0F;                    //获取高四位字节
+ 154   1          temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
+ 155   1          sendchar(temp2);                                //发送之
+ 156   1      
+ 157   1          temp1 = abyte & 0x0F;                           //获取低四位字节
+ 158   1          temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
+ 159   1          sendchar(temp2);                                //发送之
+ 160   1      }
+*** WARNING C294 IN LINE 49 OF host.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.56.0.0   HOST                                                              11/17/2018 14:25:57 PAGE 4   
+
+   CODE SIZE        =    165    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
