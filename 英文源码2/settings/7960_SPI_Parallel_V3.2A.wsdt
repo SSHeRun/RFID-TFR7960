@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>7060_SPI_Parallel_Firmware_V2.1A/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>189</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>916</ColumnWidth1><ColumnWidth2>244</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+      <TerminalIO/>
+      <Profiling/>
+    <Find-in-Files><ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-30004-16658</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A</ExpandedNode><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A/main.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-21247-15841</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-25550-18909</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-13382-16133</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>2</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\14443.c</Filename><XPos>0</XPos><YPos>603</YPos><SelStart>13851</SelStart><SelEnd>13851</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\main.c</Filename><XPos>0</XPos><YPos>26</YPos><SelStart>2568</SelStart><SelEnd>2568</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\tiris.c</Filename><XPos>0</XPos><YPos>69</YPos><SelStart>2364</SelStart><SelEnd>2364</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\parallel.c</Filename><XPos>0</XPos><YPos>1219</YPos><SelStart>38504</SelStart><SelEnd>38504</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\hardware.h</Filename><XPos>0</XPos><YPos>1</YPos><SelStart>810</SelStart><SelEnd>810</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\parallel.h</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>1605</SelStart><SelEnd>1664</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\anticollision.c</Filename><XPos>0</XPos><YPos>350</YPos><SelStart>9145</SelStart><SelEnd>9145</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\hardware.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>492</SelStart><SelEnd>492</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\host.c</Filename><XPos>0</XPos><YPos>431</YPos><SelStart>12088</SelStart><SelEnd>12088</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2A(With Bit-bang)\TRF7960_SPI_Parallel_Firmware_V3.2A\automatic.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>742</SelStart><SelEnd>742</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files\IAR Systems\Embedded Workbench 4.0_V3.41A\430\inc\MSP430x23x0.h</Filename><XPos>0</XPos><YPos>865</YPos><SelStart>47603</SelStart><SelEnd>47603</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00a3e808><key>iaridepm1</key></Toolbar-00a3e808></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>723</Bottom><Right>263</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>156250</sizeHorzCX><sizeHorzCY>208768</sizeHorzCY><sizeVertCX>207031</sizeVertCX><sizeVertCY>756785</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>191</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>193</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>201461</sizeHorzCY><sizeVertCX>156250</sizeVertCX><sizeVertCY>208768</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

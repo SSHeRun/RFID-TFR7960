@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>2605746836</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\communicate.c</file>
+      <file>$PROJ_DIR$\anticollision.c</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdlib.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\communicate.r43</file>
+      <file>$PROJ_DIR$\communicate.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\host.r43</file>
+      <file>$PROJ_DIR$\automatic.c</file>
+      <file>$PROJ_DIR$\hardware.c</file>
+      <file>$PROJ_DIR$\host.c</file>
+      <file>$PROJ_DIR$\ISO14443.c</file>
+      <file>$PROJ_DIR$\lcd.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\tiris.c</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl430f.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.pbi</file>
+      <file>$PROJ_DIR$\anticollision.h</file>
+      <file>$PROJ_DIR$\data.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\communicate.pbi</file>
+      <file>$TOOLKIT_DIR$\config\lnk430F2370.xcl</file>
+      <file>$TOOLKIT_DIR$\inc\MSP430x23x0.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\anticollision.r43</file>
+      <file>$PROJ_DIR$\ISO14443.h</file>
+      <file>$PROJ_DIR$\hardware.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ISO14443.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
+      <file>$PROJ_DIR$\globals.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\tiris.r43</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\lcd.h</file>
+      <file>$PROJ_DIR$\tiris.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\anticollision.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\automatic.r43</file>
+      <file>$PROJ_DIR$\automatic.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\host.pbi</file>
+      <file>$PROJ_DIR$\Debug\Exe\RFID.d43</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r43</file>
+      <file>$PROJ_DIR$\Debug\Exe\RFID.a43</file>
+      <file>$PROJ_DIR$\Debug\Obj\automatic.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\in430.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ISO14443.r43</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\RFID.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\hardware.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\hardware.r43</file>
+      <file>$TOOLKIT_DIR$\config\multiplier.xcl</file>
+      <file>$PROJ_DIR$\Debug\Obj\tiris.pbi</file>
+      <file>$PROJ_DIR$\host.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\RFID.hex</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\communicate.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 17</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 4 19 40 42 27 45 24 22 25 49</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4 19 40 42 27 45 24 22 25 49</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\anticollision.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 20</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 15 19 40 42 27 45 24 4 22 25 49 28 2 29 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15 19 40 42 27 45 24 4 22 25 49 28 2 29 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\automatic.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 32</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 33 19 40 42 27 45 24 22 25 49 4 15 21 29 28 2</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 33 19 40 42 27 45 24 22 25 49 4 15 21 29 28 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\hardware.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 46</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 44</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 22 19 40 42 27 45 24 25 4 49</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22 19 40 42 27 45 24 25 4 49</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\host.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 5</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 22 19 40 42 27 45 24 25 4 49 15 29 21 28 2</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22 19 40 42 27 45 24 25 4 49 15 29 21 28 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ISO14443.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 41</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 23</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 21 19 40 42 4 27 45 24 22 25 49 15 28 2 29</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 21 19 40 42 4 27 45 24 22 25 49 15 28 2 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\lcd.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 22 19 40 42 27 45 24 25 4 49 15 29 21 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22 19 40 42 27 45 24 25 4 49 15 29 21 16</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 37</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 19 40 42 2 24 27 45 22 25 4 49 15 33 21 29 28</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19 40 42 2 24 27 45 22 25 4 49 15 33 21 29 28</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\tiris.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 26</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 29 19 40 42 4 27 45 24 22 25 49 15</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 29 19 40 42 4 27 45 24 22 25 49 15</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\RFID.d43</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 18 47 41 20 32 3 46 5 30 37 26 13</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\RFID.a43</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 18 47 41 20 32 3 46 5 30 37 26 13</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\RFID.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 23 31 39 17 44 34 14 36 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 38</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\RFID.hex</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 18 47 41 20 32 3 46 5 30 37 26 13</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>[REBUILD_ALL]</name>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

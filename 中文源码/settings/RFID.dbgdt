@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log><ColumnWidth0>27</ColumnWidth0><ColumnWidth1>958</ColumnWidth1></Debug-Log>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>77</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <CodeCovEnabled>0</CodeCovEnabled><MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1155</ColumnWidth1><ColumnWidth2>308</ColumnWidth2><ColumnWidth3>77</ColumnWidth3></Build>
+    </Static>
+    <Windows>
+      
+      
+      
+    <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-22823-17467</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-280-17480</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-803-17470</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>RFID</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-11552-17473</Identity>
+            <TabName>Disassembly</TabName>
+            <Factory>Disassembly</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd5></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\Users\Sharlyne\Desktop\RFID&#x53D1;&#x8D27;&#x5149;&#x76D8;\&#x5B9e;&#x9A8C;&#x6587;&#x6863;&#x53CA;&#x4ee3;&#x7801;\RFID_MSP430_V1.0_20110602\main.c</Filename><XPos>0</XPos><YPos>33</YPos><SelStart>2035</SelStart><SelEnd>2035</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Users\Sharlyne\Desktop\RFID&#x53D1;&#x8D27;&#x5149;&#x76D8;\&#x5B9e;&#x9A8C;&#x6587;&#x6863;&#x53CA;&#x4ee3;&#x7801;\RFID_MSP430_V1.0_20110602\automatic.c</Filename><XPos>0</XPos><YPos>26</YPos><SelStart>1685</SelStart><SelEnd>1685</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Users\Sharlyne\Desktop\RFID&#x53D1;&#x8D27;&#x5149;&#x76D8;\&#x5B9e;&#x9A8C;&#x6587;&#x6863;&#x53CA;&#x4ee3;&#x7801;\RFID_MSP430_V1.0_20110602\lcd.c</Filename><XPos>0</XPos><YPos>218</YPos><SelStart>9346</SelStart><SelEnd>9346</SelEnd></Tab><ActiveTab>2</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00784a20><key>430fet1</key></Toolbar-00784a20></Sizes></Row0><Row1><Sizes><Toolbar-0071f770><key>iaridepm.enu1</key></Toolbar-0071f770></Sizes></Row1><Row2><Sizes><Toolbar-0c049f40><key>debuggergui.enu1</key></Toolbar-0c049f40></Sizes></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6><Row7><Sizes/></Row7></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>486</Bottom><Right>151</Right><x>-2</x><y>-2</y><xscreen>95</xscreen><yscreen>119</yscreen><sizeHorzCX>92773</sizeHorzCX><sizeHorzCY>170977</sizeHorzCY><sizeVertCX>149414</sizeVertCX><sizeVertCY>701149</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>486</Bottom><Right>93</Right><x>-2</x><y>-2</y><xscreen>95</xscreen><yscreen>119</yscreen><sizeHorzCX>92773</sizeHorzCX><sizeHorzCY>170977</sizeHorzCY><sizeVertCX>92773</sizeVertCX><sizeVertCY>701149</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>117</Bottom><Right>1026</Right><x>-2</x><y>-2</y><xscreen>1028</xscreen><yscreen>119</yscreen><sizeHorzCX>1003906</sizeHorzCX><sizeHorzCY>170977</sizeHorzCY><sizeVertCX>92773</sizeVertCX><sizeVertCY>170977</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

@@ -1,0 +1,9 @@
+".\Objects\anticollision.obj",
+".\Objects\automatic.obj",
+".\Objects\communicate.obj",
+".\Objects\hardware.obj",
+".\Objects\host.obj",
+".\Objects\ISO14443.obj",
+".\Objects\main.obj" 
+TO ".\Objects\15693" 
+PRINT(".\Listings\15693.m51") RAMSIZE(256) 

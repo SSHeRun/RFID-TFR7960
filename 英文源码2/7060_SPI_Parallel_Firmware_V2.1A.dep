@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\14443.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\parallel.r43</file>
+      <file>$PROJ_DIR$\epc.h</file>
+      <file>$TOOLKIT_DIR$\config\lnk430F2370.xcl</file>
+      <file>$PROJ_DIR$\hardware.h</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl430f.r43</file>
+      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
+      <file>$PROJ_DIR$\host.h</file>
+      <file>$TOOLKIT_DIR$\inc\in430.h</file>
+      <file>$PROJ_DIR$\automatic.h</file>
+      <file>$PROJ_DIR$\parallel.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\host.r43</file>
+      <file>$PROJ_DIR$\SPI.h</file>
+      <file>$TOOLKIT_DIR$\inc\MSP430x23x0.h</file>
+      <file>$PROJ_DIR$\tiris.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\7060_SPI_Parallel_Firmware_V2.1A.d43</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\anticollision.r43</file>
+      <file>$PROJ_DIR$\globals.h</file>
+      <file>$PROJ_DIR$\14443.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\tiris.r43</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdlib.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\hardware.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\automatic.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r43</file>
+      <file>$PROJ_DIR$\anticollision.h</file>
+      <file>$PROJ_DIR$\host.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\parallel.c</file>
+      <file>$PROJ_DIR$\tiris.c</file>
+      <file>$PROJ_DIR$\14443.c</file>
+      <file>$PROJ_DIR$\automatic.c</file>
+      <file>$PROJ_DIR$\anticollision.c</file>
+      <file>$PROJ_DIR$\hardware.c</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 17</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\7060_SPI_Parallel_Firmware_V2.1A.d43</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 5 2 19 25 24 13 26 3 22 7</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\host.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 6 15 10 0 18 1 8 20 12 9 14 27 16 21 4 11</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 26</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 15 10 0 23 8 18 1 6 20 12 9 27 14 16 21 4 11</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\parallel.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 12 15 10 0 18 1 8 6 20 9 14</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\tiris.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 16 15 10 0 12 18 1 8 6 20 9 14 27</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\14443.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 21 15 10 0 12 18 1 8 6 20 9 14 27</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\automatic.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 11 15 10 0 18 1 8 6 20 9 12 14 27 21 16 4</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\anticollision.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 19</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 27 15 10 0 18 1 8 12 6 20 9 14</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\hardware.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 24</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 6 15 10 0 18 1 8 20 12 9 14</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

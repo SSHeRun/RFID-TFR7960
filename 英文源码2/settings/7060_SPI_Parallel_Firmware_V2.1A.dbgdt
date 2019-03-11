@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Debug-Log>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>237</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
+      <Build>
+        <ColumnWidth0>20</ColumnWidth0>
+        <ColumnWidth1>916</ColumnWidth1>
+        <ColumnWidth2>244</ColumnWidth2>
+        <ColumnWidth3>61</ColumnWidth3>
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows></Build>
+    <Find-in-Files><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files><CallStack><PreferedWindows><Position>1</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ViewArgs>1</ViewArgs></CallStack><STACK2><PreferedWindows><Position>1</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></STACK2><Watch><Format><struct_types/><watch_formats/></Format><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><Column0>100</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Watch><Register><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Register><Memory><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><FindDirection>1</FindDirection><FindAsHex>0</FindAsHex></Memory></Static>
+    <Windows>
+      
+      
+      
+    <Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-11807-18680</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A</ExpandedNode><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A/hardware.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd2><Tabs><Tab><Identity>TabID-16125-12475</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>12</Group><States>9</States><State0>P2DIR</State0><State1>P2IE</State1><State2>P2IES</State2><State3>P2IFG</State3><State4>P2SEL</State4><State5>P3SEL</State5><State6>SR</State6><State7>UCB0CTL0</State7><State8>UCB0CTL1</State8></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-12427-2760</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\main.c</Filename><XPos>0</XPos><YPos>56</YPos><SelStart>2455</SelStart><SelEnd>2455</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\host.c</Filename><XPos>0</XPos><YPos>266</YPos><SelStart>8728</SelStart><SelEnd>8728</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\anticollision.c</Filename><XPos>0</XPos><YPos>43</YPos><SelStart>1960</SelStart><SelEnd>1960</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\automatic.c</Filename><XPos>0</XPos><YPos>18</YPos><SelStart>918</SelStart><SelEnd>918</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\hardware.c</Filename><XPos>0</XPos><YPos>81</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\parallel.c</Filename><XPos>0</XPos><YPos>553</YPos><SelStart>17181</SelStart><SelEnd>17188</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\parallel.h</Filename><XPos>0</XPos><YPos>40</YPos><SelStart>1697</SelStart><SelEnd>1697</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\tiris.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>517</SelStart><SelEnd>517</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\New EVM (F23x0 based) Firmware\7960_Parallel_SPI_Ver3.2_EXP(No Bit-bang_Golden)\TRF7960_SPI_Parallel_Firmware_V3.2_EXP\hardware.h</Filename><XPos>0</XPos><YPos>72</YPos><SelStart>2908</SelStart><SelEnd>2928</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-008eea00><key>iaridepm1</key></Toolbar-008eea00></Sizes></Row0><Row1><Sizes><Toolbar-012a25e8><key>debuggergui1</key></Toolbar-012a25e8></Sizes></Row1><Row2><Sizes><Toolbar-0126b678><key>430fet1</key></Toolbar-0126b678></Sizes></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6><Row7><Sizes/></Row7><Row8><Sizes/></Row8></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>668</Bottom><Right>311</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>244531</sizeVertCX><sizeVertCY>699374</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>668</Bottom><Right>195</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>153906</sizeVertCX><sizeVertCY>699374</sizeVertCY></Rect></Wnd2></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>200</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>208768</sizeHorzCY><sizeVertCX>156250</sizeVertCX><sizeVertCY>208768</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

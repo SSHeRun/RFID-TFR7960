@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>7060_SPI_Parallel_Firmware_V2.1A/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>217</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Find-in-Files>
+        
+        
+        
+      <ColumnWidth0>460</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>916</ColumnWidth1><ColumnWidth2>244</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+      <Debug-Log/>
+    <TerminalIO/><Profiling/></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-9420-16558</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A</ExpandedNode><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A/SPI.c</ExpandedNode><ExpandedNode>7060_SPI_Parallel_Firmware_V2.1A/hardware.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-28596-16813</Identity>
+            <TabName>Find in Files</TabName>
+            <Factory>Find-in-Files</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-26274-17061</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-26194-7629</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>1</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\epc.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>252</SelStart><SelEnd>252</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\automatic.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>126</SelStart><SelEnd>126</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\14443.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>306</SelStart><SelEnd>317</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\SPI.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>970</SelStart><SelEnd>970</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\parallel.h</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>830</SelStart><SelEnd>830</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\SPI.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1020</SelStart><SelEnd>1020</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\epc.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1992</SelStart><SelEnd>1992</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\globals.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>655</SelStart><SelEnd>655</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files\IAR Systems\Embedded Workbench 4.0_V3.41A\430\inc\MSP430x23x0.h</Filename><XPos>0</XPos><YPos>874</YPos><SelStart>46768</SelStart><SelEnd>46784</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\anticollision.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>130</SelStart><SelEnd>130</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\hardware.c</Filename><XPos>0</XPos><YPos>32</YPos><SelStart>1276</SelStart><SelEnd>1276</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\automatic.c</Filename><XPos>7</XPos><YPos>17</YPos><SelStart>1087</SelStart><SelEnd>1087</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\host.h</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>889</SelStart><SelEnd>889</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\14443.c</Filename><XPos>0</XPos><YPos>558</YPos><SelStart>13261</SelStart><SelEnd>13261</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\hardware.h</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>2614</SelStart><SelEnd>2630</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\anticollision.c</Filename><XPos>0</XPos><YPos>305</YPos><SelStart>8485</SelStart><SelEnd>8485</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\tiris.c</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>2075</SelStart><SelEnd>2075</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\main.c</Filename><XPos>0</XPos><YPos>53</YPos><SelStart>2400</SelStart><SelEnd>2400</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\parallel.c</Filename><XPos>0</XPos><YPos>210</YPos><SelStart>6085</SelStart><SelEnd>6085</SelEnd></Tab><ActiveTab>18</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\HF RFID Reader\Firmware\7960_Parallel_SPI_Ver2.1A\TRF7960_SPI_Parallel_Firmware_V2.1A\host.c</Filename><XPos>0</XPos><YPos>62</YPos><SelStart>2592</SelStart><SelEnd>2592</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00a3e810><key>iaridepm1</key></Toolbar-00a3e810></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6><Row7><Sizes/></Row7><Row8><Sizes/></Row8><Row9><Sizes/></Row9><Row10><Sizes/></Row10><Row11><Sizes/></Row11><Row12><Sizes/></Row12><Row13><Sizes/></Row13><Row14><Sizes/></Row14><Row15><Sizes/></Row15><Row16><Sizes/></Row16><Row17><Sizes/></Row17><Row18><Sizes/></Row18><Row19><Sizes/></Row19><Row20><Sizes/></Row20><Row21><Sizes/></Row21><Row22><Sizes/></Row22><Row23><Sizes/></Row23><Row24><Sizes/></Row24><Row25><Sizes/></Row25><Row26><Sizes/></Row26><Row27><Sizes/></Row27><Row28><Sizes/></Row28><Row29><Sizes/></Row29><Row30><Sizes/></Row30><Row31><Sizes/></Row31><Row32><Sizes/></Row32><Row33><Sizes/></Row33><Row34><Sizes/></Row34><Row35><Sizes/></Row35><Row36><Sizes/></Row36><Row37><Sizes/></Row37><Row38><Sizes/></Row38><Row39><Sizes/></Row39><Row40><Sizes/></Row40><Row41><Sizes/></Row41><Row42><Sizes/></Row42><Row43><Sizes/></Row43><Row44><Sizes/></Row44><Row45><Sizes/></Row45><Row46><Sizes/></Row46><Row47><Sizes/></Row47><Row48><Sizes/></Row48></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>686</Bottom><Right>291</Right><x>-2</x><y>-2</y><xscreen>169</xscreen><yscreen>192</yscreen><sizeHorzCX>132031</sizeHorzCX><sizeHorzCY>200418</sizeHorzCY><sizeVertCX>228906</sizeVertCX><sizeVertCY>718163</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>228</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>230</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>240084</sizeHorzCY><sizeVertCX>132031</sizeVertCX><sizeVertCY>200418</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
