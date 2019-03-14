@@ -1,0 +1,104 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              12/24/2018 23:57:46 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*************************************************************************************************
+   2          * 文 件 名：MAIN.C
+   3          * 功    能：RFID阅读器TRF7960系统与计算器连机演示程序。
+   4          *
+   5          * 说    明： TRF7960与C8051F340微控制器之间的通信方式为串行SPI或者并行PAR模式。              
+   6          *                       
+   7          * 作    者：EMDOOR
+   8          * 日    期：2011-9-29
+   9          ***************************************************************************************************/
+  10          #include <c8051f340.h>                            //微控制器头文件定义
+  11          #include <host.h>
+  12          #include <hardware.h>
+  13          #include <automatic.h>
+  14          #include <communicate.h>
+  15          #include <globals.h>                 
+  16          
+  17          char     rxdata;                                    //RS232 接收数据字节
+  18          xdata    unsigned char buf[BUF_LENGTH];             //定义MSP430微控制器与TRF7960通信接收缓冲区
+  19          signed   char RXTXstate;                            //定义发送接收字节寄存器变量
+  20          unsigned char flags;                                //定义存储标志位(在仿冲撞中使用)
+  21          unsigned char RXErrorFlag;                          //定义接收错误标志
+  22          unsigned char RXflag;                               //定义接收书标志位，用来指示缓冲区中是否有数据
+  23          unsigned char i_reg;                                //中断寄存器变量
+  24          unsigned char CollPoss;                             //定义冲撞发生位置变量
+  25          
+  26          /**************************************************************************************************
+  27          * 函数名称：main()
+  28          * 功    能：主函数入口。
+  29          * 入口参数：无
+  30          * 出口参数：无
+  31          * 说    明：程序从此函数开始运行。
+  32          ****************************************************************************************************/
+  33          void main(void)
+  34          {
+  35   1      //==================================================================================================
+  36   1          PCA0MD   &= ~0x40;
+  37   1          PCA0MD    = 0x00;   //关闭看门狗
+  38   1      //==================================================================================================  
+  39   1          OSCsel();  //选择晶体振荡器
+  40   1          PORT_Init();//初始化串口端口
+  41   1          UART0_Init();  //初始化串口
+  42   1         
+  43   1       //使用轮循方法来提高抗干扰能力
+  44   1      /*=================================================================================================*/
+  45   1          EnableSet(); //设置为输出                                      
+  46   1          TRFDisable(); //禁止读卡器  
+  47   1          delay_ms(1);  
+  48   1          TRFEnable();//使能读卡器   
+  49   1          delay_ms(1);  
+  50   1          IRQPinset();                //选择IRQ中断管脚
+  51   1          IRQInit();
+  52   1        
+  53   1          SlaveSelectPortSet();       //c8051f340P0.3Slave Select功能设置
+  54   1          H_SlaveSelect();            //Slave Select禁止(高)
+C51 COMPILER V9.56.0.0   MAIN                                                              12/24/2018 23:57:46 PAGE 2   
+
+  55   1          SIMOSet();          //设置SIMO为输出
+  56   1          SOMISIGNALSET();
+  57   1          CLKPOUTset();       //设置时钟引脚为输出
+  58   1      
+  59   1          TRFDisable();
+  60   1          delay_ms(1);
+  61   1          TRFEnable();
+  62   1          delay_ms(1);
+  63   1        
+  64   1          InitialSettings();           //初始化设置：设置MSP430时钟频率为6.78MHz及OOK调制模式
+  65   1          EnableInterrupts();          //使能总中断
+  66   1          
+  67   1          OOKdirIN();                  //设置OOK管脚为三态门状态
+  68   1          
+  69   1          while(1)                                      
+  70   1          { 
+  71   2                                       //寻找各种协议标准卷标卡片
+  72   2           FindTags();
+  73   2          
+  74   2          }
+  75   1      }
+  76          
+  77          
+  78          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     93    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    307    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
