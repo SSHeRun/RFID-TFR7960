@@ -7,13 +7,13 @@
 ********************************************************************************************************************/
 #include <automatic.h>
 
-unsigned char Set_pro[9]={0x0C,0x00,0x03,0x04,0x10,0x00,0x21,0x01,0x00};                    //??????
-unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21,0x08,0xFF,0xFF};  //????0x01 ??12345678
-unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                        //????0x01
-//unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //?AFI??01
-//unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                     //?DSFID??EE
-//unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //????????
-//unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                    //?????????0x01,???02(???3??)
+unsigned char Set_pro[9]={0x0C,0x00,0x03,0x04,0x10,0x00,0x21,0x01,0x00};                    //设置参数数据
+unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21,0x08,0xFF,0xFF};          //写块地址0x01 数据12345678
+unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                         //写块地址0x01
+//unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //写AFI数据01
+//unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                      //写DSFID数据EE
+//unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //获取卡片系统信息
+//unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                   //获取块安全状态地址0x01,块数量02（实际为3个块）
 
 /******************************************************************************************************************
 * 函数名称：FindTags()
@@ -28,87 +28,111 @@ void FindTags(void)
 		unsigned char i, count;
 //		while(1)
 //    {
-//            command[0] = ChipStateControl;          // ??RF??,??5V????
+//            command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
 //            command[1] = 0x21;
-//            command[2] = ISOControl;                // ????ISO15693?????:????26.48kbps ???? 1/4(????)
+//            command[2] = ISOControl;                // 设置选择ISO15693操作模式为:高比特率26.48kbps 单幅载波 1/4(默认模式)
 //            command[3] = 0x02;
-//            WriteSingle(command, 4);                // ?4??????TRF7960????
+//            WriteSingle(command, 4);                 // 写4个字节命令到TRF7960寄存器中
 
 //            delay_ms(5);
-//            flags = 0x06;                           // 16(slot)???
-//            //flags = 0x26;
+//            flags = 0x06;                            // 16(slot)槽模式
+//            //flags = 0x26;                          // 1(slot)槽模式
 
 //            command[0] = 0x04;
 //						
 //						count = buf[0] - 9;
-//						InventoryRequest(command, 0);           // ????????(?????)      
+//						InventoryRequest(command, 0);          // 发送总量请求命令(即寻卡命令)      
 
-//            command[0] = ChipStateControl;          // ??RF????
+//            command[0] = ChipStateControl;          // 关闭RF部分电路
 //            command[1] = 0x01;
 //            WriteSingle(command, 2);
 //            delay_ms(1);
 
-//            command[0] = IRQStatus;                 // ??????
+//            command[0] = IRQStatus;                // 给寄存器赋值
 //            command[1] = IRQMask;               
 
 //                                      
-//		    ReadCont(command, 2);							   //??IRQ????????????
+//		    ReadCont(command, 2);							    //读取IRQ中断状态寄存器及中断标志
 //		
 //        delay_ms(10);
 //    }   /* while */
 	
-		while(1)
+		while(1)                                         //ISO14443A协议标准
 		{
-						command[0] = ChipStateControl;          // ??RF??,??5V????
+						command[0] = ChipStateControl;           // 开启RF使能，选择5V操作模式
             command[1] = 0x21;
-            command[2] = ISOControl;                // ????ISO14443A?????:???106kbps
+            command[2] = ISOControl;                 // 设置选择ISO14443A操作模式为:比特率106kbps
             command[3] = 0x08;
             WriteSingle(command, 4);
             delay_ms(5);
 						
-            AnticollisionSequenceA(0x01);           //??ISO14443A???????
+            AnticollisionSequenceA(0x01);           //执行ISO14443A完整仿冲撞序列
 						
-            command[0] = ChipStateControl;          // ??????
+            command[0] = ChipStateControl;          // 给寄存器赋值
             command[1] = 0x01;
-            WriteSingle(command, 2);                // ??RF???? 
+            WriteSingle(command, 2);                 // 关闭RF部分电路 
             delay_ms(1);
 
-            command[0] = IRQStatus;                 // ?????? 
+            command[0] = IRQStatus;                  // 给寄存器赋值 
             command[1] = IRQMask;   
         
 //            if(SPIMODE)
-                ReadCont(command, 2);               //??IRQ????????????
+                ReadCont(command, 2);             //读取IRQ中断状态寄存器及中断标志
 //            else
 //                ReadSingle(command, 1); 
 		}
 
 
-//			while(1)
+//			while(1)                                        //ISO14443B协议标准
 //			{
 //						command[0] = ChipStateControl;
-//            command[1] = 0x21;                      // ??RF??,??5V????
+//            command[1] = 0x21;                     // 开启RF使能，选择5V操作模式
 //            WriteSingle(command, 2);
 //				
-//            //command[0] = ISOControl;                // ????ISO14443B?????:???106kbps
+//            //command[0] = ISOControl;                // 设置选择ISO14443B操作模式为:比特率106kbps
 //            command[1] = 0x0C;
 //            WriteSingle(command, 2);
 
 //            delay_ms(5);
-//            AnticollisionSequenceB(0xB0, 0x04);     //??ISO14443A???????(0x04??16?slots)
-//            //AnticollisionSequenceB(0xB0, 0x00);   //0x00 ?????slot
+//            AnticollisionSequenceB(0xB0, 0x04);     //执行ISO14443A完整仿冲撞序列(0x04表示16槽slots)
+//            //AnticollisionSequenceB(0xB0, 0x00);  //0x00 表示单个槽slot
 
 //            command[0] = ChipStateControl;  
 //            command[1] = 0x01;
-//            WriteSingle(command, 2);                // ??RF???? 
+//            WriteSingle(command, 2);               // 关闭RF部分电路 
 //            delay_ms(1);
 
 //            command[0] = IRQStatus;
 //            command[1] = IRQMask;   
 //        
-////            if(SPIMODE)                             //??IRQ????????????
+////            if(SPIMODE)                            //读取IRQ中断状态寄存器及中断标志
 //                ReadCont(command, 2);
 ////            else
 ////                ReadSingle(command, 1); 
 //			}
+      // while(1){
+      //    command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
+      //       command[1] = 0x21;
+      //       command[2] = ISOControl;                // 设置选择Tag-it操作模式
+      //       command[3] = 0x13;
+      //       WriteSingle(command, 4);
+      //       delay_ms(5);
+      //       flags = 0x00;
+      //       command[0] = 0x00;
+      //       TIInventoryRequest(command, 0);         //发送寻卡命令
+
+      //       command[0] = ChipStateControl;          // 关闭RF部分电路 
+      //       command[1] = 0x01;
+      //       WriteSingle(command, 2);
+      //       delay_ms(1);
+
+      //       command[0] = IRQStatus;                 // 给寄存器赋值 
+      //       command[1] = IRQMask;
+        
+      //       if(SPIMODE)
+      //           ReadCont(command, 2);               //读取IRQ中断状态寄存器及中断标志
+      //       else
+      //           ReadSingle(command, 1); 
+      // }
 }   /* FindTags */
 

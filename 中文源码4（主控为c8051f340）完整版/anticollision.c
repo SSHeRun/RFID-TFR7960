@@ -236,26 +236,26 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght)
 	                                               //仿冲撞过程结束，关闭中断
 }   /* InventoryRequest */
 /******************************************************************************************************************
-* ????:RequestCommand()
-* ?    ?:????????????????????????
-* ????:*pbuf           ???
-*           lenght          ????
-*           brokenBits      ?????????
-*           noCRC           ???CRC??
-* ????:1     
-* ?    ?:??????????,???1,??????????,???0?????,????
+* 函数名称：RequestCommand()
+* 功    能：卡片协议请求命令及处理和计时阅读器到卡片的应答。
+* 入口参数：*pbuf           命令值
+*           lenght          命令长度
+*           brokenBits      不完整字节的位数量
+*           noCRC           是否有CRC校验
+* 出口参数：1     
+* 说    明：该函数为协议请求命令，若返回1，则说明该函数成功执行，若返回0或者不返回，则异常。
 *******************************************************************************************************************/
 unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned char brokenBits, char noCRC)
 {
-    unsigned char index, command;                //????
+    unsigned char index, command;                 //定义变量
     
     RXTXstate = lenght;                             
 			
     *pbuf = 0x8f;
     if(noCRC) 
-        *(pbuf + 1) = 0x90;                         //????CRC??
+        *(pbuf + 1) = 0x90;                         //传输不带CRC校验
     else
-        *(pbuf + 1) = 0x91;                         //???CRC??
+        *(pbuf + 1) = 0x91;                          //传输带CRC校验
     
     *(pbuf + 2) = 0x3d;
     *(pbuf + 3) = RXTXstate >> 8;
@@ -270,10 +270,10 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
         RXTXstate = 1;
     }
 
-    RAWwrite(pbuf, lenght + 5);                     //????FIFO??????
+    RAWwrite(pbuf, lenght + 5);                    //以直接写FIFO模式发送命令
 		
 		//sendchar('z');
-    IRQCLR();                                       //??????
+    IRQCLR();                                    //清中断标志位
     IRQON();
 
 		RXTXstate = RXTXstate - 12;
@@ -286,46 +286,45 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
     while(RXTXstate > 0)
     {
 			
-        //LPM0;                                       //???????,?????
+        //LPM0;                                       //进入低功耗模式，并退出中断
 				PCON |=0X01;
-        if(RXTXstate > 9)                           //?RXTXstate?????????????????9
+        if(RXTXstate > 9)                            //在RXTXstate全局变量中未发送的字节数量如果大于9
         {                       
-            lenght = 10;                            //???10,????FIFO??9????1???????
+            lenght = 10;                            //长度为10，其中包括FIFO中的9个字节及1个字节的地址值
         }
-        else if(RXTXstate < 1)                      //??????1,?????????????FIFO?,??????
+        else if(RXTXstate < 1)                     //如果该值小于1，则说明所有的字节已经发送到FIFO中，并从中断返回
         {
             break;
         }
-        else                                        //???????????
+        else                                        //所有的值已经全部被发送
         {
             lenght = RXTXstate + 1;         
         }   /* if */
 
-        buf[index - 1] = FIFO;                      //?FIFO??????9??????????,?????
+        buf[index - 1] = FIFO;                      //向FIFO缓冲器中写入9个或者更少字节的数据，将用于发送
         WriteCont(&buf[index - 1], lenght);
-        RXTXstate = RXTXstate - 9;                  //?9????FIFO?
+        RXTXstate = RXTXstate - 9;                  //写9个字节到FIFO中
         index = index + 9;
     }   /* while */
 		
 		
 		
-    RXTXstate = 1;                                  //?????,???????buf[1]????
+    RXTXstate = 1;                                 //设置标志位，其接收位存储于buf[1]起始位置
 		
-    while(i_reg == 0x01)                            //??????
+    while(i_reg == 0x01)                            //等待传送结束
     {				
-      
-        Timer0_Delay(60);                      	      //???? 60ms
-        StartCounter();                               //?????????
+                                                    //定时器设置
+        Timer0_Delay(60);                      	     //计时时间 60ms
+        StartCounter();                              //开始以递增模式计时
         PCON |= 0x01;
     }
 		
     i_reg = 0x01;
     Timer0_Delay(60);                            	
     StartCounter();                                 
-//		send_byte(buf[5]);
-//		send_byte(buf[6]);
+
 		
-    /* ?????????,???????????? */
+     /* 如果中断标志位错误，则先复位后发送下个槽命令 */
     /*====================================================================================================*/
 		if(((buf[5] & 0x40) == 0x40) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] == 0x29))||(buf[5] == 0x00 && ((buf[6] & 0xF0) == 0x20 || (buf[6] & 0xF0) == 0x30 || (buf[6] & 0xF0) == 0x40)))
 		{
@@ -343,31 +342,30 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
         {           
             
         }
-				//send_byte(i_reg);
 				
    	
-	 if(i_reg == 0xFF)                       //?????
+	 if(i_reg == 0xFF)                      //接收到应答
 				{
-						if((buf[1]) == 0x00)                //???? 
+						if((buf[1]) == 0x00)                //操作成功 
 						{
 								send_cstring("ojbk");
 								send_crlf();
 						}
-						else                                //????
+						else                              //操作失败
 						{
 								send_cstring("shibai");
 								send_crlf();
 						}
 				}
 			else if(i_reg == 0x02)
-		{		/* collision occured */
+		{		 //冲撞发生
 			sendchar('[');
 			sendchar('z');
 			sendchar(']');
 			return(0);
 		}
 		else if(i_reg == 0x00)
-		{		/* timer interrupt */
+		{		 //定时时间到
 			sendchar('[');
 			sendchar('i');
 			sendchar(']');
@@ -388,7 +386,7 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
 //			}                                 
 
   
-    IRQOFF();                                       //????
-    return(1);                                      //????????,?? 1
+    IRQOFF();                                       //关闭中断
+    return(1);                                      //函数全部执行完毕，返回 1
 }   /* RequestCommand */
 

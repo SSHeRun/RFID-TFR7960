@@ -56,14 +56,14 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght);
 *******************************************************************************************************************/
 void InventoryRequest1(unsigned char *mask, unsigned char lenght);
 /******************************************************************************************************************
-* ????:RequestCommand()
-* ?    ?:????????????????????????
-* ????:*pbuf           ???
-*           lenght          ????
-*           brokenBits      ?????????
-*           noCRC           ???CRC??
-* ????:1     
-* ?    ?:??????????,???1,??????????,???0?????,????
+* 函数名称：RequestCommand()
+* 功    能：卡片协议请求命令及处理和计时阅读器到卡片的应答。
+* 入口参数：*pbuf           命令值
+*           lenght          命令长度
+*           brokenBits      不完整字节的位数量
+*           noCRC           是否有CRC校验
+* 出口参数：1     
+* 说    明：该函数为协议请求命令，若返回1，则说明该函数成功执行，若返回0或者不返回，则异常。
 *******************************************************************************************************************/
 unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned char brokenBits, char noCRC);
 

@@ -67,12 +67,12 @@ void WriteSingle(unsigned char *pbuf, unsigned char lenght)
 }   /* WriteSingle */
 
 /******************************************************************************************************************
-* ????:WriteCont()
-* ?    ?:????????????????????
-* ????:*pbuf            ???????           
-*           lenght           ??????? 
-* ????:?
-* ?    ?:????????
+* 函数名称：WriteCont()
+* 功    能：连续写寄存器或者特殊地址的多个寄存器命令
+* 入口参数：*pbuf            将要写入的数据           
+*           lenght           写入数据的长度 
+* 出口参数：无
+* 说    明：连续地址写命令。
 ******************************************************************************************************************/
 void WriteCont(unsigned char *pbuf, unsigned char lenght)
 {
@@ -80,28 +80,28 @@ void WriteCont(unsigned char *pbuf, unsigned char lenght)
     unsigned char j;
      
     /*====================================================================================================*/     
-    /* ??(SPI)???? */
+    /* 串行(SPI)模式通信 */
     /*====================================================================================================*/
 		/*-----------------------------------------------------------------------------*/
-		/*  SPI ??? */
+		 /* 硬件SPI模式 */
 		/*-----------------------------------------------------------------------------*/
-		L_SlaveSelect();                            //SS?????,SPI??
-		CLKOFF();                                   //CLK????(?)
+		L_SlaveSelect();                             //SS管脚输出低，SPI启动
+		CLKOFF();                                   //CLK时钟关闭（低）
 
-		*pbuf = (0x20 | *pbuf);                     //??B5 ??????? ????? ???001XXXXX
-		*pbuf = (0x3f &*pbuf);                      //??6?B0-B5 ???????
+		*pbuf = (0x20 | *pbuf);                     //取位B5 寄存器地址数据 连续标志位 格式为001XXXXX
+		*pbuf = (0x3f &*pbuf);                      //取低6位B0-B5 寄存器地址数据
 		while(lenght > 0)
 		{
 				for(j=0;j<8;j++)
 				{
-						if (*pbuf & mask)                   //?????
+						if (*pbuf & mask)                    //设置数据位
 								SIMOON();
 						else
 								SIMOOFF();
 
-						CLKON();                            //??CLK????,????
+						CLKON();                             //关联CLK时钟信息，发送数据
 						CLKOFF();
-						mask >>= 1;                         //?????
+						mask >>= 1;                        //标志位右移
 				}/*for*/
 
 				mask = 0x80;                            
@@ -109,7 +109,7 @@ void WriteCont(unsigned char *pbuf, unsigned char lenght)
 				lenght--;
 		}/*while*/
 
-		H_SlaveSelect();                            //SS?????,SPI??
+		H_SlaveSelect();                            //SS管脚输出高，SPI停止
 		/*-----------------------------------------------------------------------------*/
 }   /* WriteCont */
 
@@ -566,8 +566,8 @@ void Port_0(void) interrupt 0
 				
     }while((IRQPORT & IRQPin) == IRQPin);           //条件执行
 FINISH:
-   PCON &= ~0X02;
-  // return;
+   PCON &= ~0X03;                                   //退出idle和stop的状态
+
 }
 
 

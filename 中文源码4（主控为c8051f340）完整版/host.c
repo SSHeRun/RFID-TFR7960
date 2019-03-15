@@ -158,29 +158,35 @@ void send_byte(unsigned char abyte)
     temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
     sendchar(temp2);                                //发送之
 }
+/******************************************************************************************************************
+* 函数名称：Get_nibble()
+* 功    能：在发送字节函数Put_byte结束后，获取一个十六进制字节
+* 入口参数：无
+* 出口参数：rxdata          返回接收到的字节
+* 说    明：该函数调用两次Nibble2Ascii，将一个字节拆分成高低四位，先转换再次序发送。
+*******************************************************************************************************************/
 unsigned char Get_nibble(void)
 {
-    unsigned char reading;                          //????
+    unsigned char reading;                          //读标志位
     //unsigned char rxdata;
-		send_cstring("Get_nibble");
-    reading = 1;                                    //????1 ????????
-    while(reading)                                  //??????
+    reading = 1;                                    //标志位置1 表示读取尚未完成
+    while(reading)                                   //循环读取字符
     {                   		
         //LPM0; 
-				PCON |= 0x01;				//???????,????
-        if(rxdata >= 'a')                           //???????
+				PCON |= 0x01;				        //进入低功耗模式，等待唤醒
+        if(rxdata >= 'a')                           //转换成大写字母
         {
             rxdata -= 32;
         }
 
-        /* ???????,???? */
+         /* 如果为十六进制，则回显之 */
         /*====================================================================================================*/
         if(((rxdata >= '0') && (rxdata <= '9')) || ((rxdata >= 'A') && (rxdata <= 'F')))
         {
             reading = 0;
-            sendchar(rxdata);                       //??????
+            sendchar(rxdata);                       //发送回显字符
         
-            if(rxdata > '9')                        //??ASCII?????A-F,??9
+            if(rxdata > '9')                        //如果ASCII码值范围是A-F，则加9
             {       
                 rxdata = (rxdata & 0x0F) + 9;
             }
@@ -188,33 +194,43 @@ unsigned char Get_nibble(void)
         /*====================================================================================================*/
     }
     
-    return(rxdata);                                 //??????                             
+    return(rxdata);                                 //返回接收字符                              
 }
-
+/******************************************************************************************************************
+* 函数名称：RXhandler()
+* 功    能：串口接收中断服务程序
+* 入口参数：无
+* 出口参数：无
+* 说    明：串口USCI_A0接收向量中断
+*******************************************************************************************************************/
 void RXhandler (void) interrupt 4
 {
-    if(RI0==1)                            //?????????
+    if(RI0==1)                            //如果串口接收到数据
     {   
-        rxdata = SBUF0;                         //??????UCA0RXBUF?????rxdata
-        RXdone = 1;                                 //???????
-        if(ENABLE == 0)                             //TRF7960??????
+        rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
+        RXdone = 1;                                 //置起接收标志位
+        if(ENABLE == 0)                            //TRF7960在禁止状态下
         {
-            TRFEnable();                            //??TRF790
-            //BaudSet(0x00);                          //?????
-            OSCsel();                           //????????? 
+            TRFEnable();                             //使能TRF790
+            //BaudSet(0x00);                          //设置波特率
+            OSCsel();                           //设置外部晶体振荡器 
                
-            InitialSettings();                      //???TRF7960
-            send_cstring("Reader enabled.");        //????????
-            ENABLE = 1;                             //??TRF7960???
+            InitialSettings();                     //初始化TRF7960
+            send_cstring("Reader enabled.");        //向上位机发送信息
+            ENABLE = 1;                             //设置TRF7960标志位
         }
-       PCON &= ~0X02;
+       PCON &= ~0X03;                                   //退出idle和stop的状态
 
-        if(Firstdata)                               //????1??????
+        if(Firstdata)                              //如果是第1次接收到数据
         {
             
-            IRQOFF();                               //??IRQ??
-            StopCounter();                          //?????
+            IRQOFF();                               //关闭IRQ中断
+            StopCounter();                            //停止计数器
          
+            // /* 利用SP操作，在中断返回后，可调用HostCommands函数 */
+            // /*-----------------------------------------------------------------------------*/
+            // asm("mov.w #HostCommands,10(SP)");      //调用HostCommands函数
+            // /*-----------------------------------------------------------------------------*/
         }
     }
 }
