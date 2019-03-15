@@ -30,14 +30,14 @@
 /* EN           -       P4.3 */
 /*-----------------------------------------------------------------------------*/
 #define EnableSet()         P4MDOUT |= 0X08               //设置方向为输出
-#define TRFDisable()	    P4 &= ~0X08             //输出低电平
 #define TRFEnable()         P4 |= 0X08              //输出高电平
+#define TRFDisable()	    P4 &= ~0X08             //输出低电平
  /*-----------------------------------------------------------------------------*/
 /* TRF7960时钟CLK管脚连接 - C8051F340管脚P0.0 */
 /* CLK          -       P0.0*/
 /*-----------------------------------------------------------------------------*/
-//#define CLKGPIOset()        P0SKIP |=0x01              //设置为GPIO功能
-//#define CLKFUNset()         P0SKIP   &=~0x01            //设置为主功能函数
+#define CLKGPIOset()        P0SKIP &=~0x01                //设置为GPIO功能
+#define CLKFUNset()         P0SKIP |=0x01               //设置为主功能函数
 #define CLKPOUTset()        P0MDOUT |= 0X01               //设置方向为输出
 #define CLKON()             P0 |= 0X01             //输出高电平
 #define CLKOFF()            P0 &= ~0X01            //输出低电平
@@ -85,7 +85,7 @@
 /* OOK          -       P2.2 */
 /*-----------------------------------------------------------------------------*/
 #define OOKPin              0X04                        
-#define OOKdirIN()          P4MDIN |= OOKPin            //设置方向为输入     
+#define OOKdirIN()          P4MDIN &= ~OOKPin            //设置方向为输入     
 #define OOKdirOUT()         P4MDOUT |= OOKPin            //设置方向为输出
 #define OOKoff()            P4 &= ~OOKPin            //OOK关闭
 #define OOKon()             P4 |= OOKPin             //OOK开启

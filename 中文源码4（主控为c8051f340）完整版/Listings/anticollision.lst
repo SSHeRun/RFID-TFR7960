@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 1   
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE ANTICOLLISION
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE ANTICOLLISION
 OBJECT MODULE PLACED IN .\Objects\anticollision.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE anticollision.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(
                     -.\Listings\anticollision.lst) TABS(2) OBJECT(.\Objects\anticollision.obj)
@@ -62,7 +62,7 @@ line level    source
   47          * 入口参数：无
   48          * 出口参数：无     
   49          * 说    明：该函数使槽计数功能停止。
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 2   
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 2   
 
   50          **********************************************************************************************************
              -*********/
@@ -126,7 +126,7 @@ line level    source
  104   2              EnableSlotCounter();
  105   2          }
  106   1          else                                            //如果位5不为0x00，表示选择1个槽模式
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 3   
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 3   
 
  107   1              NoSlots = 2;
  108   1      
@@ -190,7 +190,7 @@ line level    source
  161   2              
  162   2              while(i_reg == 0x01)                        //等待RX接收结束
  163   2              {           
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 4   
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 4   
 
  164   3                  k++;
  165   3      
@@ -254,7 +254,7 @@ line level    source
  219   1          /* 如果是16个槽模式，及槽指针不为0x00, 则递归调用本函数，再次寻找卡片 */
  220   1          /*====================================================================================================
              -*/
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 5   
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 5   
 
  221   1          while((*PslotNo != 0x00) && (NoSlots == 17)) 
  222   1          {   
@@ -277,28 +277,29 @@ line level    source
  237   1      }   /* InventoryRequest */
  238          /*********************************************************************************************************
              -*********
- 239          * ????:RequestCommand()
- 240          * ?    ?:????????????????????????
- 241          * ????:*pbuf           ???
- 242          *           lenght          ????
- 243          *           brokenBits      ?????????
- 244          *           noCRC           ???CRC??
- 245          * ????:1     
- 246          * ?    ?:??????????,???1,??????????,???0?????,????
+ 239          * 函数名称：RequestCommand()
+ 240          * 功    能：卡片协议请求命令及处理和计时阅读器到卡片的应答。
+ 241          * 入口参数：*pbuf           命令值
+ 242          *           lenght          命令长度
+ 243          *           brokenBits      不完整字节的位数量
+ 244          *           noCRC           是否有CRC校验
+ 245          * 出口参数：1     
+ 246          * 说    明：该函数为协议请求命令，若返回1，则说明该函数成功执行，若返回0�
+             -�者不返回，则异常。
  247          **********************************************************************************************************
              -*********/
  248          unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned char brokenBits, char noC
              -RC)
  249          {
- 250   1          unsigned char index, command;                //????
+ 250   1          unsigned char index, command;                 //定义变量
  251   1          
  252   1          RXTXstate = lenght;                             
  253   1            
  254   1          *pbuf = 0x8f;
  255   1          if(noCRC) 
- 256   1              *(pbuf + 1) = 0x90;                         //????CRC??
+ 256   1              *(pbuf + 1) = 0x90;                         //传输不带CRC校验
  257   1          else
- 258   1              *(pbuf + 1) = 0x91;                         //???CRC??
+ 258   1              *(pbuf + 1) = 0x91;                          //传输带CRC校验
  259   1          
  260   1          *(pbuf + 2) = 0x3d;
  261   1          *(pbuf + 3) = RXTXstate >> 8;
@@ -313,141 +314,143 @@ line level    source
  270   2              RXTXstate = 1;
  271   2          }
  272   1      
- 273   1          RAWwrite(pbuf, lenght + 5);                     //????FIFO??????
+ 273   1          RAWwrite(pbuf, lenght + 5);                    //以直接写FIFO模式发送命令
  274   1          
- 275   1          //sendchar('z');
- 276   1          IRQCLR();                                       //??????
- 277   1          IRQON();
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 6   
+ 275   1          IRQCLR();                                    //清中断标志位
+ 276   1          IRQON();
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 6   
 
- 278   1      
- 279   1          RXTXstate = RXTXstate - 12;
- 280   1          index = 17;
+ 277   1      
+ 278   1          RXTXstate = RXTXstate - 12;
+ 279   1          index = 17;
+ 280   1          
  281   1          
- 282   1          
- 283   1          i_reg = 0x01;
- 284   1           
- 285   1          
- 286   1          while(RXTXstate > 0)
- 287   1          {
- 288   2            
- 289   2              //LPM0;                                       //???????,?????
- 290   2              PCON |=0X01;
- 291   2              if(RXTXstate > 9)                           //?RXTXstate?????????????????9
- 292   2              {                       
- 293   3                  lenght = 10;                            //???10,????FIFO??9????1???????
- 294   3              }
- 295   2              else if(RXTXstate < 1)                      //??????1,?????????????FIFO?,??????
- 296   2              {
- 297   3                  break;
- 298   3              }
- 299   2              else                                        //???????????
- 300   2              {
- 301   3                  lenght = RXTXstate + 1;         
- 302   3              }   /* if */
- 303   2      
- 304   2              buf[index - 1] = FIFO;                      //?FIFO??????9??????????,?????
- 305   2              WriteCont(&buf[index - 1], lenght);
- 306   2              RXTXstate = RXTXstate - 9;                  //?9????FIFO?
- 307   2              index = index + 9;
- 308   2          }   /* while */
+ 282   1          i_reg = 0x01;
+ 283   1           
+ 284   1          
+ 285   1          while(RXTXstate > 0)
+ 286   1          {
+ 287   2            
+ 288   2              //LPM0;                                       //进入低功耗模式，并退出中断
+ 289   2              PCON |=0X01;
+ 290   2              if(RXTXstate > 9)                            //在RXTXstate全局变量中未发送的字节数量
+             -如果大于9
+ 291   2              {                       
+ 292   3                  lenght = 10;                            //长度为10，其中包括FIFO中的9个字节及1�
+             -�字节的地址值
+ 293   3              }
+ 294   2              else if(RXTXstate < 1)                     //如果该值小于1，则说明所有的字节已经�
+             -��送到FIFO中，并从中断返回
+ 295   2              {
+ 296   3                  break;
+ 297   3              }
+ 298   2              else                                        //所有的值已经全部被发送
+ 299   2              {
+ 300   3                  lenght = RXTXstate + 1;         
+ 301   3              }   /* if */
+ 302   2      
+ 303   2              buf[index - 1] = FIFO;                      //向FIFO缓冲器中写入9个或者更少字节的�
+             -�据，将用于发送
+ 304   2              WriteCont(&buf[index - 1], lenght);
+ 305   2              RXTXstate = RXTXstate - 9;                  //写9个字节到FIFO中
+ 306   2              index = index + 9;
+ 307   2          }   /* while */
+ 308   1          
  309   1          
  310   1          
- 311   1          
- 312   1          RXTXstate = 1;                                  //?????,???????buf[1]????
- 313   1          
- 314   1          while(i_reg == 0x01)                            //??????
- 315   1          {       
- 316   2            
- 317   2              Timer0_Delay(60);                             //???? 60ms
- 318   2              StartCounter();                               //?????????
- 319   2              PCON |= 0x01;
- 320   2          }
- 321   1          
- 322   1          i_reg = 0x01;
- 323   1          Timer0_Delay(60);                             
- 324   1          StartCounter();                                 
- 325   1      //    send_byte(buf[5]);
- 326   1      //    send_byte(buf[6]);
- 327   1          
- 328   1          /* ?????????,???????????? */
- 329   1          /*====================================================================================================
+ 311   1          RXTXstate = 1;                                 //设置标志位，其接收位存储于buf[1]起始�
+             -�置
+ 312   1          
+ 313   1          while(i_reg == 0x01)                            //等待传送结束
+ 314   1          {       
+ 315   2                                                          //定时器设置
+ 316   2              Timer0_Delay(60);                            //计时时间 60ms
+ 317   2              StartCounter();                              //开始以递增模式计时
+ 318   2              PCON |= 0x01;
+ 319   2          }
+ 320   1          
+ 321   1          i_reg = 0x01;
+ 322   1          Timer0_Delay(60);                             
+ 323   1          StartCounter();                                 
+ 324   1      
+ 325   1          
+ 326   1           /* 如果中断标志位错误，则先复位后发送下个槽命令 */
+ 327   1          /*====================================================================================================
              -*/
- 330   1          if(((buf[5] & 0x40) == 0x40) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] == 
+ 328   1          if(((buf[5] & 0x40) == 0x40) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] == 
              -0x29))||(buf[5] == 0x00 && ((buf[6] & 0xF0) == 0x20 || (buf[6] & 0xF0) == 0x30 || (buf[6] & 0xF0) == 0x40)))
- 331   1          {
- 332   2              
- 333   2              delay_ms(20);        
- 334   2              command = Reset;
- 335   2              DirectCommand(&command);
- 336   2            
- 337   2              command = TransmitNextSlot;
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 7   
+ 329   1          {
+ 330   2              
+ 331   2              delay_ms(20);        
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 7   
 
- 338   2              DirectCommand(&command);
- 339   2          }
- 340   1      
- 341   1          
- 342   1              while(i_reg == 0x01)                        //等待RX接收结束
- 343   1              {           
- 344   2                  
- 345   2              }
- 346   1              send_byte(i_reg);
- 347   1              
- 348   1          
- 349   1         if(i_reg == 0xFF)                       //?????
- 350   1              {
- 351   2                  if((buf[1]) == 0x00)                //???? 
- 352   2                  {
- 353   3                      send_cstring("ojbk");
- 354   3                      send_crlf();
- 355   3                  }
- 356   2                  else                                //????
- 357   2                  {
- 358   3                      send_cstring("shibai");
- 359   3                      send_crlf();
- 360   3                  }
- 361   2              }
- 362   1            else if(i_reg == 0x02)
- 363   1          {   /* collision occured */
- 364   2            sendchar('[');
- 365   2            sendchar('z');
- 366   2            sendchar(']');
- 367   2            return(0);
- 368   2          }
- 369   1          else if(i_reg == 0x00)
- 370   1          {   /* timer interrupt */
- 371   2            sendchar('[');
- 372   2            sendchar('i');
- 373   2            sendchar(']');
- 374   2            return(1);
- 375   2          }
- 376   1          else
- 377   1            ;
- 378   1          
- 379   1      //    for(j = 1; j < RXTXstate; j++)
- 380   1      //    {   
- 381   1      //        send_byte(buf[j]);
- 382   1      //    }
- 383   1      //    send_crlf();
- 384   1          
- 385   1      //     for(j = 11; j < RXTXstate - 1; j++)
- 386   1      //      {   //????????????
- 387   1      //        send_byte(buf[j]);
- 388   1      //      }                                 
- 389   1      
- 390   1        
- 391   1          IRQOFF();                                       //????
- 392   1          return(1);                                      //????????,?? 1
- 393   1      }   /* RequestCommand */
- 394          
+ 332   2              command = Reset;
+ 333   2              DirectCommand(&command);
+ 334   2            
+ 335   2              command = TransmitNextSlot;
+ 336   2              DirectCommand(&command);
+ 337   2          }
+ 338   1      
+ 339   1          
+ 340   1              while(i_reg == 0x01)                        //等待RX接收结束
+ 341   1              {           
+ 342   2                  
+ 343   2              }
+ 344   1              
+ 345   1          
+ 346   1         if(i_reg == 0xFF)                      //接收到应答
+ 347   1              {
+ 348   2                  if((buf[1]) == 0x00)                //操作成功 
+ 349   2                  {
+ 350   3                      send_cstring("ojbk");
+ 351   3                      send_crlf();
+ 352   3                  }
+ 353   2                  else                              //操作失败
+ 354   2                  {
+ 355   3                      send_cstring("shibai");
+ 356   3                      send_crlf();
+ 357   3                  }
+ 358   2              }
+ 359   1            else if(i_reg == 0x02)
+ 360   1          {    //冲撞发生
+ 361   2            sendchar('[');
+ 362   2            sendchar('z');
+ 363   2            sendchar(']');
+ 364   2            return(0);
+ 365   2          }
+ 366   1          else if(i_reg == 0x00)
+ 367   1          {    //定时时间到
+ 368   2            sendchar('[');
+ 369   2            sendchar('i');
+ 370   2            sendchar(']');
+ 371   2            return(1);
+ 372   2          }
+ 373   1          else
+ 374   1            ;
+ 375   1          
+ 376   1      //    for(j = 1; j < RXTXstate; j++)
+ 377   1      //    {   
+ 378   1      //        send_byte(buf[j]);
+ 379   1      //    }
+ 380   1      //    send_crlf();
+ 381   1          
+ 382   1      //     for(j = 11; j < RXTXstate - 1; j++)
+ 383   1      //      {   //????????????
+ 384   1      //        send_byte(buf[j]);
+ 385   1      //      }                                 
+ 386   1      
+ 387   1        
+ 388   1          IRQOFF();                                       //关闭中断
+ 389   1          return(1);                                      //函数全部执行完毕，返回 1
+ 390   1      }   /* RequestCommand */
+ 391          
 
+
+C51 COMPILER V9.57.0.0   ANTICOLLISION                                                     03/15/2019 18:02:00 PAGE 8   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1339    ----
+   CODE SIZE        =   1331    ----
    CONSTANT SIZE    =     20    ----
-C51 COMPILER V9.56.0.0   ANTICOLLISION                                                     12/25/2018 00:28:37 PAGE 8   
-
    XDATA SIZE       =      2      49
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

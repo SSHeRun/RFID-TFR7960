@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   AUTOMATIC                                                         12/25/2018 00:25:13 PAGE 1   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/15/2019 18:11:32 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE AUTOMATIC
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE AUTOMATIC
 OBJECT MODULE PLACED IN .\Objects\automatic.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE automatic.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
                     -stings\automatic.lst) TABS(2) OBJECT(.\Objects\automatic.obj)
@@ -19,14 +19,19 @@ line level    source
              -**********/
    8          #include <automatic.h>
    9          
-  10          unsigned char Set_pro[9]={0x0C,0x00,0x03,0x04,0x10,0x00,0x21,0x01,0x00};                    //??????
-  11          unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21,0x08,0xFF,0xFF};  //????0x01 ??12345678
-  12          unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                        //????0x01
-  13          //unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //?AFI??01
-  14          //unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                     //?DSFID??EE
-  15          //unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //????????
-  16          //unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                    //?????????0
-             -x01,???02(???3??)
+  10          unsigned char Set_pro[9]={0x0C,0x00,0x03,0x04,0x10,0x00,0x21,0x01,0x00};                    //ÉèÖÃ²ÎÊýÊý¾Ý
+  11          unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21,0x08,0xFF,0xFF};          //Ð´¿éµØÖ·0x01 Ê
+             -ý¾Ý12345678
+  12          unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                         //Ð´¿éµØÖ·0x0
+             -1
+  13          //unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //Ð´AFIÊý¾Ý0
+             -1
+  14          //unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                      //Ð´DSFIDÊý
+             -¾ÝEE
+  15          //unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //»ñÈ¡¿¨Æ¬Ïµ
+             -Í³ÐÅÏ¢
+  16          //unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                   //»ñÈ¡¿é°²È«×
+             -´Ì¬µØÖ·0x01,¿éÊýÁ¿02£¨Êµ¼ÊÎª3¸ö¿é£©
   17          
   18          /*********************************************************************************************************
              -*********
@@ -43,96 +48,121 @@ line level    source
   28   1          unsigned char i, count;
   29   1      //    while(1)
   30   1      //    {
-  31   1      //            command[0] = ChipStateControl;          // ??RF??,??5V????
+  31   1      //            command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
   32   1      //            command[1] = 0x21;
-  33   1      //            command[2] = ISOControl;                // ????ISO15693?????:????26.48kbps ???? 1/4(????)
+  33   1      //            command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñISO15693²Ù×÷Ä£Ê½Îª:¸ß±ÈÌØÂÊ26.48kbps µ¥·ù
+             -ÔØ²¨ 1/4(Ä¬ÈÏÄ£Ê½)
   34   1      //            command[3] = 0x02;
-  35   1      //            WriteSingle(command, 4);                // ?4??????TRF7960????
+  35   1      //            WriteSingle(command, 4);                 // Ð´4¸ö×Ö½ÚÃüÁîµ½TRF7960¼Ä´æÆ÷ÖÐ
   36   1      
   37   1      //            delay_ms(5);
-  38   1      //            flags = 0x06;                           // 16(slot)???
-  39   1      //            //flags = 0x26;
+  38   1      //            flags = 0x06;                            // 16(slot)²ÛÄ£Ê½
+  39   1      //            //flags = 0x26;                          // 1(slot)²ÛÄ£Ê½
   40   1      
   41   1      //            command[0] = 0x04;
   42   1      //            
   43   1      //            count = buf[0] - 9;
-  44   1      //            InventoryRequest(command, 0);           // ????????(?????)      
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/15/2019 18:11:32 PAGE 2   
+
+  44   1      //            InventoryRequest(command, 0);          // ·¢ËÍ×ÜÁ¿ÇëÇóÃüÁî(¼´Ñ°¿¨ÃüÁî)      
   45   1      
-  46   1      //            command[0] = ChipStateControl;          // ??RF????
+  46   1      //            command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ·
   47   1      //            command[1] = 0x01;
   48   1      //            WriteSingle(command, 2);
   49   1      //            delay_ms(1);
-C51 COMPILER V9.56.0.0   AUTOMATIC                                                         12/25/2018 00:25:13 PAGE 2   
-
   50   1      
-  51   1      //            command[0] = IRQStatus;                 // ??????
+  51   1      //            command[0] = IRQStatus;                // ¸ø¼Ä´æÆ÷¸³Öµ
   52   1      //            command[1] = IRQMask;               
   53   1      
   54   1      //                                      
-  55   1      //        ReadCont(command, 2);                //??IRQ????????????
+  55   1      //        ReadCont(command, 2);                 //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
   56   1      //    
   57   1      //        delay_ms(10);
   58   1      //    }   /* while */
   59   1        
-  60   1          while(1)
+  60   1          while(1)                                         //ISO14443AÐ­Òé±ê×¼
   61   1          {
-  62   2                  command[0] = ChipStateControl;          // ??RF??,??5V????
+  62   2                  command[0] = ChipStateControl;           // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
   63   2                  command[1] = 0x21;
-  64   2                  command[2] = ISOControl;                // ????ISO14443A?????:???106kbps
+  64   2                  command[2] = ISOControl;                 // ÉèÖÃÑ¡ÔñISO14443A²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
   65   2                  command[3] = 0x08;
   66   2                  WriteSingle(command, 4);
   67   2                  delay_ms(5);
   68   2                  
-  69   2                  AnticollisionSequenceA(0x01);           //??ISO14443A???????
+  69   2                  AnticollisionSequenceA(0x01);           //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ
   70   2                  
-  71   2                  command[0] = ChipStateControl;          // ??????
+  71   2                  command[0] = ChipStateControl;          // ¸ø¼Ä´æÆ÷¸³Öµ
   72   2                  command[1] = 0x01;
-  73   2                  WriteSingle(command, 2);                // ??RF???? 
+  73   2                  WriteSingle(command, 2);                 // ¹Ø±ÕRF²¿·ÖµçÂ· 
   74   2                  delay_ms(1);
   75   2      
-  76   2                  command[0] = IRQStatus;                 // ?????? 
+  76   2                  command[0] = IRQStatus;                  // ¸ø¼Ä´æÆ÷¸³Öµ 
   77   2                  command[1] = IRQMask;   
   78   2              
   79   2      //            if(SPIMODE)
-  80   2                      ReadCont(command, 2);               //??IRQ????????????
+  80   2                      ReadCont(command, 2);             //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
   81   2      //            else
   82   2      //                ReadSingle(command, 1); 
   83   2          }
   84   1      
   85   1      
-  86   1      //      while(1)
+  86   1      //      while(1)                                        //ISO14443BÐ­Òé±ê×¼
   87   1      //      {
   88   1      //            command[0] = ChipStateControl;
-  89   1      //            command[1] = 0x21;                      // ??RF??,??5V????
+  89   1      //            command[1] = 0x21;                     // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
   90   1      //            WriteSingle(command, 2);
   91   1      //        
-  92   1      //            //command[0] = ISOControl;                // ????ISO14443B?????:???106kbps
+  92   1      //            command[0] = ISOControl;                // ÉèÖÃÑ¡ÔñISO14443B²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
   93   1      //            command[1] = 0x0C;
   94   1      //            WriteSingle(command, 2);
   95   1      
   96   1      //            delay_ms(5);
-  97   1      //            AnticollisionSequenceB(0xB0, 0x04);     //??ISO14443A???????(0x04??16?slots)
-  98   1      //            //AnticollisionSequenceB(0xB0, 0x00);   //0x00 ?????slot
+  97   1      //            AnticollisionSequenceB(0xB0, 0x04);     //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ(0x04±íÊ¾16²Ûslots)
+  98   1      //            //AnticollisionSequenceB(0xB0, 0x00);  //0x00 ±íÊ¾µ¥¸ö²Ûslot
   99   1      
  100   1      //            command[0] = ChipStateControl;  
  101   1      //            command[1] = 0x01;
- 102   1      //            WriteSingle(command, 2);                // ??RF???? 
+ 102   1      //            WriteSingle(command, 2);               // ¹Ø±ÕRF²¿·ÖµçÂ· 
  103   1      //            delay_ms(1);
  104   1      
  105   1      //            command[0] = IRQStatus;
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/15/2019 18:11:32 PAGE 3   
+
  106   1      //            command[1] = IRQMask;   
  107   1      //        
- 108   1      ////            if(SPIMODE)                             //??IRQ????????????
+ 108   1      ////            if(SPIMODE)                            //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
  109   1      //                ReadCont(command, 2);
  110   1      ////            else
  111   1      ////                ReadSingle(command, 1); 
-C51 COMPILER V9.56.0.0   AUTOMATIC                                                         12/25/2018 00:25:13 PAGE 3   
-
  112   1      //      }
- 113   1      }   /* FindTags */
+ 113   1            // while(1){
+ 114   1            //    command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
+ 115   1            //       command[1] = 0x21;
+ 116   1            //       command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñTag-it²Ù×÷Ä£Ê½
+ 117   1            //       command[3] = 0x13;
+ 118   1            //       WriteSingle(command, 4);
+ 119   1            //       delay_ms(5);
+ 120   1            //       flags = 0x00;
+ 121   1            //       command[0] = 0x00;
+ 122   1            //       TIInventoryRequest(command, 0);         //·¢ËÍÑ°¿¨ÃüÁî
+ 123   1      
+ 124   1            //       command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ· 
+ 125   1            //       command[1] = 0x01;
+ 126   1            //       WriteSingle(command, 2);
+ 127   1            //       delay_ms(1);
+ 128   1      
+ 129   1            //       command[0] = IRQStatus;                 // ¸ø¼Ä´æÆ÷¸³Öµ 
+ 130   1            //       command[1] = IRQMask;
+ 131   1              
+ 132   1            //       if(SPIMODE)
+ 133   1            //           ReadCont(command, 2);               //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
+ 134   1            //       else
+ 135   1            //           ReadSingle(command, 1); 
+ 136   1            // }
+ 137   1      }   /* FindTags */
 *** WARNING C280 IN LINE 28 OF automatic.c: 'i': unreferenced local variable
 *** WARNING C280 IN LINE 28 OF automatic.c: 'count': unreferenced local variable
- 114          
+ 138          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

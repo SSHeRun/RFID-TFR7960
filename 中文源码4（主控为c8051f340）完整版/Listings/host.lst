@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   HOST                                                              12/24/2018 23:57:38 PAGE 1   
+C51 COMPILER V9.57.0.0   HOST                                                              03/15/2019 17:46:50 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE HOST
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE HOST
 OBJECT MODULE PLACED IN .\Objects\host.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE host.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
                     -s\host.lst) TABS(2) OBJECT(.\Objects\host.obj)
@@ -62,7 +62,7 @@ line level    source
   48   1         {
   49   2            TH1 = -(SYSCLK/BAUDRATE/2/4);
   50   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
-C51 COMPILER V9.56.0.0   HOST                                                              12/24/2018 23:57:38 PAGE 2   
+C51 COMPILER V9.57.0.0   HOST                                                              03/15/2019 17:46:50 PAGE 2   
 
   51   2            CKCON |=  0x09;
   52   2         }
@@ -126,7 +126,7 @@ line level    source
  106   1      }
  107          
  108          /*********************************************************************************************************
-C51 COMPILER V9.56.0.0   HOST                                                              12/24/2018 23:57:38 PAGE 3   
+C51 COMPILER V9.57.0.0   HOST                                                              03/15/2019 17:46:50 PAGE 3   
 
              -*********
  109          * 函数名称：send_cstring()
@@ -186,78 +186,98 @@ line level    source
  158   1          temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
  159   1          sendchar(temp2);                                //发送之
  160   1      }
- 161          unsigned char Get_nibble(void)
- 162          {
- 163   1          unsigned char reading;                          //????
- 164   1          //unsigned char rxdata;
-C51 COMPILER V9.56.0.0   HOST                                                              12/24/2018 23:57:38 PAGE 4   
+ 161          /*********************************************************************************************************
+             -*********
+ 162          * 函数名称：Get_nibble()
+ 163          * 功    能：在发送字节函数Put_byte结束后，获取一个十六进制字节
+C51 COMPILER V9.57.0.0   HOST                                                              03/15/2019 17:46:50 PAGE 4   
 
- 165   1          send_cstring("Get_nibble");
- 166   1          reading = 1;                                    //????1 ????????
- 167   1          while(reading)                                  //??????
- 168   1          {                       
- 169   2              //LPM0; 
- 170   2              PCON |= 0x01;       //???????,????
- 171   2              if(rxdata >= 'a')                           //???????
- 172   2              {
- 173   3                  rxdata -= 32;
- 174   3              }
- 175   2      
- 176   2              /* ???????,???? */
- 177   2              /*================================================================================================
+ 164          * 入口参数：无
+ 165          * 出口参数：rxdata          返回接收到的字节
+ 166          * 说    明：该函数调用两次Nibble2Ascii，将一个字节拆分成高低四位，先转换再次序发送。
+ 167          **********************************************************************************************************
+             -*********/
+ 168          unsigned char Get_nibble(void)
+ 169          {
+ 170   1          unsigned char reading;                          //读标志位
+ 171   1          //unsigned char rxdata;
+ 172   1          reading = 1;                                    //标志位置1 表示读取尚未完成
+ 173   1          while(reading)                                   //循环读取字符
+ 174   1          {                       
+ 175   2              //LPM0; 
+ 176   2              PCON |= 0x01;               //进入低功耗模式，等待唤醒
+ 177   2              if(rxdata >= 'a')                           //转换成大写字母
+ 178   2              {
+ 179   3                  rxdata -= 32;
+ 180   3              }
+ 181   2      
+ 182   2               /* 如果为十六进制，则回显之 */
+ 183   2              /*================================================================================================
              -====*/
- 178   2              if(((rxdata >= '0') && (rxdata <= '9')) || ((rxdata >= 'A') && (rxdata <= 'F')))
- 179   2              {
- 180   3                  reading = 0;
- 181   3                  sendchar(rxdata);                       //??????
- 182   3              
- 183   3                  if(rxdata > '9')                        //??ASCII?????A-F,??9
- 184   3                  {       
- 185   4                      rxdata = (rxdata & 0x0F) + 9;
- 186   4                  }
- 187   3              }
- 188   2              /*================================================================================================
+ 184   2              if(((rxdata >= '0') && (rxdata <= '9')) || ((rxdata >= 'A') && (rxdata <= 'F')))
+ 185   2              {
+ 186   3                  reading = 0;
+ 187   3                  sendchar(rxdata);                       //发送回显字符
+ 188   3              
+ 189   3                  if(rxdata > '9')                        //如果ASCII码值范围是A-F，则加9
+ 190   3                  {       
+ 191   4                      rxdata = (rxdata & 0x0F) + 9;
+ 192   4                  }
+ 193   3              }
+ 194   2              /*================================================================================================
              -====*/
- 189   2          }
- 190   1          
- 191   1          return(rxdata);                                 //??????                             
- 192   1      }
- 193          
- 194          void RXhandler (void) interrupt 4
- 195          {
- 196   1          if(RI0==1)                            //?????????
- 197   1          {   
- 198   2              rxdata = SBUF0;                         //??????UCA0RXBUF?????rxdata
- 199   2              RXdone = 1;                                 //???????
- 200   2              if(ENABLE == 0)                             //TRF7960??????
- 201   2              {
- 202   3                  TRFEnable();                            //??TRF790
- 203   3                  //BaudSet(0x00);                          //?????
- 204   3                  OSCsel();                           //????????? 
- 205   3                     
- 206   3                  InitialSettings();                      //???TRF7960
- 207   3                  send_cstring("Reader enabled.");        //????????
- 208   3                  ENABLE = 1;                             //??TRF7960???
- 209   3              }
- 210   2             PCON &= ~0X02;
- 211   2      
- 212   2              if(Firstdata)                               //????1??????
+ 195   2          }
+ 196   1          
+ 197   1          return(rxdata);                                 //返回接收字符                              
+ 198   1      }
+ 199          /*********************************************************************************************************
+             -*********
+ 200          * 函数名称：RXhandler()
+ 201          * 功    能：串口接收中断服务程序
+ 202          * 入口参数：无
+ 203          * 出口参数：无
+ 204          * 说    明：串口USCI_A0接收向量中断
+ 205          **********************************************************************************************************
+             -*********/
+ 206          void RXhandler (void) interrupt 4
+ 207          {
+ 208   1          if(RI0==1)                            //如果串口接收到数据
+ 209   1          {   
+ 210   2              rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
+ 211   2              RXdone = 1;                                 //置起接收标志位
+ 212   2              if(ENABLE == 0)                            //TRF7960在禁止状态下
  213   2              {
- 214   3                  
- 215   3                  IRQOFF();                               //??IRQ??
- 216   3                  StopCounter();                          //?????
- 217   3               
- 218   3              }
- 219   2          }
- 220   1      }
+ 214   3                  TRFEnable();                             //使能TRF790
+ 215   3                  //BaudSet(0x00);                          //设置波特率
+ 216   3                  OSCsel();                           //设置外部晶体振荡器 
+ 217   3                     
+ 218   3                  InitialSettings();                     //初始化TRF7960
+ 219   3                  send_cstring("Reader enabled.");        //向上位机发送信息
+ 220   3                  ENABLE = 1;                             //设置TRF7960标志位
+C51 COMPILER V9.57.0.0   HOST                                                              03/15/2019 17:46:50 PAGE 5   
+
+ 221   3              }
+ 222   2             PCON &= ~0X03;                                   //退出idle和stop的状态
+ 223   2      
+ 224   2              if(Firstdata)                              //如果是第1次接收到数据
+ 225   2              {
+ 226   3                  
+ 227   3                  IRQOFF();                               //关闭IRQ中断
+ 228   3                  StopCounter();                            //停止计数器
+ 229   3               
+ 230   3                  // /* 利用SP操作，在中断返回后，可调用HostCommands函数 */
+ 231   3                  // /*-----------------------------------------------------------------------------*/
+ 232   3                  // asm("mov.w #HostCommands,10(SP)");      //调用HostCommands函数
+ 233   3                  // /*-----------------------------------------------------------------------------*/
+ 234   3              }
+ 235   2          }
+ 236   1      }
 *** WARNING C294 IN LINE 49 OF host.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.56.0.0   HOST                                                              12/24/2018 23:57:38 PAGE 5   
-
-   CODE SIZE        =    380    ----
-   CONSTANT SIZE    =     27    ----
+   CODE SIZE        =    371    ----
+   CONSTANT SIZE    =     16    ----
    XDATA SIZE       =      3       3
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              12/24/2018 23:57:46 PAGE 1   
+C51 COMPILER V9.57.0.0   MAIN                                                              03/15/2019 17:46:53 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
 OBJECT MODULE PLACED IN .\Objects\main.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
                     -s\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
@@ -62,7 +62,7 @@ line level    source
   52   1        
   53   1          SlaveSelectPortSet();       //c8051f340P0.3Slave Select功能设置
   54   1          H_SlaveSelect();            //Slave Select禁止(高)
-C51 COMPILER V9.56.0.0   MAIN                                                              12/24/2018 23:57:46 PAGE 2   
+C51 COMPILER V9.57.0.0   MAIN                                                              03/15/2019 17:46:53 PAGE 2   
 
   55   1          SIMOSet();          //设置SIMO为输出
   56   1          SOMISIGNALSET();

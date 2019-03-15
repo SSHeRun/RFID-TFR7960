@@ -272,7 +272,6 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
 
     RAWwrite(pbuf, lenght + 5);                    //以直接写FIFO模式发送命令
 		
-		//sendchar('z');
     IRQCLR();                                    //清中断标志位
     IRQON();
 

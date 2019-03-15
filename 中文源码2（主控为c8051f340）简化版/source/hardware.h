@@ -30,14 +30,15 @@
 /* EN           -       P4.3 */
 /*-----------------------------------------------------------------------------*/
 #define EnableSet()         P4MDOUT |= 0X08               //设置方向为输出
-#define TRFDisable()	    P4 &= ~0X08             //输出低电平
 #define TRFEnable()         P4 |= 0X08              //输出高电平
+#define TRFDisable()	    P4 &= ~0X08             //输出低电平
+
  /*-----------------------------------------------------------------------------*/
 /* TRF7960时钟CLK管脚连接 - C8051F340管脚P0.0 */
 /* CLK          -       P0.0*/
 /*-----------------------------------------------------------------------------*/
-//#define CLKGPIOset()        P0SKIP |=0x01              //设置为GPIO功能
-//#define CLKFUNset()         P0SKIP   &=~0x01            //设置为主功能函数
+#define CLKGPIOset()        P0SKIP &=~0x01              //设置为GPIO功能
+#define CLKFUNset()         P0SKIP |=0x01              //设置为主功能函数
 #define CLKPOUTset()        P0MDOUT |= 0X01               //设置方向为输出
 #define CLKON()             P0 |= 0X01             //输出高电平
 #define CLKOFF()            P0 &= ~0X01            //输出低电平
@@ -73,9 +74,9 @@
 #define IRQPin              0X80                        //第7脚
 #define IRQPORT             P0                        //端口0
 #define IRQPinset()         P0MDIN |= IRQPin            //设置方向为输入
-#define IRQON()             IE |= 0X01              //IRQ 中断开启
-#define IRQOFF()            IE &= ~0X01            //IRQ 中断关闭
-//#define IRQEDGEset()        TCON |= 0X01           //上升沿中断
+#define IRQON()             IE |= IRQPin              //IRQ 中断开启
+#define IRQOFF()            IE &= ~IRQPin            //IRQ 中断关闭
+#define IRQEDGEset()        TCON |= IRQPin           //上升沿中断
 #define IRQCLR()            TCON  &= ~0X02              //清中断标志位
 #define IRQREQreg()         TCON                       //中断寄存器     
 /*-----------------------------------------------------------------------------*/

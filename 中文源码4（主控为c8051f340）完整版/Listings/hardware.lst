@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   HARDWARE                                                          12/24/2018 23:57:33 PAGE 1   
+C51 COMPILER V9.57.0.0   HARDWARE                                                          03/15/2019 17:46:49 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE HARDWARE
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE HARDWARE
 OBJECT MODULE PLACED IN .\Objects\hardware.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE hardware.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Lis
                     -tings\hardware.lst) TABS(2) OBJECT(.\Objects\hardware.obj)
@@ -62,7 +62,7 @@ line level    source
   50   1        
   51   1      }
   52          
-C51 COMPILER V9.56.0.0   HARDWARE                                                          12/24/2018 23:57:33 PAGE 2   
+C51 COMPILER V9.57.0.0   HARDWARE                                                          03/15/2019 17:46:49 PAGE 2   
 
   53          
   54          /*********************************************************************************************************
@@ -126,7 +126,7 @@ line level    source
              -*/
  106   1          Register[0] = IRQStatus;                        //IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷µØÖ·
  107   1          Register[1] = IRQMask;                          //ÐéÄâ¶Á(Dummy read)    
-C51 COMPILER V9.56.0.0   HARDWARE                                                          12/24/2018 23:57:33 PAGE 3   
+C51 COMPILER V9.57.0.0   HARDWARE                                                          03/15/2019 17:46:49 PAGE 3   
 
  108   1          ReadCont(Register, 2);
  109   1          /*====================================================================================================
@@ -138,9 +138,11 @@ line level    source
  114   1          else                                            
  115   1              i_reg = 0x01;   
  116   1          
- 117   1          PCON &= ~0X02;                //½øÈëµÍ¹¦ºÄÄ£Ê½£¬µ±ÖÐ¶ÏÏìÓ¦Ê±±»»½ÐÑ£¬´Ó¶øÍË³ö¸ÃÄ£Ê½
- 118   1      }
- 119          
+ 117   1          // PCON &= ~0X02;                                  //½øÈëµÍ¹¦ºÄÄ£Ê½£¬µ±ÖÐ¶ÏÏìÓ¦Ê±±»»½ÐÑ£¬´Ó¶øÍË³ö¸ÃÄ£Ê
+             -½
+ 118   1          PCON &= ~0X03;                                   //ÍË³öidleºÍstopµÄ×´Ì¬
+ 119   1      }
+ 120          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

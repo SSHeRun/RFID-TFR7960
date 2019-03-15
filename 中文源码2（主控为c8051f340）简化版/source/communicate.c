@@ -255,6 +255,7 @@ void InitialSettings(void)
 
     command[0] = ModulatorControl;                  
     command[1] = 0x21;                              // 调制和系统时钟控制：0x21 - 6.78MHz OOK(100%)
+    //command[1] = 0x31;                            // 调制和系统时钟控制：0x31 - 13.56MHz OOK(100%)
     WriteSingle(command,2);
 
 }
@@ -301,6 +302,41 @@ void InterruptHandlerReader(unsigned char *Register)
 #if DBG
         sendchar('T');                              //TX发送结束
 #endif
+    }
+    else if((*Register & 0x02) == 0x02)             //BIT1 = 00000010 冲撞错误
+    {                           
+        i_reg = 0x02;                               //设置RX结束
+
+        *Register = StopDecoders;                   //在TX发送结束后复位FIFO
+        DirectCommand(Register);
+
+        CollPoss = CollisionPosition;
+        ReadSingle(&CollPoss, 1);
+
+        len = CollPoss - 0x20;                      //获取FIFO中的有效数据字节数量
+        
+        if((len & 0x0f) != 0x00) 
+            len = len + 0x10;                       //如果接收到不完整字节，则加上一个字节
+        len = len >> 4;
+
+        if(len != 0x00)
+        {
+            buf[RXTXstate] = FIFO;                  //将接收到的数据写到缓冲区的当前位置                               
+            ReadCont(&buf[RXTXstate], len);
+            RXTXstate = RXTXstate + len;
+        }   /* if */
+
+        *Register = Reset;                          //执行复位命令
+        DirectCommand(Register);
+
+        *Register = IRQStatus;                      //获取IRQ中断状态寄存器地址
+        *(Register + 1) = IRQMask;
+
+                                    
+            ReadCont(Register, 2);                   //读取寄存器
+ 
+
+        IRQCLR();                                   //清中断
     }
 
  else if(*Register == 0x40)                      //BIT6 = 01000000 接收开始

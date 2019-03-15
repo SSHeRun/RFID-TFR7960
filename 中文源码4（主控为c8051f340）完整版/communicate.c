@@ -555,8 +555,7 @@ void Port_0(void) interrupt 0
         IRQCLR();                                   //清端口2中断标志位
         Register[0] = IRQStatus;                    //获取IRQ中断状态寄存器地址
         Register[1] = IRQMask;                      //虚拟读 Dummy read                                 
-        ReadCont(Register, 2); //读取寄存器
-				send_byte(*Register);
+        ReadCont(Register, 2); 											//读取寄存器
         if(*Register == 0xA0)                       //A0 = 10100000 指示TX发送结束，并且在FIFO中剩下3字节数据
         {   
             goto FINISH;                            //跳转到FINISH处，进入低功耗模式

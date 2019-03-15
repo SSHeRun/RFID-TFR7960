@@ -89,7 +89,7 @@ void FindTags(void)
 //            command[1] = 0x21;                     // 开启RF使能，选择5V操作模式
 //            WriteSingle(command, 2);
 //				
-//            //command[0] = ISOControl;                // 设置选择ISO14443B操作模式为:比特率106kbps
+//            command[0] = ISOControl;                // 设置选择ISO14443B操作模式为:比特率106kbps
 //            command[1] = 0x0C;
 //            WriteSingle(command, 2);
 

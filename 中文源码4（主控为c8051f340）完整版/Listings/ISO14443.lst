@@ -1,7 +1,7 @@
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 1   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE ISO14443
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE ISO14443
 OBJECT MODULE PLACED IN .\Objects\ISO14443.obj
 COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ISO14443.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Lis
                     -tings\ISO14443.lst) TABS(2) OBJECT(.\Objects\ISO14443.obj)
@@ -62,7 +62,7 @@ line level    source
   45   1      
   46   1          RAWwrite(buf, 12);                              //使用直接写命令写入12字节请求命令数�
              -�
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 2   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 2   
 
   47   1      
   48   1          i_reg = 0x01;
@@ -126,7 +126,7 @@ line level    source
  105   2          }
  106   1          else
  107   1              ;
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 3   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 3   
 
  108   1            
  109   1      FINISH:
@@ -190,7 +190,7 @@ line level    source
  163   1          buf[8] = *(UID + 1);
  164   1          buf[9] = *(UID + 2);
  165   1          buf[10] = *(UID + 3);
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 4   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 4   
 
  166   1      
  167   1          RAWwrite(&buf[0], lenght);                      //直接写命令到FIFO缓冲区,长度为lenth
@@ -254,7 +254,7 @@ line level    source
  223   6                                  completeUID[i] = *(UID + i + 1);
  224   6                              else if(i == (NvBytes - 1)) //将不完整的位合并到整个UID中
  225   6                                  completeUID[i] = (buf[i + 2 - NvBytes] &~NvBits) | (*(UID + i + 1) & NvBits);
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 5   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 5   
 
  226   6                              else                        //将接收到的字节添加到UID中
  227   6                                  completeUID[i] = buf[i + 2 - NvBytes];
@@ -318,7 +318,7 @@ line level    source
  282   4                      {
  283   5                          completeUID[i + 4] = buf[i + 2];
  284   5                      }
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 6   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 6   
 
  285   4                      SelectCommand(select, &buf[1]);     //选择命令，将数据写入到FIFO中
  286   4                      more = 1;                           //串级标志位设定，需递归调用
@@ -382,7 +382,7 @@ line level    source
  342   1          else if(i_reg == 0x00)                          //定时器中断
  343   1          {                   
  344   2              sendchar('(');
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 7   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 7   
 
  345   2              sendchar(')');
  346   2          }
@@ -446,7 +446,7 @@ line level    source
  398   1          buf[1] = 0x21;
  399   1          WriteSingle(buf, 2);
  400   1      
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 8   
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 8   
 
  401   1          buf[0] = ISOControl;                            // 设置选择ISO14443A操作模式为:比特率106kb
              -ps
@@ -462,378 +462,376 @@ line level    source
  410   1              buf[5] = 0x52;                              //发送 WUPA 命令 */
  411   1          /*====================================================================================================
              -*/
- 412   1          //send_byte(buf[5]);
- 413   1          RequestCommand(&buf[0], 0x00, 0x0f, 1);         //发送请求命令
- 414   1          
- 415   1          IRQCLR();                                       //清中断标志位
- 416   1          IRQON();                                        //外部中断开启
- 417   1          
- 418   1          //i_reg = 0xff; 
- 419   1          
- 420   1          if(i_reg == 0xff || i_reg == 0x02)              //如果接收到数据或者冲撞发生
- 421   1          {
- 422   2              for(i = 40; i < 45; i++)                    //将 buf 清空
- 423   2                  buf[i] = 0x00;
- 424   2              AnticollisionLoopA(select, NVB, &buf[40]);  //调用仿冲撞循环 AnticollisionLoopA 函数
- 425   2              LEDON;
- 426   2          }
- 427   1          else                                            //否则：LED指示灯灭，蜂鸣器关
- 428   1          {
- 429   2              LEDOFF;
- 430   2          }
- 431   1      
- 432   1          buf[0] = ISOControl;
- 433   1          buf[1] = 0x08;                                  //重新配置TRF7960，为接收不带CRC校验
- 434   1          WriteSingle(buf, 2);
- 435   1          IRQOFF();                                       //中断关闭
- 436   1      }   /* AnticollisionSequenceA */
- 437          
- 438          /*********************************************************************************************************
+ 412   1          RequestCommand(&buf[0], 0x00, 0x0f, 1);         //发送请求命令
+ 413   1          
+ 414   1          IRQCLR();                                       //清中断标志位
+ 415   1          IRQON();                                        //外部中断开启
+ 416   1          
+ 417   1          //i_reg = 0xff; 
+ 418   1          
+ 419   1          if(i_reg == 0xff || i_reg == 0x02)              //如果接收到数据或者冲撞发生
+ 420   1          {
+ 421   2              for(i = 40; i < 45; i++)                    //将 buf 清空
+ 422   2                  buf[i] = 0x00;
+ 423   2              AnticollisionLoopA(select, NVB, &buf[40]);  //调用仿冲撞循环 AnticollisionLoopA 函数
+ 424   2              LEDON;
+ 425   2          }
+ 426   1          else                                            //否则：LED指示灯灭，蜂鸣器关
+ 427   1          {
+ 428   2              LEDOFF;
+ 429   2          }
+ 430   1      
+ 431   1          buf[0] = ISOControl;
+ 432   1          buf[1] = 0x08;                                  //重新配置TRF7960，为接收不带CRC校验
+ 433   1          WriteSingle(buf, 2);
+ 434   1          IRQOFF();                                       //中断关闭
+ 435   1      }   /* AnticollisionSequenceA */
+ 436          
+ 437          /*********************************************************************************************************
              -*********
- 439          * 函数名称：Request14443A()
- 440          * 功    能：ISO14443A请求命令函数。
- 441          * 入口参数：pbuf       请求命令
- 442          *           lenght     命令长度
- 443          *           BitRate    比特率
- 444          * 出口参数：1 成功执行 0错误发生    
- 445          * 说    明：请求命令函数，能执行ISO14443A卡片的所有请求操作
- 446          **********************************************************************************************************
+ 438          * 函数名称：Request14443A()
+ 439          * 功    能：ISO14443A请求命令函数。
+ 440          * 入口参数：pbuf       请求命令
+ 441          *           lenght     命令长度
+ 442          *           BitRate    比特率
+ 443          * 出口参数：1 成功执行 0错误发生    
+ 444          * 说    明：请求命令函数，能执行ISO14443A卡片的所有请求操作
+ 445          **********************************************************************************************************
              -*********/
- 447          unsigned char Request14443A(unsigned char *pbuf, unsigned char lenght, unsigned char BitRate)
- 448          {
- 449   1          unsigned char index, j, command, RXBitRate, TXBitRate, reg[2];
- 450   1      
- 451   1          TXBitRate = ((BitRate >> 4) & 0x0F) + 0x08;
- 452   1          RXBitRate = (BitRate & 0x0F) + 0x08;
- 453   1      
- 454   1          reg[0] = ISOControl;
- 455   1          reg[1] = TXBitRate;
- 456   1          WriteSingle(reg, 2);
- 457   1      
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 9   
+ 446          unsigned char Request14443A(unsigned char *pbuf, unsigned char lenght, unsigned char BitRate)
+ 447          {
+ 448   1          unsigned char index, j, command, RXBitRate, TXBitRate, reg[2];
+ 449   1      
+ 450   1          TXBitRate = ((BitRate >> 4) & 0x0F) + 0x08;
+ 451   1          RXBitRate = (BitRate & 0x0F) + 0x08;
+ 452   1      
+ 453   1          reg[0] = ISOControl;
+ 454   1          reg[1] = TXBitRate;
+ 455   1          WriteSingle(reg, 2);
+ 456   1      
+ 457   1          RXTXstate = lenght;     
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 9   
 
- 458   1          RXTXstate = lenght;     
- 459   1      
- 460   1          *pbuf = 0x8f;
- 461   1          *(pbuf + 1) = 0x91;                             //为FIFO的写入设置缓冲区
- 462   1          *(pbuf + 2) = 0x3d;
- 463   1          *(pbuf + 3) = RXTXstate >> 4;
- 464   1          *(pbuf + 4) = RXTXstate << 4;
- 465   1      
- 466   1          if(lenght > 12) lenght = 12;
- 467   1      
- 468   1          RAWwrite(pbuf, lenght + 5);                     //使用直接写模式发送请求命令
- 469   1      
- 470   1          IRQCLR();                                       //清除外部中断标志位
- 471   1          IRQON();                                        //开启中断
- 472   1      
- 473   1          RXTXstate = RXTXstate - 12;
- 474   1          index = 18;
- 475   1      
- 476   1          i_reg = 0x01;
- 477   1      
- 478   1          while(RXTXstate > 0)
- 479   1          {
- 480   2      //        LPM0;                                       //进入低功耗模式，在中断时退出
- 481   2              PCON |=0X01;
- 482   2              if(RXTXstate > 9)                           //如果未发送的字节数量大于9
- 483   2              {                          
- 484   3                  lenght = 10;                            //将其设置成10
- 485   3              }
- 486   2              else if(RXTXstate < 1)                      //如果所有的字节已经发送到FIFO中，则从
+ 458   1      
+ 459   1          *pbuf = 0x8f;
+ 460   1          *(pbuf + 1) = 0x91;                             //为FIFO的写入设置缓冲区
+ 461   1          *(pbuf + 2) = 0x3d;
+ 462   1          *(pbuf + 3) = RXTXstate >> 4;
+ 463   1          *(pbuf + 4) = RXTXstate << 4;
+ 464   1      
+ 465   1          if(lenght > 12) lenght = 12;
+ 466   1      
+ 467   1          RAWwrite(pbuf, lenght + 5);                     //使用直接写模式发送请求命令
+ 468   1      
+ 469   1          IRQCLR();                                       //清除外部中断标志位
+ 470   1          IRQON();                                        //开启中断
+ 471   1      
+ 472   1          RXTXstate = RXTXstate - 12;
+ 473   1          index = 18;
+ 474   1      
+ 475   1          i_reg = 0x01;
+ 476   1      
+ 477   1          while(RXTXstate > 0)
+ 478   1          {
+ 479   2      //        LPM0;                                       //进入低功耗模式，在中断时退出
+ 480   2              PCON |=0X01;
+ 481   2              if(RXTXstate > 9)                           //如果未发送的字节数量大于9
+ 482   2              {                          
+ 483   3                  lenght = 10;                            //将其设置成10
+ 484   3              }
+ 485   2              else if(RXTXstate < 1)                      //如果所有的字节已经发送到FIFO中，则从
              -中断返回
- 487   2              {
- 488   3                  break;                
- 489   3              }
- 490   2              else
- 491   2              {
- 492   3                  lenght = RXTXstate + 1;                 //所有字节已经被发送
- 493   3              }   /* if */
- 494   2      
- 495   2              buf[index - 1] = FIFO;                      //传送过程中，写入9个或者更少的字节到
+ 486   2              {
+ 487   3                  break;                
+ 488   3              }
+ 489   2              else
+ 490   2              {
+ 491   3                  lenght = RXTXstate + 1;                 //所有字节已经被发送
+ 492   3              }   /* if */
+ 493   2      
+ 494   2              buf[index - 1] = FIFO;                      //传送过程中，写入9个或者更少的字节到
              -FIFO中
- 496   2              WriteCont(&buf[index - 1], lenght);
- 497   2              RXTXstate = RXTXstate - 9;                  //写9字节到FIFO中
- 498   2              index = index + 9;
- 499   2          }   /* while */
- 500   1      
- 501   1          RXTXstate = 1;         
- 502   1          while(i_reg == 0x01)
- 503   1          {
- 504   2          }
- 505   1      
- 506   1          reg[0] = ISOControl;
- 507   1          reg[1] = RXBitRate;
- 508   1          WriteSingle(reg, 2);
- 509   1      
- 510   1          command = 0x16;
- 511   1          DirectCommand(&command);
- 512   1          command = 0x17;
- 513   1          DirectCommand(&command);
- 514   1      
- 515   1          i_reg = 0x01;
- 516   1          //StartCounter(); 
- 517   1          Timer0_Delay(60);                             
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 10  
+ 495   2              WriteCont(&buf[index - 1], lenght);
+ 496   2              RXTXstate = RXTXstate - 9;                  //写9字节到FIFO中
+ 497   2              index = index + 9;
+ 498   2          }   /* while */
+ 499   1      
+ 500   1          RXTXstate = 1;         
+ 501   1          while(i_reg == 0x01)
+ 502   1          {
+ 503   2          }
+ 504   1      
+ 505   1          reg[0] = ISOControl;
+ 506   1          reg[1] = RXBitRate;
+ 507   1          WriteSingle(reg, 2);
+ 508   1      
+ 509   1          command = 0x16;
+ 510   1          DirectCommand(&command);
+ 511   1          command = 0x17;
+ 512   1          DirectCommand(&command);
+ 513   1      
+ 514   1          i_reg = 0x01;
+ 515   1          //StartCounter(); 
+ 516   1          Timer0_Delay(60);                             
+ 517   1          StartCounter();  
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 10  
 
- 518   1          StartCounter();  
- 519   1            
- 520   1      //    CounterSet();
- 521   1      //    CountValue = 0xF000;                            //设置60ms等待时间
- 522   1      //    StartCounter;                                   //启动定时器
- 523   1      
- 524   1          while(i_reg == 0x01)                            //等待RX接收完成
- 525   1          {
- 526   2          }               
- 527   1      
- 528   1          if(i_reg == 0xFF)                               //接收到应答
- 529   1          {                       
- 530   2              sendchar('[');
- 531   2              for(j = 1; j < RXTXstate; j++)
- 532   2              {
- 533   3                  send_byte(buf[j]);
- 534   3              }   /* for */
- 535   2      
- 536   2              sendchar(']');
- 537   2              return(0);
- 538   2          }
- 539   1          else if(i_reg == 0x02)                          //冲撞发生
- 540   1          {       
- 541   2              sendchar('[');
- 542   2              sendchar('z');
- 543   2              sendchar(']');
- 544   2              return(0);
- 545   2          }
- 546   1          else if(i_reg == 0x00)                          //定时器中断
- 547   1          {               
- 548   2              sendchar('[');
- 549   2              sendchar(']');
- 550   2              return(1);
- 551   2          }
- 552   1          else
- 553   1              ;
- 554   1          IRQOFF();
- 555   1          return(1);
- 556   1      }   /* Request14443A */
- 557          
- 558          /*********************************************************************************************************
+ 518   1            
+ 519   1      //    CounterSet();
+ 520   1      //    CountValue = 0xF000;                            //设置60ms等待时间
+ 521   1      //    StartCounter;                                   //启动定时器
+ 522   1      
+ 523   1          while(i_reg == 0x01)                            //等待RX接收完成
+ 524   1          {
+ 525   2          }               
+ 526   1      
+ 527   1          if(i_reg == 0xFF)                               //接收到应答
+ 528   1          {                       
+ 529   2              sendchar('[');
+ 530   2              for(j = 1; j < RXTXstate; j++)
+ 531   2              {
+ 532   3                  send_byte(buf[j]);
+ 533   3              }   /* for */
+ 534   2      
+ 535   2              sendchar(']');
+ 536   2              return(0);
+ 537   2          }
+ 538   1          else if(i_reg == 0x02)                          //冲撞发生
+ 539   1          {       
+ 540   2              sendchar('[');
+ 541   2              sendchar('z');
+ 542   2              sendchar(']');
+ 543   2              return(0);
+ 544   2          }
+ 545   1          else if(i_reg == 0x00)                          //定时器中断
+ 546   1          {               
+ 547   2              sendchar('[');
+ 548   2              sendchar(']');
+ 549   2              return(1);
+ 550   2          }
+ 551   1          else
+ 552   1              ;
+ 553   1          IRQOFF();
+ 554   1          return(1);
+ 555   1      }   /* Request14443A */
+ 556          
+ 557          /*********************************************************************************************************
              -*********
- 559          * 函数名称：SlotMarkerCommand()
- 560          * 功    能：该函数发送ISO14443B协议槽标记命令，该命令同时包括了槽号。
- 561          * 入口参数：number       槽号
- 562          * 出口参数：无    
- 563          * 说    明：无
- 564          **********************************************************************************************************
+ 558          * 函数名称：SlotMarkerCommand()
+ 559          * 功    能：该函数发送ISO14443B协议槽标记命令，该命令同时包括了槽号。
+ 560          * 入口参数：number       槽号
+ 561          * 出口参数：无    
+ 562          * 说    明：无
+ 563          **********************************************************************************************************
              -*********/
- 565          void SlotMarkerCommand(unsigned char number)
- 566          {
- 567   1          buf[0] = 0x8f;
- 568   1          buf[1] = 0x91;
- 569   1          buf[2] = 0x3d;
- 570   1          buf[3] = 0x00;
- 571   1          buf[4] = 0x10;
- 572   1          RAWwrite(&buf[0], 5);                           //写配置命令值
- 573   1      
- 574   1          buf[5] = 0x3F;
- 575   1          buf[6] = (number << 4) | 0x05;
- 576   1          buf[7] = 0x00;
- 577   1          
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 11  
+ 564          void SlotMarkerCommand(unsigned char number)
+ 565          {
+ 566   1          buf[0] = 0x8f;
+ 567   1          buf[1] = 0x91;
+ 568   1          buf[2] = 0x3d;
+ 569   1          buf[3] = 0x00;
+ 570   1          buf[4] = 0x10;
+ 571   1          RAWwrite(&buf[0], 5);                           //写配置命令值
+ 572   1      
+ 573   1          buf[5] = 0x3F;
+ 574   1          buf[6] = (number << 4) | 0x05;
+ 575   1          buf[7] = 0x00;
+ 576   1          
+ 577   1          i_reg = 0x01;
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 11  
 
- 578   1          i_reg = 0x01;
- 579   1          RAWwrite(&buf[5], 3);                           //写配置命令值
- 580   1      
- 581   1          IRQCLR();                                       //清中断标志位
- 582   1          IRQON();                                        //开中断
- 583   1      
- 584   1          while(i_reg == 0x01)
- 585   1          {
- 586   2              //StartCounter();   
- 587   2                Timer0_Delay(40);                             
- 588   2                StartCounter();   
- 589   2      //        CounterSet();                               //定时器设置
- 590   2      //        CountValue = 0x9c40;                        //计时时间 40ms
- 591   2      //        StartCounter;                               //开始计时
- 592   2      //        LPM0; 
- 593   2              PCON |=0X01;
- 594   2          }
- 595   1      }   
- 596          
- 597          /*********************************************************************************************************
+ 578   1          RAWwrite(&buf[5], 3);                           //写配置命令值
+ 579   1      
+ 580   1          IRQCLR();                                       //清中断标志位
+ 581   1          IRQON();                                        //开中断
+ 582   1      
+ 583   1          while(i_reg == 0x01)
+ 584   1          {
+ 585   2              //StartCounter();   
+ 586   2                Timer0_Delay(40);                             
+ 587   2                StartCounter();   
+ 588   2      //        CounterSet();                               //定时器设置
+ 589   2      //        CountValue = 0x9c40;                        //计时时间 40ms
+ 590   2      //        StartCounter;                               //开始计时
+ 591   2      //        LPM0; 
+ 592   2              PCON |=0X01;
+ 593   2          }
+ 594   1      }   
+ 595          
+ 596          /*********************************************************************************************************
              -*********
- 598          * 函数名称：AnticollisionSequenceB()
- 599          * 功    能：ISO14443B仿冲撞序列。
- 600          * 入口参数：command       请求命令
- 601          *           slots           槽号
- 602          * 出口参数：无    
- 603          * 说    明：该函数根据 command 请求命令和槽号slots执行ISO14443B卡片不同操作。
- 604          **********************************************************************************************************
+ 597          * 函数名称：AnticollisionSequenceB()
+ 598          * 功    能：ISO14443B仿冲撞序列。
+ 599          * 入口参数：command       请求命令
+ 600          *           slots           槽号
+ 601          * 出口参数：无    
+ 602          * 说    明：该函数根据 command 请求命令和槽号slots执行ISO14443B卡片不同操作。
+ 603          **********************************************************************************************************
              -*********/
- 605          void AnticollisionSequenceB(unsigned char command, unsigned char slots)
- 606          {
- 607   1          unsigned char i, collision = 0x00, j, found = 0;
- 608   1          unsigned int k = 0;
- 609   1          
- 610   1      //    buf[0] = RXNoResponseWaitTime;
- 611   1      //    buf[1] = 0x14;
- 612   1      //    buf[2] = ModulatorControl;
- 613   1      //    buf[3] = 0x20;
- 614   1      //    WriteSingle(buf, 4);
- 615   1        
- 616   1          buf[0] = ModulatorControl;                      // 调制和系统时钟控制：0x20 - 6.78MHz ASK(10
+ 604          void AnticollisionSequenceB(unsigned char command, unsigned char slots)
+ 605          {
+ 606   1          unsigned char i, collision = 0x00, j, found = 0;
+ 607   1          unsigned int k = 0;
+ 608   1          
+ 609   1      //    buf[0] = RXNoResponseWaitTime;
+ 610   1      //    buf[1] = 0x14;
+ 611   1      //    buf[2] = ModulatorControl;
+ 612   1      //    buf[3] = 0x20;
+ 613   1      //    WriteSingle(buf, 4);
+ 614   1        
+ 615   1          buf[0] = ModulatorControl;                      // 调制和系统时钟控制：0x20 - 6.78MHz ASK(10
              -%)
- 617   1          //buf[1] = 0x20;
- 618   1          buf[1] = 0x31;
- 619   1          WriteSingle(buf, 2);
- 620   1      
- 621   1          RXErrorFlag = 0x00;
- 622   1      
- 623   1          buf[0] = 0x8f;
- 624   1          buf[1] = 0x91;
- 625   1          buf[2] = 0x3d;
- 626   1          buf[3] = 0x00;
- 627   1          buf[4] = 0x30;
- 628   1          buf[5] = 0x05;
- 629   1          buf[6] = 0x00;
- 630   1          //buf[6] = 0x20;                                //AFI 应用族标志值
- 631   1      
- 632   1          
- 633   1          if(slots == 0x04)                               //0x04表示16个槽
- 634   1          {
- 635   2              EnableSlotCounter();                        //使能槽计数器
- 636   2              buf[7] |= 0x08;
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 12  
+ 616   1          //buf[1] = 0x20;
+ 617   1          buf[1] = 0x31;
+ 618   1          WriteSingle(buf, 2);
+ 619   1      
+ 620   1          RXErrorFlag = 0x00;
+ 621   1      
+ 622   1          buf[0] = 0x8f;
+ 623   1          buf[1] = 0x91;
+ 624   1          buf[2] = 0x3d;
+ 625   1          buf[3] = 0x00;
+ 626   1          buf[4] = 0x30;
+ 627   1          buf[5] = 0x05;
+ 628   1          buf[6] = 0x00;
+ 629   1          //buf[6] = 0x20;                                //AFI 应用族标志值
+ 630   1      
+ 631   1          
+ 632   1          if(slots == 0x04)                               //0x04表示16个槽
+ 633   1          {
+ 634   2              EnableSlotCounter();                        //使能槽计数器
+ 635   2              buf[7] |= 0x08;
+ 636   2          }
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 12  
 
- 637   2          }
- 638   1          
- 639   1           buf[7] = slots;
- 640   1      
- 641   1          if(command == 0xB1)                             //如果为0xB1，那么是WUPB唤醒命令
- 642   1              buf[7] |= 0x08;                             //如果非0xB1，那么是REQB请求命令
- 643   1          
- 644   1          i_reg = 0x01;
- 645   1          RAWwrite(&buf[0], 8);                           //写入以上8个配置值到FIFO中
- 646   1      
- 647   1          IRQCLR();                                       //清中断标志位
- 648   1          IRQON();                                        //开中断
- 649   1      
- 650   1          j = 0;
- 651   1          while((i_reg == 0x01) && (j < 2))               //等待TX发送结束
- 652   1          {
- 653   2              j++;
- 654   2             // StartCounter();   
- 655   2              Timer0_Delay(20);                             
- 656   2              StartCounter();   
- 657   2      //        CounterSet();                               //定时器设置
- 658   2      //        CountValue = 0x4E20;                        //计时时间 20ms
- 659   2      //        StartCounter;                               //开始计时
- 660   2      //        LPM0;
- 661   2            PCON |=0X01;
- 662   2          }   
- 663   1      
- 664   1          i_reg = 0x01;                                   //恢复标志位
- 665   1          //StartCounter();   
- 666   1          Timer0_Delay(20);                             
- 667   1          StartCounter();   
- 668   1      //    CounterSet();                                   //定时器设置
- 669   1      //    CountValue = 0x4E20;                            //计时时间 20ms
- 670   1      //    //CountValue = 0x9c40;                          //计时时间 20ms 在晶体为 13.56 MHz的情况�
+ 637   1          
+ 638   1           buf[7] = slots;
+ 639   1      
+ 640   1          if(command == 0xB1)                             //如果为0xB1，那么是WUPB唤醒命令
+ 641   1              buf[7] |= 0x08;                             //如果非0xB1，那么是REQB请求命令
+ 642   1          
+ 643   1          i_reg = 0x01;
+ 644   1          RAWwrite(&buf[0], 8);                           //写入以上8个配置值到FIFO中
+ 645   1      
+ 646   1          IRQCLR();                                       //清中断标志位
+ 647   1          IRQON();                                        //开中断
+ 648   1      
+ 649   1          j = 0;
+ 650   1          while((i_reg == 0x01) && (j < 2))               //等待TX发送结束
+ 651   1          {
+ 652   2              j++;
+ 653   2             // StartCounter();   
+ 654   2              Timer0_Delay(20);                             
+ 655   2              StartCounter();   
+ 656   2      //        CounterSet();                               //定时器设置
+ 657   2      //        CountValue = 0x4E20;                        //计时时间 20ms
+ 658   2      //        StartCounter;                               //开始计时
+ 659   2      //        LPM0;
+ 660   2            PCON |=0X01;
+ 661   2          }   
+ 662   1      
+ 663   1          i_reg = 0x01;                                   //恢复标志位
+ 664   1          //StartCounter();   
+ 665   1          Timer0_Delay(20);                             
+ 666   1          StartCounter();   
+ 667   1      //    CounterSet();                                   //定时器设置
+ 668   1      //    CountValue = 0x4E20;                            //计时时间 20ms
+ 669   1      //    //CountValue = 0x9c40;                          //计时时间 20ms 在晶体为 13.56 MHz的情况�
              -��，该值为0x9c40*/
- 671   1      //    StartCounter;                                   //开始计时
- 672   1      
- 673   1          for(i = 1; i < 17; i++)                         //1-16个槽轮循
- 674   1          {
- 675   2              RXTXstate = 1;                              //应答数据将被存储在buf[1]以后地址中
- 676   2              PCON |=0X01;
- 677   2              while(i_reg == 0x01)                        //等待RX接收完毕
- 678   2              {                 
- 679   3                  k++;
- 680   3                  if(k == 0xFFF0)
- 681   3                  {
- 682   4                      i_reg = 0x00;
- 683   4                      RXErrorFlag = 0x00;
- 684   4                      break;
- 685   4                  }
- 686   3              }
- 687   2      
- 688   2              if(RXErrorFlag == 0x02) 
- 689   2                  i_reg = RXErrorFlag;
- 690   2      
- 691   2              if(i_reg == 0xFF)                           //如果接收到PUPI
- 692   2              {                                     
- 693   3                  sendchar('[');
- 694   3                  for(j = 1; j < RXTXstate; j++) send_byte(buf[j]);
- 695   3                  sendchar(']');
- 696   3         
- 697   3              }
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 13  
+ 670   1      //    StartCounter;                                   //开始计时
+ 671   1      
+ 672   1          for(i = 1; i < 17; i++)                         //1-16个槽轮循
+ 673   1          {
+ 674   2              RXTXstate = 1;                              //应答数据将被存储在buf[1]以后地址中
+ 675   2              while(i_reg == 0x01)                        //等待RX接收完毕
+ 676   2              {                 
+ 677   3                  k++;
+ 678   3                  if(k == 0xFFF0)
+ 679   3                  {
+ 680   4                      i_reg = 0x00;
+ 681   4                      RXErrorFlag = 0x00;
+ 682   4                      break;
+ 683   4                  }
+ 684   3              }
+ 685   2      
+ 686   2              if(RXErrorFlag == 0x02) 
+ 687   2                  i_reg = RXErrorFlag;
+ 688   2      
+ 689   2              if(i_reg == 0xFF)                           //如果接收到PUPI
+ 690   2              {                                     
+ 691   3                  sendchar('[');
+ 692   3                  for(j = 1; j < RXTXstate; j++) send_byte(buf[j]);
+ 693   3                  sendchar(']');
+ 694   3         
+ 695   3              }
+ 696   2              else if(i_reg == 0x02)                      //冲撞发生
+ 697   2              {                       
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 13  
 
- 698   2              else if(i_reg == 0x02)                      //冲撞发生
- 699   2              {                       
- 700   3                  sendchar('[');
- 701   3                  sendchar('z');
- 702   3                  sendchar(']');           
- 703   3                  collision = 0x01;
- 704   3              }
- 705   2              else if(i_reg == 0x00)                      //超时
- 706   2              {                   
- 707   3                  sendchar('[');
- 708   3                  sendchar('C');
- 709   3                  sendchar(']'); 
- 710   3              }
- 711   2              else
- 712   2                  ;
- 713   2      
- 714   2              /* 判断槽号及循环次数，若超过16次，则跳出for循环 */
+ 698   3                  sendchar('[');
+ 699   3                  sendchar('z');
+ 700   3                  sendchar(']');           
+ 701   3                  collision = 0x01;
+ 702   3              }
+ 703   2              else if(i_reg == 0x00)                      //超时
+ 704   2              {                   
+ 705   3                  sendchar('[');
+ 706   3                  sendchar('C');
+ 707   3                  sendchar(']'); 
+ 708   3              }
+ 709   2              else
+ 710   2                  ;
+ 711   2      
+ 712   2              /* 判断槽号及循环次数，若超过16次，则跳出for循环 */
+ 713   2              /*================================================================================================
+             -====*/
+ 714   2              if((slots == 0x00) || (slots == 0x01) || (slots == 0x02) || ((slots == 0x04) && (i == 16))) break;
  715   2              /*================================================================================================
              -====*/
- 716   2              if((slots == 0x00) || (slots == 0x01) || (slots == 0x02) || ((slots == 0x04) && (i == 16))) break;
- 717   2              /*================================================================================================
-             -====*/
+ 716   2      
+ 717   2              SlotMarkerCommand(i);                       //执行槽标记功能
  718   2      
- 719   2              SlotMarkerCommand(i);                       //执行槽标记功能
+ 719   2              i_reg = 0x01;
  720   2      
- 721   2              i_reg = 0x01;
- 722   2      
- 723   2          }   /* for */
- 724   1      
- 725   1          if(slots == 0x04)                               //如果为16槽，则停止槽计数
- 726   1              DisableSlotCounter();
+ 721   2          }   /* for */
+ 722   1      
+ 723   1          if(slots == 0x04)                               //如果为16槽，则停止槽计数
+ 724   1              DisableSlotCounter();
+ 725   1      
+ 726   1          IRQOFF();                                       //关闭中断
  727   1      
- 728   1          IRQOFF();                                       //关闭中断
- 729   1      
- 730   1          if(found)                                       //如果找到卡片，则LED相应协议指示灯亮 
+ 728   1          if(found)                                       //如果找到卡片，则LED相应协议指示灯亮 
              -          
- 731   1          {
- 732   2              LEDON;
- 733   2      
- 734   2          }
- 735   1          else                                            //如果未找到卡片，则LED熄灭、蜂鸣器不�
+ 729   1          {
+ 730   2              LEDON;
+ 731   2      
+ 732   2          }
+ 733   1          else                                            //如果未找到卡片，则LED熄灭、蜂鸣器不�
              -��声
- 736   1          {
- 737   2              LEDOFF;
- 738   2          }
- 739   1      
- 740   1          if(collision != 0x00)                           //如果冲撞位不等于0x00，则递归调用16时�
+ 734   1          {
+ 735   2              LEDOFF;
+ 736   2          }
+ 737   1      
+ 738   1          if(collision != 0x00)                           //如果冲撞位不等于0x00，则递归调用16时�
              -��槽ISO14443B序列函数
- 741   1              sendchar('d');
- 742   1              AnticollisionSequenceB(0x20, 0x02);
- 743   1      }   /* AnticollisionSequenceB */
+ 739   1              sendchar('d');
+ 740   1              AnticollisionSequenceB(0x20, 0x02);
+ 741   1      }   /* AnticollisionSequenceB */
+ 742          
+ 743          
  744          
  745          
  746          
- 747          
- 748          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   3320    ----
+   CODE SIZE        =   3312    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     14      43
-C51 COMPILER V9.56.0.0   ISO14443                                                          12/25/2018 00:21:22 PAGE 14  
-
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
+C51 COMPILER V9.57.0.0   ISO14443                                                          03/15/2019 18:02:03 PAGE 14  
+
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
