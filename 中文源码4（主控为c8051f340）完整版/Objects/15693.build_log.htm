@@ -23,9 +23,12 @@ Project File Date:  03/15/2019
 
 <h2>Output:</h2>
 Build target 'Target 1'
+compiling ISO14443.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_INVENTORYREQUEST?ANTICOLLISION
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RFID_TEST?AUTOMATIC
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GET_NIBBLE?HOST
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
@@ -52,10 +55,17 @@ linking...
     SEGMENT: ?PR?_READCONT?COMMUNICATE
     CALLER1: ?PR?TIMER0HANDLER?HARDWARE
     CALLER2: ?C_C51STARTUP
-Program Size: data=9.0 xdata=500 code=8468
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  RXDONE
+    MODULE:  .\Objects\host.obj (HOST)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RXDONE
+    MODULE:  .\Objects\host.obj (HOST)
+    ADDRESS: 1C0BH
+Program Size: data=9.0 xdata=531 code=8696
 creating hex file from ".\Objects\15693"...
-".\Objects\15693" - 0 Error(s), 9 Warning(s).
-Build Time Elapsed:  00:00:04
+".\Objects\15693" - 0 Error(s), 12 Warning(s).
+Build Time Elapsed:  00:00:06
 </pre>
 </body>
 </html>

@@ -75,7 +75,7 @@
 #define IRQPinset()         P0MDIN |= IRQPin            //设置方向为输入
 #define IRQON()             IE |= 0X01              //IRQ 中断开启
 #define IRQOFF()            IE &= ~0X01            //IRQ 中断关闭
-//#define IRQEDGEset()        TCON |= 0X01           //上升沿中断
+//#define IRQEDGEset()        TCON |= IRQPin           //上升沿中断
 #define IRQCLR()            TCON  &= ~0X02              //清中断标志位
 #define IRQREQreg()         TCON                       //中断寄存器     
 /*-----------------------------------------------------------------------------*/

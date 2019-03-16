@@ -14,8 +14,6 @@
 #include "hardware.h"
 #include <globals.h>
 
-unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
-
 //unsigned char   Firstdata = 1;                      //设置串口同步标志位
 
 #define BAUDRATE           115200      // UART波特率设置
