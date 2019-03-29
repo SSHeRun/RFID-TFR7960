@@ -565,8 +565,8 @@ void Port_0(void) interrupt 0
 				
     }while((IRQPORT & IRQPin) == IRQPin);           //条件执行
 FINISH:
-   PCON &= ~0X03;                                   //退出idle和stop的状态
-
+   //PCON &= ~0X03;                                   //退出idle和stop的状态
+		PCON = 0x00;
 }
 
 

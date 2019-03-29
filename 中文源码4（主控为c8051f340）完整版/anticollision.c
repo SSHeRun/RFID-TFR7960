@@ -267,8 +267,9 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
     {
         lenght = 1;
         RXTXstate = 1;
-    }
+    }                                     //等待TX发送结束
 
+		
     RAWwrite(pbuf, lenght + 5);                    //以直接写FIFO模式发送命令
 		
     IRQCLR();                                    //清中断标志位

@@ -115,6 +115,8 @@ void Timer0handler(void) interrupt 1
         i_reg = 0x01;   
 		
     // PCON &= ~0X02;                                  //进入低功耗模式，当中断响应时被唤醒，从而退出该模式
-    PCON &= ~0X03;                                   //退出idle和stop的状态
+    //PCON &= ~0X03;                                   //退出idle和stop的状态
+		//PCON |=0X01; 
+		PCON = 0x00;
 }
 

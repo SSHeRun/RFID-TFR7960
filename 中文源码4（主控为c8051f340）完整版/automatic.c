@@ -84,63 +84,63 @@ void FindTags(void)
 {
     unsigned char command[10];                      //定义命令数据暂存缓冲器数组
 //		unsigned char i, count;
-//		while(1)
-//    {
-//            command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
-//            command[1] = 0x21;
-//            command[2] = ISOControl;                // 设置选择ISO15693操作模式为:高比特率26.48kbps 单幅载波 1/4(默认模式)
-//            command[3] = 0x02;
-//            WriteSingle(command, 4);                 // 写4个字节命令到TRF7960寄存器中
-
-//            delay_ms(5);
-//            flags = 0x06;                            // 16(slot)槽模式
-//            //flags = 0x26;                          // 1(slot)槽模式
-
-//            command[0] = 0x00;                      //此处有修改
-//						
-//						//count = buf[0] - 9;
-//						InventoryRequest(command, 0);          // 发送总量请求命令(即寻卡命令)      
-
-//            command[0] = ChipStateControl;          // 关闭RF部分电路
-//            command[1] = 0x01;
-//            WriteSingle(command, 2);
-//            delay_ms(1);
-
-//            command[0] = IRQStatus;                // 给寄存器赋值
-//            command[1] = IRQMask;               
-
-//                                      
-//						ReadCont(command, 2);							    //读取IRQ中断状态寄存器及中断标志
-//						
-//						RFID_test();
-//		
-//        delay_ms(10);
-//    }   /* while */
-//	
-		while(1)                                         //ISO14443A协议标准
-		{
-						command[0] = ChipStateControl;           // 开启RF使能，选择5V操作模式
+		while(1)
+    {
+            command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
             command[1] = 0x21;
-            command[2] = ISOControl;                 // 设置选择ISO14443A操作模式为:比特率106kbps
-            command[3] = 0x08;
-            WriteSingle(command, 4);
+            command[2] = ISOControl;                // 设置选择ISO15693操作模式为:高比特率26.48kbps 单幅载波 1/4(默认模式)
+            command[3] = 0x02;
+            WriteSingle(command, 4);                 // 写4个字节命令到TRF7960寄存器中
+
             delay_ms(5);
+            flags = 0x06;                            // 16(slot)槽模式
+            //flags = 0x26;                          // 1(slot)槽模式
+
+            command[0] = 0x00;                      //此处有修改
 						
-            AnticollisionSequenceA(0x00);           //执行ISO14443A完整仿冲撞序列
-						
-            command[0] = ChipStateControl;          // 给寄存器赋值
+						//count = buf[0] - 9;
+						InventoryRequest(command, 0);          // 发送总量请求命令(即寻卡命令)      
+
+            command[0] = ChipStateControl;          // 关闭RF部分电路
             command[1] = 0x01;
-            WriteSingle(command, 2);                 // 关闭RF部分电路 
+            WriteSingle(command, 2);
             delay_ms(1);
 
-            command[0] = IRQStatus;                  // 给寄存器赋值 
-            command[1] = IRQMask;   
-        
-//            if(SPIMODE)
-                ReadCont(command, 2);             //读取IRQ中断状态寄存器及中断标志
-//            else
-//                ReadSingle(command, 1); 
-		}
+            command[0] = IRQStatus;                // 给寄存器赋值
+            command[1] = IRQMask;               
+
+                                      
+						ReadCont(command, 2);							    //读取IRQ中断状态寄存器及中断标志
+						
+						RFID_test();
+		
+        delay_ms(10);
+    }   /* while */
+	
+//		while(1)                                         //ISO14443A协议标准
+//		{
+//						command[0] = ChipStateControl;           // 开启RF使能，选择5V操作模式
+//            command[1] = 0x21;
+//            command[2] = ISOControl;                 // 设置选择ISO14443A操作模式为:比特率106kbps
+//            command[3] = 0x08;
+//            WriteSingle(command, 4);
+//            delay_ms(5);
+//						
+//            AnticollisionSequenceA(0x00);           //执行ISO14443A完整仿冲撞序列
+//						
+//            command[0] = ChipStateControl;          // 给寄存器赋值
+//            command[1] = 0x01;
+//            WriteSingle(command, 2);                 // 关闭RF部分电路 
+//            delay_ms(1);
+
+//            command[0] = IRQStatus;                  // 给寄存器赋值 
+//            command[1] = IRQMask;   
+//        
+////            if(SPIMODE)
+//                ReadCont(command, 2);             //读取IRQ中断状态寄存器及中断标志
+////            else
+////                ReadSingle(command, 1); 
+//		}
 
 
 //			while(1)                                        //ISO14443B协议标准

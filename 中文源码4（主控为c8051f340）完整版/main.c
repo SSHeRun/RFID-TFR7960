@@ -11,7 +11,10 @@
 #include <host.h>
 #include <hardware.h>
 #include <automatic.h>
+#include <anticollision.h>
 #include <communicate.h>
+#include <host.h>
+#include <ISO14443.h>
 #include <globals.h>                 
 
 char     rxdata;                                    //RS232 接收数据字节
@@ -22,6 +25,7 @@ unsigned char RXErrorFlag;                          //定义接收错误标志
 unsigned char RXflag;                               //定义接收书标志位，用来指示缓冲区中是否有数据
 unsigned char i_reg;                                //中断寄存器变量
 unsigned char CollPoss;                             //定义冲撞发生位置变量
+
 
 /**************************************************************************************************
 * 函数名称：main()
@@ -65,6 +69,7 @@ void main(void)
     EnableInterrupts();          //使能总中断
     
     OOKdirIN();                  //设置OOK管脚为三态门状态
+		ENABLE = 1;
     
     while(1)                                      
     { 

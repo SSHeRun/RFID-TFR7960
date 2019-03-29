@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/16/2019 23:47:04 PAGE 1   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE AUTOMATIC
@@ -62,7 +62,7 @@ line level    source
   43   1            
   44   1            for(i = 0; i < 9; i++)              //读一个块地址为0x01
   45   1            {
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/16/2019 23:47:04 PAGE 2   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 2   
 
   46   2                buf[ i ] = Read_Sig[ i ];
   47   2            }
@@ -107,66 +107,66 @@ line level    source
   84          {
   85   1          unsigned char command[10];                      //定义命令数据暂存缓冲器数组
   86   1      //    unsigned char i, count;
-  87   1      //    while(1)
-  88   1      //    {
-  89   1      //            command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
-  90   1      //            command[1] = 0x21;
-  91   1      //            command[2] = ISOControl;                // 设置选择ISO15693操作模式为:高比特率26.48kbps 单幅
-             -载波 1/4(默认模式)
-  92   1      //            command[3] = 0x02;
-  93   1      //            WriteSingle(command, 4);                 // 写4个字节命令到TRF7960寄存器中
-  94   1      
-  95   1      //            delay_ms(5);
-  96   1      //            flags = 0x06;                            // 16(slot)槽模式
-  97   1      //            //flags = 0x26;                          // 1(slot)槽模式
-  98   1      
-  99   1      //            command[0] = 0x00;                      //此处有修改
- 100   1      //            
- 101   1      //            //count = buf[0] - 9;
- 102   1      //            InventoryRequest(command, 0);          // 发送总量请求命令(即寻卡命令)      
- 103   1      
- 104   1      //            command[0] = ChipStateControl;          // 关闭RF部分电路
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/16/2019 23:47:04 PAGE 3   
+  87   1          while(1)
+  88   1          {
+  89   2                  command[0] = ChipStateControl;          // 开启RF使能，选择5V操作模式
+  90   2                  command[1] = 0x21;
+  91   2                  command[2] = ISOControl;                // 设置选择ISO15693操作模式为:高比特率26.48kbps 单幅载
+             -波 1/4(默认模式)
+  92   2                  command[3] = 0x02;
+  93   2                  WriteSingle(command, 4);                 // 写4个字节命令到TRF7960寄存器中
+  94   2      
+  95   2                  delay_ms(5);
+  96   2                  flags = 0x06;                            // 16(slot)槽模式
+  97   2                  //flags = 0x26;                          // 1(slot)槽模式
+  98   2      
+  99   2                  command[0] = 0x00;                      //此处有修改
+ 100   2                  
+ 101   2                  //count = buf[0] - 9;
+ 102   2                  InventoryRequest(command, 0);          // 发送总量请求命令(即寻卡命令)      
+ 103   2      
+ 104   2                  command[0] = ChipStateControl;          // 关闭RF部分电路
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 3   
 
- 105   1      //            command[1] = 0x01;
- 106   1      //            WriteSingle(command, 2);
- 107   1      //            delay_ms(1);
- 108   1      
- 109   1      //            command[0] = IRQStatus;                // 给寄存器赋值
- 110   1      //            command[1] = IRQMask;               
- 111   1      
- 112   1      //                                      
- 113   1      //            ReadCont(command, 2);                 //读取IRQ中断状态寄存器及中断标志
- 114   1      //            
- 115   1      //            RFID_test();
- 116   1      //    
- 117   1      //        delay_ms(10);
- 118   1      //    }   /* while */
- 119   1      //  
- 120   1          while(1)                                         //ISO14443A协议标准
- 121   1          {
- 122   2                  command[0] = ChipStateControl;           // 开启RF使能，选择5V操作模式
- 123   2                  command[1] = 0x21;
- 124   2                  command[2] = ISOControl;                 // 设置选择ISO14443A操作模式为:比特率106kbps
- 125   2                  command[3] = 0x08;
- 126   2                  WriteSingle(command, 4);
- 127   2                  delay_ms(5);
- 128   2                  
- 129   2                  AnticollisionSequenceA(0x00);           //执行ISO14443A完整仿冲撞序列
- 130   2                  
- 131   2                  command[0] = ChipStateControl;          // 给寄存器赋值
- 132   2                  command[1] = 0x01;
- 133   2                  WriteSingle(command, 2);                 // 关闭RF部分电路 
- 134   2                  delay_ms(1);
- 135   2      
- 136   2                  command[0] = IRQStatus;                  // 给寄存器赋值 
- 137   2                  command[1] = IRQMask;   
- 138   2              
- 139   2      //            if(SPIMODE)
- 140   2                      ReadCont(command, 2);             //读取IRQ中断状态寄存器及中断标志
- 141   2      //            else
- 142   2      //                ReadSingle(command, 1); 
- 143   2          }
+ 105   2                  command[1] = 0x01;
+ 106   2                  WriteSingle(command, 2);
+ 107   2                  delay_ms(1);
+ 108   2      
+ 109   2                  command[0] = IRQStatus;                // 给寄存器赋值
+ 110   2                  command[1] = IRQMask;               
+ 111   2      
+ 112   2                                            
+ 113   2                  ReadCont(command, 2);                 //读取IRQ中断状态寄存器及中断标志
+ 114   2                  
+ 115   2                  RFID_test();
+ 116   2          
+ 117   2              delay_ms(10);
+ 118   2          }   /* while */
+ 119   1        
+ 120   1      //    while(1)                                         //ISO14443A协议标准
+ 121   1      //    {
+ 122   1      //            command[0] = ChipStateControl;           // 开启RF使能，选择5V操作模式
+ 123   1      //            command[1] = 0x21;
+ 124   1      //            command[2] = ISOControl;                 // 设置选择ISO14443A操作模式为:比特率106kbps
+ 125   1      //            command[3] = 0x08;
+ 126   1      //            WriteSingle(command, 4);
+ 127   1      //            delay_ms(5);
+ 128   1      //            
+ 129   1      //            AnticollisionSequenceA(0x00);           //执行ISO14443A完整仿冲撞序列
+ 130   1      //            
+ 131   1      //            command[0] = ChipStateControl;          // 给寄存器赋值
+ 132   1      //            command[1] = 0x01;
+ 133   1      //            WriteSingle(command, 2);                 // 关闭RF部分电路 
+ 134   1      //            delay_ms(1);
+ 135   1      
+ 136   1      //            command[0] = IRQStatus;                  // 给寄存器赋值 
+ 137   1      //            command[1] = IRQMask;   
+ 138   1      //        
+ 139   1      ////            if(SPIMODE)
+ 140   1      //                ReadCont(command, 2);             //读取IRQ中断状态寄存器及中断标志
+ 141   1      ////            else
+ 142   1      ////                ReadSingle(command, 1); 
+ 143   1      //    }
  144   1      
  145   1      
  146   1      //      while(1)                                        //ISO14443B协议标准
@@ -190,7 +190,7 @@ line level    source
  164   1      
  165   1      //            command[0] = IRQStatus;
  166   1      //            command[1] = IRQMask;   
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/16/2019 23:47:04 PAGE 4   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 4   
 
  167   1      //        
  168   1      ////            if(SPIMODE)                            //读取IRQ中断状态寄存器及中断标志
@@ -227,7 +227,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    198    ----
+   CODE SIZE        =    223    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     61      11
    PDATA SIZE       =   ----    ----

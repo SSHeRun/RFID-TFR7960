@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 1   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE COMMUNICATE
@@ -62,7 +62,7 @@ line level    source
   50   4                          if (*pbuf & mask)               //设置数据位
   51   4                              SIMOON();
   52   4                          else
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 2   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 2   
 
   53   4                              SIMOOFF();
   54   4                         
@@ -126,7 +126,7 @@ line level    source
  108   2              pbuf++;
  109   2              lenght--;
  110   2          }/*while*/
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 3   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 3   
 
  111   1      
  112   1          H_SlaveSelect();                            //SS管脚输出高，SPI停止
@@ -190,7 +190,7 @@ line level    source
              -*********
  168          * 函数名称：ReadCont()
  169          * 功    能：连续读寄存器或者特殊地址的多个寄存器命令
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 4   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 4   
 
  170          * 入口参数：*pbuf            将要读取的数据           
  171          *           lenght           读取数据的长度 
@@ -254,7 +254,7 @@ line level    source
  226   1        unsigned char j;
  227   1        /*  SPI 位模式 */
  228   1              /*-----------------------------------------------------------------------------*/
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 5   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 5   
 
  229   1              L_SlaveSelect();                            //SS管脚输出低，SPI启动
  230   1              *pbuf = (0x80 | *pbuf);                     //取位B7 寄存器地址数据 命令标志位 格式为1XXXXXXX
@@ -318,7 +318,7 @@ line level    source
  286   1      
  287   1              H_SlaveSelect();                            //SS管脚输出高，SPI停止
  288   1      
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 6   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 6   
 
  289   1      }   /* RAWwrite */
  290          
@@ -382,7 +382,7 @@ line level    source
  341   2          }
  342   1      
  343   1          else if(*Register == 0x80)                      //BIT7 = 10000000 指示TX发送结束
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 7   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 7   
 
  344   1          {            
  345   2              i_reg = 0x00;
@@ -446,7 +446,7 @@ line level    source
  401   2              *Register = (0x0F & *Register) + 0x01;
  402   2              buf[RXTXstate] = FIFO;                      //将接收到的数据写到缓冲区的当前位置
  403   2                                                                                        
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 8   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 8   
 
  404   2              ReadCont(&buf[RXTXstate], *Register);
  405   2              RXTXstate = RXTXstate +*Register;
@@ -510,7 +510,7 @@ line level    source
                               sendchar('E');                      //发送无响应标志 E
               #endif
  465   4                      i_reg = 0xFF;                       //指示接收函数这些字节已经是最后字节
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 9   
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 9   
 
  466   4                      *Register = Reset;                  //在最后字节被读取后复位FIFO
  467   4                      DirectCommand(Register);
@@ -574,7 +574,7 @@ line level    source
  525   2              DirectCommand(Register);
  526   2      
  527   2              *Register = Reset;
-C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/16/2019 22:39:17 PAGE 10  
+C51 COMPILER V9.57.0.0   COMMUNICATE                                                       03/29/2019 19:09:38 PAGE 10  
 
  528   2              DirectCommand(Register);
  529   2      
@@ -617,8 +617,8 @@ line level    source
  565   2              
  566   2          }while((IRQPORT & IRQPin) == IRQPin);           //条件执行
  567   1      FINISH:
- 568   1         PCON &= ~0X03;                                   //退出idle和stop的状态
- 569   1      
+ 568   1         //PCON &= ~0X03;                                   //退出idle和stop的状态
+ 569   1          PCON = 0x00;
  570   1      }
  571          
  572          

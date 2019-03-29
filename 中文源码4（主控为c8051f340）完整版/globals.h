@@ -8,7 +8,7 @@
 ***************************************************************************************************************************/
 #ifndef GLOBALS_H
 #define GLOBALS_H                 
-#include <c8051f340.h>
+//#include <c8051f340.h>
 
 #define BUF_LENGTH                      300                 //最大帧字节数量
 #define EnableInterrupts()              IE |= 0X80          //使能中断
@@ -27,6 +27,7 @@ extern unsigned char CollPoss;                              //外部声明冲撞发生位
 extern unsigned char RXdone;                                //外部声明接收完整数据标志位，若接收完成，置该标志位1
 extern unsigned char Found_tag;                             //定义是否检测到卡片全局变量
 extern unsigned char rssival;                               //定义检测到的卡片接收信号强度值
+extern unsigned char ENABLE;                                //????TRF7960????
 
 #endif
 

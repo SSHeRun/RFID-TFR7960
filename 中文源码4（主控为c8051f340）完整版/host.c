@@ -11,11 +11,10 @@
 #include <anticollision.h>
 #include <globals.h>
 #include <host.h>
+#include "intrins.h"
 
+unsigned char   ENABLE;                             //TRF7960
 unsigned char   Firstdata = 1;                      //设置串口同步标志位
-unsigned char   ENABLE;                             //TRF7960??????????,1??;0????
-
-
 /******************************************************************************************************************
 * 函数名称：PORT_Init()
 * 功    能：串口初始化设置函数
@@ -223,8 +222,12 @@ void RXhandler (void) interrupt 4
             send_cstring("Reader enabled.");        //向上位机发送信息
             ENABLE = 1;                             //设置TRF7960标志位
         }
-       PCON &= ~0X03;                                   //退出idle和stop的状态
-
+//       PCON &= ~0X03;                                   //退出idle和stop的状态
+				PCON = 0x00;
+//				_nop_();
+//				_nop_();
+//				_nop_();
+				
         if(Firstdata)                              //如果是第1次接收到数据
         {
             

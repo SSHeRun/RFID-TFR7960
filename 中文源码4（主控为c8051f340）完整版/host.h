@@ -11,10 +11,12 @@
 
 #include <C8051F340.h>     	
 #include <stdio.h>
-#include "hardware.h"
+#include <hardware.h>
 #include <globals.h>
 
-//unsigned char   Firstdata = 1;                      //设置串口同步标志位
+
+
+//unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
 
 #define BAUDRATE           115200      // UART波特率设置
 #define SYSCLK             12000000    // 内部的晶振频率
