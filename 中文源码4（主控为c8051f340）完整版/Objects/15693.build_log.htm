@@ -22,10 +22,13 @@ Dialog DLL:      TCYG.DLL V2.72.0.0
  
 <h2>Project:</h2>
 C:\Users\圣三一\Documents\Tencent Files\1440401918\FileRecv\EMRFID-ZHJX-1 RFID综合教学平台发货光盘 V1.0.1（201201129） (3)\TRF7960\中文源码4（主控为c8051f340）完整版\15693.uvproj
-Project File Date:  03/26/2019
+Project File Date:  03/30/2019
 
 <h2>Output:</h2>
 Build target 'Target 1'
+compiling automatic.c...
+automatic.c(87): warning C280: 'i': unreferenced local variable
+automatic.c(87): warning C280: 'count': unreferenced local variable
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GET_NIBBLE?HOST
@@ -56,24 +59,17 @@ linking...
     CALLER1: ?PR?TIMER0HANDLER?HARDWARE
     CALLER2: ?C_C51STARTUP
 *** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_DIRECTCOMMAND?COMMUNICATE
-    CALLER1: ?PR?PORT_0?COMMUNICATE
-    CALLER2: ?C_C51STARTUP
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
     SEGMENT: ?PR?_SEND_CSTRING?HOST
     CALLER1: ?PR?RXHANDLER?HOST
     CALLER2: ?C_C51STARTUP
-*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
-    SYMBOL:  RXDONE
-    MODULE:  .\Objects\host.obj (HOST)
-*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
-    SYMBOL:  RXDONE
-    MODULE:  .\Objects\host.obj (HOST)
-    ADDRESS: 1C0BH
-Program Size: data=9.0 xdata=517 code=8712
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_DIRECTCOMMAND?COMMUNICATE
+    CALLER1: ?PR?PORT_0?COMMUNICATE
+    CALLER2: ?C_C51STARTUP
+Program Size: data=9.0 xdata=489 code=8618
 creating hex file from ".\Objects\15693"...
 ".\Objects\15693" - 0 Error(s), 13 Warning(s).
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:22
 </pre>
 </body>
 </html>

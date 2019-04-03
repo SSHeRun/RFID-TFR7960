@@ -7,6 +7,7 @@
 * 日    期：2011年04月13号
 **********************************************************************************************************************************************************/
 #include "ISO14443.h"
+#include "intrins.h"
 
 unsigned char completeUID[14];                      //定义完整的ISO14443协议UID码变量
 
@@ -47,11 +48,6 @@ char SelectCommand(unsigned char select, unsigned char *UID)
 
     i_reg = 0x01;
     RXTXstate = 1;                                  //设置标志位，其接收位存储于buf[1]起始位置
-
-    /*
-	 * LPM0;
-	 * //wait for end of transmit
-	 */
 
     while(i_reg == 0x01)                            //等待中断接收完成
     {
@@ -398,10 +394,15 @@ void AnticollisionLoopA(unsigned char select, unsigned char NVB, unsigned char *
 void AnticollisionSequenceA(unsigned char REQA)
 {
     unsigned char i, select = 0x93, NVB = 0x20;
+		unsigned char num_singlebits = 7;
     
     buf[0] = ModulatorControl;                      // 调制和系统时钟控制：0x21 - 6.78MHz OOK(100%)
     buf[1] = 0x21;
     WriteSingle(buf, 2);
+	
+		buf[0] = RXNoResponseWaitTime;
+		buf[1] = 0x0E;
+		WriteSingle(buf, 2);
 
     buf[0] = ISOControl;                            // 设置选择ISO14443A操作模式为:比特率106kbps
     buf[1] = 0x88;                                  // 接收不带CRC校验
@@ -414,9 +415,37 @@ void AnticollisionSequenceA(unsigned char REQA)
     else
         buf[5] = 0x52;                              //发送 WUPA 命令 */
     /*====================================================================================================*/
+    //send_byte(buf[5]);
     RequestCommand(&buf[0], 0x00, 0x0f, 1);         //发送请求命令
-    IRQCLR();                                       //清中断标志位
-    IRQON();                                        //外部中断开启
+		
+		
+//		buf[0] = 0x8f;
+//    buf[1] = 0x90;                         //传输不带CRC校验
+//    buf[2] = 0x3d;
+//    buf[3] = RXTXstate >> 4;
+//    buf[4] = (RXTXstate << 4) | 0x0f;
+//		buf[5] = 0x26;		
+//		RAWwrite(buf,5); 
+
+//    IRQCLR();                                       //清中断标志位
+//    IRQON();                                        //外部中断开启
+//		
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+//		_nop_();
+		//i_reg = 0xff; 
 		
     if(i_reg == 0xff || i_reg == 0x02)              //如果接收到数据或者冲撞发生
     {
@@ -479,7 +508,7 @@ unsigned char Request14443A(unsigned char *pbuf, unsigned char lenght, unsigned 
     while(RXTXstate > 0)
     {
 //        LPM0;                                       //进入低功耗模式，在中断时退出
-		PCON |=0X01;
+				PCON |=0X01;
         if(RXTXstate > 9)                           //如果未发送的字节数量大于9
         {                          
             lenght = 10;                            //将其设置成10
@@ -585,9 +614,8 @@ void SlotMarkerCommand(unsigned char number)
     while(i_reg == 0x01)
     {
         //StartCounter();   
-        Timer0_Delay(40);                            	
-        StartCounter();  
-        PCON |=0X01; 
+			    Timer0_Delay(40);                            	
+					StartCounter();   
 //        CounterSet();                               //定时器设置
 //        CountValue = 0x9c40;                        //计时时间 40ms
 //        StartCounter;                               //开始计时
@@ -654,8 +682,8 @@ void AnticollisionSequenceB(unsigned char command, unsigned char slots)
     {
         j++;
        // StartCounter();   
-        Timer0_Delay(20);                            	
-        StartCounter();   
+			  Timer0_Delay(20);                            	
+				StartCounter();   
 //        CounterSet();                               //定时器设置
 //        CountValue = 0x4E20;                        //计时时间 20ms
 //        StartCounter;                               //开始计时
@@ -675,6 +703,7 @@ void AnticollisionSequenceB(unsigned char command, unsigned char slots)
     for(i = 1; i < 17; i++)                         //1-16个槽轮循
     {
         RXTXstate = 1;                              //应答数据将被存储在buf[1]以后地址中
+				PCON |=0X01;
         while(i_reg == 0x01)                        //等待RX接收完毕
         {               	
             k++;

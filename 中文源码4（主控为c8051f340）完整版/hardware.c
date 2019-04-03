@@ -61,14 +61,14 @@ void delay_ms(unsigned int n_ms)
 void Timer0_Delay (int ms)
 
 {
-    TF0 = 0; // 停止定时器T0并清除溢出标志
-    TMOD &= ~0x0f; // 配置定时器T0为16位模式
-    TMOD |= 0x01;
-    CKCON &=~ 0x03; // 定时器T0计数系统时钟
-    ET0 = 1;
-    TR0 = 0; // 停定时器T0
-    TH0 = (65535-1000*ms) >> 8; // 设置定时器T0 1ms溢出
-    TL0 = (65535-1000*ms)/256;
+TF0 = 0; // 停止定时器T0并清除溢出标志
+TMOD &= ~0x0f; // 配置定时器T0为16位模式
+TMOD |= 0x01;
+CKCON &=~ 0x03; // 定时器T0计数系统时钟
+ET0 = 1;
+TR0 = 0; // 停定时器T0
+TH0 = (65535-1000*ms) >> 8; // 设置定时器T0 1ms溢出
+TL0 = (65535-1000*ms)/256;
 
 }
 
@@ -115,8 +115,6 @@ void Timer0handler(void) interrupt 1
         i_reg = 0x01;   
 		
     // PCON &= ~0X02;                                  //进入低功耗模式，当中断响应时被唤醒，从而退出该模式
-    //PCON &= ~0X03;                                   //退出idle和stop的状态
-		//PCON |=0X01; 
-		PCON = 0x00;
+    PCON = 0x00;                                   //退出idle和stop的状态
 }
 

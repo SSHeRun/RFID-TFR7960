@@ -11,10 +11,14 @@
 #include <anticollision.h>
 #include <globals.h>
 #include <host.h>
-#include "intrins.h"
 
-unsigned char   ENABLE;                             //TRF7960
+unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
+
 unsigned char   Firstdata = 1;                      //设置串口同步标志位
+unsigned char   ENABLE;                             //TRF7960??????????,1??;0????
+#define BAUDRATE           115200      // UART波特率设置
+#define SYSCLK             12000000    // 内部的晶振频率
+
 /******************************************************************************************************************
 * 函数名称：PORT_Init()
 * 功    能：串口初始化设置函数
@@ -29,13 +33,7 @@ void PORT_Init (void)
    XBR1      = 0x40;
 }
 
-/******************************************************************************************************************
-* 函数名称：UART0_Init
-* 功    能：串口初始化设置函数
-* 入口参数：无
-* 出口参数：无
-* 说    明：该串口初始化函数使用UART0。    
-*******************************************************************************************************************/
+
 void UART0_Init(void)
 {	
     SCON0 = 0x10;   //8位数据位，1位停止位，使能接收                   
@@ -72,13 +70,13 @@ void UART0_Init(void)
 
 
 
-///******************************************************************************************************************
-//* 函数名称：sendchar()
-//* 功    能：向计算器上位机发送一个字符函数
-//* 入口参数：TXchar    将要被发送的字符
-//* 出口参数：无
-//* 说    明：无   
-//*******************************************************************************************************************/
+/******************************************************************************************************************
+* 函数名称：sendchar()
+* 功    能：向计算器上位机发送一个字符函数
+* 入口参数：TXchar    将要被发送的字符
+* 出口参数：无
+* 说    明：无   
+*******************************************************************************************************************/
 sendchar(char TXchar)
 {
      
@@ -89,7 +87,7 @@ sendchar(char TXchar)
       }
       while (!TI0);                    // wait until UART0 is ready to transmit
       TI0 = 0;
-			SBUF0 = TXchar;                         // clear interrupt flag
+	  SBUF0 = TXchar;                         // clear interrupt flag
       return (SBUF0);              // output <c> using UART 0
 }
 
@@ -175,7 +173,7 @@ unsigned char Get_nibble(void)
     while(reading)                                   //循环读取字符
     {                   		
         //LPM0; 
-		PCON |= 0x01;				        //进入低功耗模式，等待唤醒
+				PCON |= 0x01;				        //进入低功耗模式，等待唤醒
         if(rxdata >= 'a')                           //转换成大写字母
         {
             rxdata -= 32;
@@ -209,7 +207,6 @@ void RXhandler (void) interrupt 4
 {
     if(RI0==1)                            //如果串口接收到数据
     {   
-				RI0=0;																	
         rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
         RXdone = 1;                                 //置起接收标志位
         if(ENABLE == 0)                            //TRF7960在禁止状态下
@@ -222,12 +219,8 @@ void RXhandler (void) interrupt 4
             send_cstring("Reader enabled.");        //向上位机发送信息
             ENABLE = 1;                             //设置TRF7960标志位
         }
-//       PCON &= ~0X03;                                   //退出idle和stop的状态
-				PCON = 0x00;
-//				_nop_();
-//				_nop_();
-//				_nop_();
-				
+       PCON = 0X00;                                   //退出idle和stop的状态
+
         if(Firstdata)                              //如果是第1次接收到数据
         {
             
@@ -240,9 +233,4 @@ void RXhandler (void) interrupt 4
             // /*-----------------------------------------------------------------------------*/
         }
     }
-		else
-		{
-         TI0 = 0;                      // clear interrupt flag
-         SBUF0 = 0x0d;                 // output carriage return command
-      }
 }

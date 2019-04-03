@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 1   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/03/2019 19:21:51 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE AUTOMATIC
@@ -24,13 +24,14 @@ line level    source
              -ý¾Ý12345678
   12          unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                         //Ð´¿éµØÖ·0x0
              -1
-  13          unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //Ð´AFIÊý¾Ý01
-  14          unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                      //Ð´DSFIDÊý¾Ý
-             -EE
-  15          unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //»ñÈ¡¿¨Æ¬ÏµÍ³
-             -ÐÅÏ¢
-  16          unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                   //»ñÈ¡¿é°²È«×´Ì
-             -¬µØÖ·0x01,¿éÊýÁ¿02£¨Êµ¼ÊÎª3¸ö¿é£©
+  13          //unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //Ð´AFIÊý¾Ý0
+             -1
+  14          //unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                      //Ð´DSFIDÊý
+             -¾ÝEE
+  15          //unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //»ñÈ¡¿¨Æ¬Ïµ
+             -Í³ÐÅÏ¢
+  16          //unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                   //»ñÈ¡¿é°²È«×
+             -´Ì¬µØÖ·0x01,¿éÊýÁ¿02£¨Êµ¼ÊÎª3¸ö¿é£©
   17          
   18          /*********************************************************************************************************
              -*********
@@ -61,9 +62,9 @@ line level    source
   42   1            // }
   43   1            
   44   1            for(i = 0; i < 9; i++)              //¶ÁÒ»¸ö¿éµØÖ·Îª0x01
-  45   1            {
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 2   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/03/2019 19:21:51 PAGE 2   
 
+  45   1            {
   46   2                buf[ i ] = Read_Sig[ i ];
   47   2            }
   48   1        
@@ -89,147 +90,149 @@ line level    source
   68   1            
   69   1            count=buf[0]-8;
   70   1            RequestCommand(buf,count,0x00,0);//·¢ËÍÇëÇóÃüÁî  
-  71   1          
-  72   1            //delay_ms(800);
-  73   1      }
-  74          
+  71   1      
+  72   1            
+  73   1            //delay_ms(800);
+  74   1      }
   75          
-  76          /*********************************************************************************************************
+  76          
+  77          /*********************************************************************************************************
              -*********
-  77          * º¯ÊýÃû³Æ£ºFindTags()
-  78          * ¹¦    ÄÜ£º¸ù¾ÝÖ¸¶¨¾í±êÐ­ÒéÀàÐÍ£¬ÉèÖÃTRF7960ÅäÖÃ¸÷Ïà¹Ø¼Ä´æÆ÷ºó£¬½øÐÐÑ°¿¨²Ù×÷¡£
-  79          * Èë¿Ú²ÎÊý£ºprotocol       Ö¸¶¨Ð­ÒéÀàÐÍ
-  80          * ³ö¿Ú²ÎÊý£ºÎÞ
-  81          * Ëµ    Ã÷£º¸Ãº¯ÊýÊÇÒ»¸öËÀÑ­»·º¯Êý£¬ËùÓÐµÄÍÑ»úÑÝÊ¾Ö´ÐÐ¹ý³Ì¾ùÔÚ´ËÍê³É¡£
-  82          **********************************************************************************************************
+  78          * º¯ÊýÃû³Æ£ºFindTags()
+  79          * ¹¦    ÄÜ£º¸ù¾ÝÖ¸¶¨¾í±êÐ­ÒéÀàÐÍ£¬ÉèÖÃTRF7960ÅäÖÃ¸÷Ïà¹Ø¼Ä´æÆ÷ºó£¬½øÐÐÑ°¿¨²Ù×÷¡£
+  80          * Èë¿Ú²ÎÊý£ºprotocol       Ö¸¶¨Ð­ÒéÀàÐÍ
+  81          * ³ö¿Ú²ÎÊý£ºÎÞ
+  82          * Ëµ    Ã÷£º¸Ãº¯ÊýÊÇÒ»¸öËÀÑ­»·º¯Êý£¬ËùÓÐµÄÍÑ»úÑÝÊ¾Ö´ÐÐ¹ý³Ì¾ùÔÚ´ËÍê³É¡£
+  83          **********************************************************************************************************
              -*********/
-  83          void FindTags(void)
-  84          {
-  85   1          unsigned char command[10];                      //¶¨ÒåÃüÁîÊý¾ÝÔÝ´æ»º³åÆ÷Êý×é
-  86   1      //    unsigned char i, count;
-  87   1          while(1)
-  88   1          {
-  89   2                  command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
-  90   2                  command[1] = 0x21;
-  91   2                  command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñISO15693²Ù×÷Ä£Ê½Îª:¸ß±ÈÌØÂÊ26.48kbps µ¥·ùÔØ
-             -²¨ 1/4(Ä¬ÈÏÄ£Ê½)
-  92   2                  command[3] = 0x02;
-  93   2                  WriteSingle(command, 4);                 // Ð´4¸ö×Ö½ÚÃüÁîµ½TRF7960¼Ä´æÆ÷ÖÐ
-  94   2      
-  95   2                  delay_ms(5);
-  96   2                  flags = 0x06;                            // 16(slot)²ÛÄ£Ê½
-  97   2                  //flags = 0x26;                          // 1(slot)²ÛÄ£Ê½
-  98   2      
-  99   2                  command[0] = 0x00;                      //´Ë´¦ÓÐÐÞ¸Ä
- 100   2                  
- 101   2                  //count = buf[0] - 9;
- 102   2                  InventoryRequest(command, 0);          // ·¢ËÍ×ÜÁ¿ÇëÇóÃüÁî(¼´Ñ°¿¨ÃüÁî)      
+  84          void FindTags(void)
+  85          {
+  86   1          unsigned char command[10];                      //¶¨ÒåÃüÁîÊý¾ÝÔÝ´æ»º³åÆ÷Êý×é
+  87   1          unsigned char i, count;
+  88   1        while(1)
+  89   1        {
+  90   2                command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
+  91   2                command[1] = 0x21;
+  92   2                command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñISO15693²Ù×÷Ä£Ê½Îª:¸ß±ÈÌØÂÊ26.48kbps µ¥·ùÔØ²¨ 1/4(
+             -Ä¬ÈÏÄ£Ê½)
+  93   2                command[3] = 0x02;
+  94   2                WriteSingle(command, 4);                 // Ð´4¸ö×Ö½ÚÃüÁîµ½TRF7960¼Ä´æÆ÷ÖÐ
+  95   2      
+  96   2                delay_ms(5);
+  97   2                flags = 0x06;                            // 16(slot)²ÛÄ£Ê½
+  98   2                //flags = 0x26;                          // 1(slot)²ÛÄ£Ê½
+  99   2      
+ 100   2                command[0] = 0x04;
+ 101   2                
+ 102   2                InventoryRequest(command, 0);          // ·¢ËÍ×ÜÁ¿ÇëÇóÃüÁî(¼´Ñ°¿¨ÃüÁî)      
  103   2      
- 104   2                  command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ·
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 3   
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/03/2019 19:21:51 PAGE 3   
 
- 105   2                  command[1] = 0x01;
- 106   2                  WriteSingle(command, 2);
- 107   2                  delay_ms(1);
+ 104   2                command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ·
+ 105   2                command[1] = 0x01;
+ 106   2                WriteSingle(command, 2);
+ 107   2                delay_ms(1);
  108   2      
- 109   2                  command[0] = IRQStatus;                // ¸ø¼Ä´æÆ÷¸³Öµ
- 110   2                  command[1] = IRQMask;               
+ 109   2                command[0] = IRQStatus;                // ¸ø¼Ä´æÆ÷¸³Öµ
+ 110   2                command[1] = IRQMask;               
  111   2      
- 112   2                                            
- 113   2                  ReadCont(command, 2);                 //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
- 114   2                  
- 115   2                  RFID_test();
- 116   2          
- 117   2              delay_ms(10);
- 118   2          }   /* while */
- 119   1        
- 120   1      //    while(1)                                         //ISO14443AÐ­Òé±ê×¼
- 121   1      //    {
- 122   1      //            command[0] = ChipStateControl;           // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
- 123   1      //            command[1] = 0x21;
- 124   1      //            command[2] = ISOControl;                 // ÉèÖÃÑ¡ÔñISO14443A²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
- 125   1      //            command[3] = 0x08;
- 126   1      //            WriteSingle(command, 4);
- 127   1      //            delay_ms(5);
- 128   1      //            
- 129   1      //            AnticollisionSequenceA(0x00);           //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ
- 130   1      //            
- 131   1      //            command[0] = ChipStateControl;          // ¸ø¼Ä´æÆ÷¸³Öµ
- 132   1      //            command[1] = 0x01;
- 133   1      //            WriteSingle(command, 2);                 // ¹Ø±ÕRF²¿·ÖµçÂ· 
- 134   1      //            delay_ms(1);
- 135   1      
- 136   1      //            command[0] = IRQStatus;                  // ¸ø¼Ä´æÆ÷¸³Öµ 
- 137   1      //            command[1] = IRQMask;   
- 138   1      //        
- 139   1      ////            if(SPIMODE)
- 140   1      //                ReadCont(command, 2);             //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
- 141   1      ////            else
- 142   1      ////                ReadSingle(command, 1); 
- 143   1      //    }
- 144   1      
+ 112   2                                          
+ 113   2                ReadCont(command, 2);                 //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
+ 114   2      
+ 115   2                RFID_test();
+ 116   2        
+ 117   2        
+ 118   2            delay_ms(10);
+ 119   2        }   /* while */
+ 120   1      //  
+ 121   1      //    while(1)                                         //ISO14443AÐ­Òé±ê×¼
+ 122   1      //    {
+ 123   1      //            command[0] = ChipStateControl;           // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
+ 124   1      //            command[1] = 0x21;
+ 125   1      //            command[2] = ISOControl;                 // ÉèÖÃÑ¡ÔñISO14443A²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
+ 126   1      //            command[3] = 0x08;
+ 127   1      //            WriteSingle(command, 4);
+ 128   1      //            delay_ms(5);
+ 129   1      //            
+ 130   1      //            AnticollisionSequenceA(0x01);           //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ
+ 131   1      //            
+ 132   1      //            command[0] = ChipStateControl;          // ¸ø¼Ä´æÆ÷¸³Öµ
+ 133   1      //            command[1] = 0x01;
+ 134   1      //            WriteSingle(command, 2);                 // ¹Ø±ÕRF²¿·ÖµçÂ· 
+ 135   1      //            delay_ms(1);
+ 136   1      
+ 137   1      //            command[0] = IRQStatus;                  // ¸ø¼Ä´æÆ÷¸³Öµ 
+ 138   1      //            command[1] = IRQMask;   
+ 139   1      //        
+ 140   1      ////            if(SPIMODE)
+ 141   1      //                ReadCont(command, 2);             //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
+ 142   1      ////            else
+ 143   1      ////                ReadSingle(command, 1); 
+ 144   1      //    }
  145   1      
- 146   1      //      while(1)                                        //ISO14443BÐ­Òé±ê×¼
- 147   1      //      {
- 148   1      //            command[0] = ChipStateControl;
- 149   1      //            command[1] = 0x21;                     // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
- 150   1      //            WriteSingle(command, 2);
- 151   1      //        
- 152   1      //            command[0] = ISOControl;                // ÉèÖÃÑ¡ÔñISO14443B²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
- 153   1      //            command[1] = 0x0C;
- 154   1      //            WriteSingle(command, 2);
- 155   1      
- 156   1      //            delay_ms(5);
- 157   1      //            AnticollisionSequenceB(0xB0, 0x04);     //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ(0x04±íÊ¾16²Ûslots)
- 158   1      //            //AnticollisionSequenceB(0xB0, 0x00);  //0x00 ±íÊ¾µ¥¸ö²Ûslot
- 159   1      
- 160   1      //            command[0] = ChipStateControl;  
- 161   1      //            command[1] = 0x01;
- 162   1      //            WriteSingle(command, 2);               // ¹Ø±ÕRF²¿·ÖµçÂ· 
- 163   1      //            delay_ms(1);
- 164   1      
- 165   1      //            command[0] = IRQStatus;
- 166   1      //            command[1] = IRQMask;   
-C51 COMPILER V9.57.0.0   AUTOMATIC                                                         03/29/2019 19:09:37 PAGE 4   
+ 146   1      
+ 147   1      //      while(1)                                        //ISO14443BÐ­Òé±ê×¼
+ 148   1      //      {
+ 149   1      //            command[0] = ChipStateControl;
+ 150   1      //            command[1] = 0x21;                     // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
+ 151   1      //            WriteSingle(command, 2);
+ 152   1      //        
+ 153   1      //            //command[0] = ISOControl;                // ÉèÖÃÑ¡ÔñISO14443B²Ù×÷Ä£Ê½Îª:±ÈÌØÂÊ106kbps
+ 154   1      //            command[1] = 0x0C;
+ 155   1      //            WriteSingle(command, 2);
+ 156   1      
+ 157   1      //            delay_ms(5);
+ 158   1      //            AnticollisionSequenceB(0xB0, 0x04);     //Ö´ÐÐISO14443AÍêÕû·Â³å×²ÐòÁÐ(0x04±íÊ¾16²Ûslots)
+ 159   1      //            //AnticollisionSequenceB(0xB0, 0x00);  //0x00 ±íÊ¾µ¥¸ö²Ûslot
+ 160   1      
+ 161   1      //            command[0] = ChipStateControl;  
+ 162   1      //            command[1] = 0x01;
+ 163   1      //            WriteSingle(command, 2);               // ¹Ø±ÕRF²¿·ÖµçÂ· 
+ 164   1      //            delay_ms(1);
+ 165   1      
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/03/2019 19:21:51 PAGE 4   
 
- 167   1      //        
- 168   1      ////            if(SPIMODE)                            //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
- 169   1      //                ReadCont(command, 2);
- 170   1      ////            else
- 171   1      ////                ReadSingle(command, 1); 
- 172   1      //      }
- 173   1            // while(1){
- 174   1            //    command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
- 175   1            //       command[1] = 0x21;
- 176   1            //       command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñTag-it²Ù×÷Ä£Ê½
- 177   1            //       command[3] = 0x13;
- 178   1            //       WriteSingle(command, 4);
- 179   1            //       delay_ms(5);
- 180   1            //       flags = 0x00;
- 181   1            //       command[0] = 0x00;
- 182   1            //       TIInventoryRequest(command, 0);         //·¢ËÍÑ°¿¨ÃüÁî
- 183   1      
- 184   1            //       command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ· 
- 185   1            //       command[1] = 0x01;
- 186   1            //       WriteSingle(command, 2);
- 187   1            //       delay_ms(1);
- 188   1      
- 189   1            //       command[0] = IRQStatus;                 // ¸ø¼Ä´æÆ÷¸³Öµ 
- 190   1            //       command[1] = IRQMask;
- 191   1              
- 192   1            //       if(SPIMODE)
- 193   1            //           ReadCont(command, 2);               //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
- 194   1            //       else
- 195   1            //           ReadSingle(command, 1); 
- 196   1            // }
- 197   1      }   /* FindTags */
- 198          
+ 166   1      //            command[0] = IRQStatus;
+ 167   1      //            command[1] = IRQMask;   
+ 168   1      //        
+ 169   1      ////            if(SPIMODE)                            //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
+ 170   1      //                ReadCont(command, 2);
+ 171   1      ////            else
+ 172   1      ////                ReadSingle(command, 1); 
+ 173   1      //      }
+ 174   1            // while(1){
+ 175   1            //    command[0] = ChipStateControl;          // ¿ªÆôRFÊ¹ÄÜ£¬Ñ¡Ôñ5V²Ù×÷Ä£Ê½
+ 176   1            //       command[1] = 0x21;
+ 177   1            //       command[2] = ISOControl;                // ÉèÖÃÑ¡ÔñTag-it²Ù×÷Ä£Ê½
+ 178   1            //       command[3] = 0x13;
+ 179   1            //       WriteSingle(command, 4);
+ 180   1            //       delay_ms(5);
+ 181   1            //       flags = 0x00;
+ 182   1            //       command[0] = 0x00;
+ 183   1            //       TIInventoryRequest(command, 0);         //·¢ËÍÑ°¿¨ÃüÁî
+ 184   1      
+ 185   1            //       command[0] = ChipStateControl;          // ¹Ø±ÕRF²¿·ÖµçÂ· 
+ 186   1            //       command[1] = 0x01;
+ 187   1            //       WriteSingle(command, 2);
+ 188   1            //       delay_ms(1);
+ 189   1      
+ 190   1            //       command[0] = IRQStatus;                 // ¸ø¼Ä´æÆ÷¸³Öµ 
+ 191   1            //       command[1] = IRQMask;
+ 192   1              
+ 193   1            //       if(SPIMODE)
+ 194   1            //           ReadCont(command, 2);               //¶ÁÈ¡IRQÖÐ¶Ï×´Ì¬¼Ä´æÆ÷¼°ÖÐ¶Ï±êÖ¾
+ 195   1            //       else
+ 196   1            //           ReadSingle(command, 1); 
+ 197   1            // }
+ 198   1      }   /* FindTags */
+*** WARNING C280 IN LINE 87 OF automatic.c: 'i': unreferenced local variable
+*** WARNING C280 IN LINE 87 OF automatic.c: 'count': unreferenced local variable
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    223    ----
+   CODE SIZE        =    225    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     61      11
+   XDATA SIZE       =     29      13
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
@@ -237,4 +240,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

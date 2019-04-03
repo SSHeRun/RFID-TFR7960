@@ -6,6 +6,7 @@
 * 作    者：EMDOOR
 * 日    期：2011-9-29
 *************************************************************************************************************************/
+
 #include <anticollision.h>
 
 
@@ -137,15 +138,14 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght)
     command[1] = IRQMask;                           //虚拟读(Dummy read)
     ReadCont(command, 2);
 
-    Timer0_Delay(20);                    			//计时时间为 20ms
-                                                    //此处没有加StartCounter();
+    Timer0_Delay(20);                    						//计时时间为 20ms
     IRQCLR();                                       //清中断标志位
     IRQON();                                        //中断开启
-
+		
     //RAWwrite(&buf[0], masksize + 8);                //将数据写入到FIFO缓冲区中
 		RAWwrite(buf, masksize + 8);  
-
     i_reg = 0x01;                                   //设置中断标志值
+		
     StartCounter();                                   //开始以递增模式计时
     PCON |=0X01;                                           //等待TX发送结束
 
@@ -154,8 +154,9 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght)
         /* 初始化全局计数器 */
         /*====================================================================================================*/
         RXTXstate = 1;                              //设置标志位，其接收位存储于buf[1]起始位置
-        Timer0_Delay(20);                //计时时间为 20ms                      
+        Timer0_Delay(20);                						//计时时间为 20ms                      
         StartCounter();                               //开始以递增模式计时
+					
         k = 0;
         PCON |=0X01;
         /*====================================================================================================*/
@@ -174,21 +175,25 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght)
 				
         command[0] = RSSILevels;                    //读取信号强度值 RSSI
         ReadSingle(command, 1);
-
+			
+				
         if(i_reg == 0xFF)                           //如果字节已经是最后字节，接收到UID数据
         {     		
-            LEDON;							 
-            for(j = 10; j>=3; j--)
-            {
-                send_byte( buf[j] );               //发送ISO15693 UID码
-            }
-            LEDOFF;
-        }
-        else if(i_reg == 0x00)
-        {	
-
-        }
-        else;
+					LEDON;							 
+//					for(j = 10; j>=3; j--)
+//							{
+//									send_byte( buf[j] );               //发送ISO15693 UID码
+//							}
+					send_cstring("find it");
+					send_crlf();
+					LEDOFF;
+				}
+				else if(i_reg == 0x00)
+				{	
+//					send_cstring("hr is cool");
+//					send_crlf();
+				}
+				else;
 
         command[0] = Reset;                         //在接收下一个槽之前，使用直接命令复位FIFO
         DirectCommand(command);
@@ -246,8 +251,7 @@ void InventoryRequest(unsigned char *mask, unsigned char lenght)
 unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned char brokenBits, char noCRC)
 {
     unsigned char index, command;                 //定义变量
-    unsigned char j;
-	
+    
     RXTXstate = lenght;                             
 			
     *pbuf = 0x8f;
@@ -259,6 +263,7 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
     *(pbuf + 2) = 0x3d;
     *(pbuf + 3) = RXTXstate >> 4;
     *(pbuf + 4) = (RXTXstate << 4) | brokenBits;
+		//*(pbuf + 5) = 0x26;																//国外网友的建议
 
     if(lenght > 12)
         lenght = 12;
@@ -266,24 +271,28 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
     if(lenght == 0x00 && brokenBits != 0x00)
     {
         lenght = 1;
-        RXTXstate = 1;
-    }                                     //等待TX发送结束
+        RXTXstate = 1;															//接收标志位，其接收位存储于bug[1]起始位置
+    }
 
-		
+	
     RAWwrite(pbuf, lenght + 5);                    //以直接写FIFO模式发送命令
-		
-    IRQCLR();                                    //清中断标志位
+		//RAWwrite(pbuf, lenght + 6); 
+		IRQCLR();                                    //清中断标志位
     IRQON();
-
-    RXTXstate = RXTXstate - 12;
+				
+		RXTXstate = RXTXstate - 12;
     index = 17;
 		
-    i_reg = 0x01;
+	
+    //i_reg = 0x01;																		//此处i_reg原本为0x00，但是如果赋值为0x01，后面的循环就会卡死
+		 
+	
+
     while(RXTXstate > 0)
     {
 			
         //LPM0;                                       //进入低功耗模式，并退出中断
-		PCON |=0X01;
+				PCON |=0X01;
         if(RXTXstate > 9)                            //在RXTXstate全局变量中未发送的字节数量如果大于9
         {                       
             lenght = 10;                            //长度为10，其中包括FIFO中的9个字节及1个字节的地址值
@@ -315,44 +324,46 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
         PCON |= 0x01;
     }
 		
+		
     i_reg = 0x01;
     Timer0_Delay(60);                            	
     StartCounter();                                 
-
+		
+		
 		
      /* 如果中断标志位错误，则先复位后发送下个槽命令 */
     /*====================================================================================================*/
-    if(((buf[5] & 0x40) == 0x40) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] == 0x29))||(buf[5] == 0x00 && ((buf[6] & 0xF0) == 0x20 || (buf[6] & 0xF0) == 0x30 || (buf[6] & 0xF0) == 0x40)))
-    {
-            
-    delay_ms(20);        
-    command = Reset;
-    DirectCommand(&command);
-        
-    command = TransmitNextSlot;
-    DirectCommand(&command);
-    }
+		if(((buf[5] & 0x40) == 0x40) && ((buf[6] == 0x21) || (buf[6] == 0x24) || (buf[6] == 0x27) || (buf[6] == 0x29)||(buf[6] == 0x01))||(buf[5] == 0x00 && ((buf[6] & 0xF0) == 0x20 || (buf[6] & 0xF0) == 0x30 || (buf[6] & 0xF0) == 0x40)))
+		{
+				
+        delay_ms(20);        
+        command = Reset;
+        DirectCommand(&command);
+			
+        command = TransmitNextSlot;
+        DirectCommand(&command);
+		}
 
-    
-    while(i_reg == 0x01)                        //等待RX接收结束
-    {           
-        
-    }
+		
+        while(i_reg == 0x01)                        //等待RX接收结束
+        {           
+            
+        }
 				
    	
 	 if(i_reg == 0xFF)                      //接收到应答
-        {
-            if((buf[1]) == 0x00)                //操作成功 
-            {
-                send_cstring("ojbk");
-                send_crlf();
-            }
-            else                              //操作失败
-            {
-                send_cstring("shibai");
-                send_crlf();
-        }
-        }
+				{
+						if((buf[1]) == 0x00)                //操作成功 
+						{
+								send_cstring("ojbk");
+								send_crlf();
+						}
+						else                              //操作失败
+						{
+								send_cstring("shibai");
+								send_crlf();
+						}
+				}
 			else if(i_reg == 0x02)
 		{		 //冲撞发生
 			sendchar('[');
@@ -362,19 +373,24 @@ unsigned char RequestCommand(unsigned char *pbuf, unsigned char lenght, unsigned
 		}
 		else if(i_reg == 0x00)
 		{		 //定时时间到
-//			sendchar('[');
-//			sendchar('i');
-//			sendchar(']');
+			sendchar('[');
+			sendchar('i');
+			sendchar(']');
 			return(1);
 		}
 		else
 			;
 		
-		for(j = 1; j < RXTXstate; j++)
-		{   
-				send_byte(buf[j]);
-		}
-		send_crlf();                            
+//		for(j = 1; j < RXTXstate; j++)
+//		{   
+//				send_byte(buf[j]);
+//		}
+//		send_crlf();
+		
+//		 for(j = 11; j < RXTXstate - 1; j++)
+//			{   //????????????
+//				send_byte(buf[j]);
+//			}                                 
 
   
     IRQOFF();                                       //关闭中断

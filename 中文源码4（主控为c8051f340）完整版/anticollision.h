@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <communicate.h>
 #include <globals.h>
-
+#include <host.h>
 
 /******************************************************************************************************************
 * º¯ÊýÃû³Æ£ºEnableSlotCounter()
