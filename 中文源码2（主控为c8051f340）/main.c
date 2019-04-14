@@ -28,6 +28,8 @@ extern unsigned char frames[8];
 extern unsigned char num;
 extern bit receiveOver;
 
+extern bit flag1=0;
+
 void Uart0_Transmit(unsigned char tmp);
 /**
   * @file   main.c
@@ -39,25 +41,61 @@ void analysisFrames()
 {
 		unsigned char arr[4];  
 		unsigned char numOfTags = 0;
+	  unsigned char datas[2];
 		arr[0] = arr[1] = arr[2] = arr[3] = num;  
 		receiveOver = 0;
 	//	if(checkCRC(frames,num))       //data is right
 	//	{
+	       
 				do
 				{
-						if(frames[2] == 0x11)  //13.56M 15693协议读
-						{
-							 FindTags();
-								//???
-								//numOfTags = readBlock(frames[3]);  
-						}
-						else if(frames[2] == 0x12) //13.56M 15693协议写
-						{
-								//???
-								//writeBuf[0] = frames[4];
-								//writeBuf[1] = frames[5];
-								//numOfTags = writeBlock(frames[3]);	
-						}
+					FindTags();
+	      switch(frames[2])
+				{
+					case 0x11:
+						flag1=1;
+					  break;
+					case 0x12:
+						flag1=0;
+						Read_Block_Command(frames[3]);
+					  
+					  break;
+					case 0x13:
+						flag1=0;
+						Get_Info_Command();
+					  break;
+					case 0x14:
+						flag1=0;
+					  datas[0]=frames[4];
+					  datas[1]=frames[5];
+						Write_Block_Command(frames[3],datas);
+					  break;
+					case 0x15:
+						flag1=0;
+						Write_AFI_Command(frames[3]);
+					  break;
+					case 0x16:
+						flag1=0;
+						Write_DSFID_Command(frames[3]);
+					  break;
+					case 0x17:
+						flag1=0;
+						Get_sec_Command(frames[3],frames[4]);
+					  break;
+				}
+//						if(frames[2] == 0x11)  //13.56M 15693协议读
+//						{
+//							 FindTags();
+//								//???
+//								//numOfTags = readBlock(frames[3]);  
+//						}
+//						else if(frames[2] == 0x12) //13.56M 15693协议写
+//						{
+//								//???
+//								//writeBuf[0] = frames[4];
+//								//writeBuf[1] = frames[5];
+//								//numOfTags = writeBlock(frames[3]);	
+//						}
 					}	while(!numOfTags && !receiveOver);   //Waiting for a tag or next data frame
 		//	}
 	//	else
@@ -118,42 +156,43 @@ void main(void)
     { 
                                  //寻找各种协议标准卷标卡片
 		// FindTags(); 
-	  // while(!receiveOver);  //等待数据接收完毕 receiveOver = 1 退出
-	  //analysisFrames();
+	  while(!receiveOver);  //等待数据接收完毕 receiveOver = 1 退出
+	  send_cstring(frames);
+			analysisFrames();
     }
 }
 
 // 串口UART0中断
 //-----------------------------------------------------------
 //中断向量0x0023
-void UATR0_ISR(void)interrupt 4
-{
-	unsigned char temp;
-    //Rx、Tx共用中断
-    //接收中断
-    if(!TI0)
-    {
-        RI0=0 ;
-        temp=SBUF0 ;
-        Uart0_Transmit(temp);
-    }
-    //发送中断
-    else TI0=0;
-}
-//-----------------------------------------------------------
-// 串口UART0发送
-//-----------------------------------------------------------
-void Uart0_Transmit(unsigned char tmp)
-{
-    ES0 = 0 ;		//关UART0中断
-    EA = 0 ;		//关全局中断
-    SBUF0 = tmp ;
-    while(TI0 == 0);
-    TI0 = 0 ;
-    ES0 = 1 ;		//开UART0中断
-    EA = 1 ;		//开全局中断
-   
-}
+//void UATR0_ISR(void)interrupt 4
+//{
+//	unsigned char temp;
+//    //Rx、Tx共用中断
+//    //接收中断
+//    if(!TI0)
+//    {
+//        RI0=0 ;
+//        temp=SBUF0 ;
+//        Uart0_Transmit(temp);
+//    }
+//    //发送中断
+//    else TI0=0;
+//}
+////-----------------------------------------------------------
+//// 串口UART0发送
+////-----------------------------------------------------------
+//void Uart0_Transmit(unsigned char tmp)
+//{
+//    ES0 = 0 ;		//关UART0中断
+//    EA = 0 ;		//关全局中断
+//    SBUF0 = tmp ;
+//    while(TI0 == 0);
+//    TI0 = 0 ;
+//    ES0 = 1 ;		//开UART0中断
+//    EA = 1 ;		//开全局中断
+//   
+//}
 
 
 

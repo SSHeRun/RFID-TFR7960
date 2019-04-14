@@ -11,13 +11,22 @@
 #include <anticollision.h>
 #include <globals.h>
 #include <host.h>
+#include <crc.h>
 
 unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
 
 unsigned char   Firstdata = 1;                      //设置串口同步标志位
 unsigned char   ENABLE;                             //TRF7960??????????,1??;0????
-#define BAUDRATE           115200      // UART波特率设置
-#define SYSCLK             12000000    // 内部的晶振频率
+#define BAUDRATE           9600  // UART波特率设置
+#define SYSCLK             12000000   // 内部的晶振频率
+//#define BAUDRATE           115200      // UART波特率设置
+//#define SYSCLK             12000000    // 内部的晶振频率
+
+unsigned char frames[8] = {0x00,0x00,0x00,0x00,0x00,0x00};  
+unsigned char num = 0;											
+unsigned char previousData = 0;
+bit dataCome = 0;
+bit receiveOver = 0;
 
 /******************************************************************************************************************
 * 函数名称：PORT_Init()
@@ -28,15 +37,23 @@ unsigned char   ENABLE;                             //TRF7960??????????,1??;0???
 void PORT_Init (void)
 {  
    
-   P0MDOUT   = 0x10;
+   P0MDOUT  |= 0x10;
    XBR0      = 0x01;
    XBR1      = 0x40;
 }
 
+//-----------------------------------------------------------------------------
+// 系统时钟初始化
+//-----------------------------------------------------------------------------
+void SYSCLK_Init(void)
+{
+    OSCICN|=0x03 ;		 // 配置内部振荡器的的最大频率
+    RSTSRC=0x04 ;		// 使能始终丢失检测寄存器
+}
 
 void UART0_Init(void)
 {	
-    SCON0 |= 0x10;   //8位数据位，1位停止位，使能接收                   
+    SCON0 = 0x10;   //8位数据位，1位停止位，使能接收                   
  
    if (SYSCLK/BAUDRATE/2/256 < 1)
    {
@@ -48,7 +65,7 @@ void UART0_Init(void)
    {
       TH1 = -(SYSCLK/BAUDRATE/2/4);
       CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
-      CKCON |=  0x09;
+      CKCON |=  0x01;
    }
    else if (SYSCLK/BAUDRATE/2/256 < 12)
    {
@@ -65,7 +82,7 @@ void UART0_Init(void)
    TMOD &= ~0xf0;                      // TMOD: timer 1 in 8-bit autoreload
    TMOD |=  0x20;
    TR1 = 1;                            // START Timer1
-   TI0 = 1;                            // Indicate TX0 ready
+   //TI0 = 1;                            // Indicate TX0 ready
 }
 
 
@@ -80,15 +97,24 @@ void UART0_Init(void)
 sendchar(char TXchar)
 {
      
-      if (TXchar == '\n')  {                // check for newline character
-         while (!TI0);                 // wait until UART0 is ready to transmit
-         TI0 = 0;                      // clear interrupt flag
-         SBUF0 = 0x0d;                 // output carriage return command
-      }
-      while (!TI0);                    // wait until UART0 is ready to transmit
-      TI0 = 0;
-			SBUF0 = TXchar;                         // clear interrupt flag
-      return (SBUF0);              // output <c> using UART 0
+//      if (TXchar == '\n')  {                // check for newline character
+//         while (!TI0);                 // wait until UART0 is ready to transmit
+//         TI0 = 0;                      // clear interrupt flag
+//         SBUF0 = 0x0d;                 // output carriage return command
+//      }
+//      while (!TI0);                    // wait until UART0 is ready to transmit
+//      TI0 = 0;
+//	  SBUF0 = TXchar;                         // clear interrupt flag
+//      return (SBUF0);              // output <c> using UART 0
+
+		ES0 = 0 ;		//关UART0中断
+    EA = 0 ;		//关全局中断
+    SBUF0 = TXchar ;
+    while(TI0 == 0);
+    TI0 = 0 ;
+    ES0 = 1 ;		//开UART0中断
+    EA = 1 ;		//开全局中断
+
 }
 
 
@@ -158,35 +184,29 @@ void send_byte(unsigned char abyte)
     temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
     sendchar(temp2);                                //发送之
 }
-/******************************************************************************************************************
-* 函数名称：Get_nibble()
-* 功    能：在发送字节函数Put_byte结束后，获取一个十六进制字节
-* 入口参数：无
-* 出口参数：rxdata          返回接收到的字节
-* 说    明：该函数调用两次Nibble2Ascii，将一个字节拆分成高低四位，先转换再次序发送。
-*******************************************************************************************************************/
 unsigned char Get_nibble(void)
 {
-    unsigned char reading;                          //读标志位
+    unsigned char reading;                          //????
     //unsigned char rxdata;
-    reading = 1;                                    //标志位置1 表示读取尚未完成
-    while(reading)                                   //循环读取字符
+		send_cstring("Get_nibble");
+    reading = 1;                                    //????1 ????????
+    while(reading)                                  //??????
     {                   		
         //LPM0; 
-				PCON |= 0x01;				        //进入低功耗模式，等待唤醒
-        if(rxdata >= 'a')                           //转换成大写字母
+				PCON |= 0x01;				//???????,????
+        if(rxdata >= 'a')                           //???????
         {
             rxdata -= 32;
         }
 
-         /* 如果为十六进制，则回显之 */
+        /* ???????,???? */
         /*====================================================================================================*/
         if(((rxdata >= '0') && (rxdata <= '9')) || ((rxdata >= 'A') && (rxdata <= 'F')))
         {
             reading = 0;
-            sendchar(rxdata);                       //发送回显字符
+            sendchar(rxdata);                       //??????
         
-            if(rxdata > '9')                        //如果ASCII码值范围是A-F，则加9
+            if(rxdata > '9')                        //??ASCII?????A-F,??9
             {       
                 rxdata = (rxdata & 0x0F) + 9;
             }
@@ -194,58 +214,121 @@ unsigned char Get_nibble(void)
         /*====================================================================================================*/
     }
     
-    return(rxdata);                                 //返回接收字符                              
+    return(rxdata);                                 //??????                             
 }
-/******************************************************************************************************************
-* 函数名称：RXhandler()
-* 功    能：串口接收中断服务程序
-* 入口参数：无
-* 出口参数：无
-* 说    明：串口USCI_A0接收向量中断
-*******************************************************************************************************************/
+//void Uart0_Transmit(unsigned char tmp)
+//{
+//    ES0 = 0 ;		//关UART0中断
+//    EA = 0 ;		//关全局中断
+//    SBUF0 = tmp ;
+//    while(TI0 == 0);
+//    TI0 = 0 ;
+//    ES0 = 1 ;		//开UART0中断
+//    EA = 1 ;		//开全局中断
+//   
+//}
+void uartInt(void) interrupt 4 
+{
+	unsigned char temp;
+    
+	unsigned char ch;
+	
+  if(TI0)
+	{
+			TI0=0;
+	}
+	else
+	{		
+			RI0 = 0;
+			ch = SBUF0;  // receive USART抯 data
+			if(ch == 0xaa) 
+			{
+				dataCome = 1;
+				receiveOver = 0;
+				num = 0;
+			}
+			if(dataCome == 1)
+			{			  
+					if( previousData == 0x1B)
+					{  
+							frames[num++] = ch;		//save data
+							previousData = 0x00;
+					} 
+					else
+					{	
+							if(ch == 0x1B)
+							{
+									previousData = 0x1B;
+							} 
+							else if(ch != 0xff)
+							{
+									frames[num++] = ch;		//save data
+									previousData = 0x00;
+							} 
+							else   //ch == 0xff
+							{
+									frames[num++] = ch;		//save last data :0xff
+									dataCome = 0;
+									previousData = 0x00;
+									receiveOver = 1;
+							}
+					}
+			}		
+	}
+}
+
+/**
+  * @file   uart.c
+	* @brief  Send unsigned char array by usart 
+  * @param  str The array waiting to be send
+	* @param  n   The array's length
+  * @retval None
+  */
+void PrintData(unsigned char b[],unsigned char n)
+{
+		unsigned char i;
+		//LED1=0;
+		send_byte(0xaa); //frame start
+		for(i = 0 ; i< n ; i++)
+		{
+				if(b[i] == 0xFF || b[i] == 0x1B)
+				{
+						send_byte(0x1B);
+				}
+				send_byte(b[i]);
+		}
+	//	send_byte(caculCRC(b,n));  
+		send_byte(0xff);  //frame end
+		delay_ms(1000);
+		//LED1=1;
+		delay_ms(1000);
+
+}
+
 //void RXhandler (void) interrupt 4
 //{
-//	  if(!TI0){          
-//			RI0=0 ;          
-//			rxdata=SBUF0 ;  
-//			if(rxdata!='\0'){   
-//				SBUF0='t';    
-//				while(TI0==0);  //??   
-//				TI0=0;  
-//				rxdata='\0'; 
-//			}			
-//		}      //????     
-//		else TI0=0 ;
-//	
-//		
+//    if(RI0==1)                            //?????????
+//    {   
+//        rxdata = SBUF0;                         //??????UCA0RXBUF?????rxdata
+//        RXdone = 1;                                 //???????
+//        if(ENABLE == 0)                             //TRF7960??????
+//        {
+//            TRFEnable();                            //??TRF790
+//            //BaudSet(0x00);                          //?????
+//            OSCsel();                           //????????? 
+//               
+//            InitialSettings();                      //???TRF7960
+//            send_cstring("Reader enabled.");        //????????
+//            ENABLE = 1;                             //??TRF7960???
+//        }
+//       PCON &= ~0X02;
 
-//	
-////    if(RI0==1)                            //如果串口接收到数据
-////    {   
-////        rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
-////        RXdone = 1;                                 //置起接收标志位
-////        if(ENABLE == 0)                            //TRF7960在禁止状态下
-////        {
-////            TRFEnable();                             //使能TRF790
-////            //BaudSet(0x00);                          //设置波特率
-////            OSCsel();                           //设置外部晶体振荡器 
-////               
-////            InitialSettings();                     //初始化TRF7960
-////            send_cstring("Reader enabled.");        //向上位机发送信息
-////            ENABLE = 1;                             //设置TRF7960标志位
-////        }
-////       PCON = 0X00;                                   //退出idle和stop的状态
-
-////        if(Firstdata)                              //如果是第1次接收到数据
-////        {
-////            
-////            IRQOFF();                               //关闭IRQ中断
-////            StopCounter();                            //停止计数器
-////         
-////            // /* 利用SP操作，在中断返回后，可调用HostCommands函数 */
-////            // /*-----------------------------------------------------------------------------*/
-////            // asm("mov.w #HostCommands,10(SP)");      //调用HostCommands函数
-////            // /*-----------------------------------------------------------------------------*/
-////        }
-////    }
+//        if(Firstdata)                               //????1??????
+//        {
+//            
+//            IRQOFF();                               //??IRQ??
+//            StopCounter();                          //?????
+//         
+//        }
+//    }
 //}

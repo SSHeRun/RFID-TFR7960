@@ -1,0 +1,264 @@
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/14/2019 22:22:17 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE AUTOMATIC
+OBJECT MODULE PLACED IN .\Objects\automatic.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE automatic.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
+                    -stings\automatic.lst) TABS(2) OBJECT(.\Objects\automatic.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+             -*********
+   2          * 文 件 名：AUTOMATIC.C
+   3          * 功    能：侦测阅读器阅读范围内的所有卷标卡片。
+   4          *
+   5          * 作    者：EMDOOR
+   6          * 日    期：2011-9-29
+   7          **********************************************************************************************************
+             -**********/
+   8          #include <automatic.h>
+   9          
+  10          unsigned char Set_pro1[9]={0x0C,0x00,0x03,0x04,0x10,0x00,0x21,0x01,0x00};                    //??????
+  11          //unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21,0x08,0xFF,0xFF};  //????0x01 ??12345678
+  12          //unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20,0x08};                        //????0x01
+  13          //unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27,0x01};                       //?AFI??01
+  14          //unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29,0xEE};                     //?DSFID??EE
+  15          //unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //????????
+  16          
+  17          //unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                    //?????????0
+             -x01,???02(???3??)
+  18          unsigned char Get_info[7]={0x0A,0x00,0x03,0x04,0x18,0x00,0x2B};                             //???????
+  19          //unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C,0x01,0x01};                    /????????0x0
+             -1,???02(???3??)
+  20          
+  21          unsigned char Write_Sig[12]={0x0F,0x00,0x03,0x04,0x18,0x00,0x21};//???
+  22          unsigned char Write_AFI[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x27};//?AFI
+  23          unsigned char Write_DSFID[8]={0x0B,0x00,0x03,0x04,0x18,0x40,0x29};//?DSFID
+  24          
+  25          
+  26          unsigned char Read_Sig[8]={0x0B,0x00,0x03,0x04,0x18,0x00,0x20};//???
+  27          unsigned char Get_sec[9]={0x0C,0x00,0x03,0x04,0x18,0x00,0x2C};//???????
+  28          
+  29          //??TRF7961????
+  30          void Set_Pro()
+  31          {
+  32   1            unsigned char i,count;   
+  33   1      
+  34   1            for(i = 0; i < 9; i++)                      //??TRF7961????
+  35   1            {
+  36   2                buf[i]=Set_pro1[i];
+  37   2            }
+  38   1            
+  39   1            count = buf[0] - 8;
+  40   1            WriteSingle(&buf[5], count);
+  41   1      }
+  42          
+  43          //?AFI???
+  44          void Write_AFI_Command(unsigned char datas)
+  45          {
+  46   1         unsigned char i,count;
+  47   1          Set_Pro();//??????
+  48   1          for(i = 0; i < 7; i++)             //???????0x01 12345678
+  49   1         {
+  50   2            buf[ i ] = Write_AFI[ i ];
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/14/2019 22:22:17 PAGE 2   
+
+  51   2         }
+  52   1         buf[7]=datas;
+  53   1         count=buf[0]-8;
+  54   1         RequestCommand(buf,count,0x00,0);//?????? 
+  55   1      }
+  56          
+  57           //?DSFID??????
+  58          void Write_DSFID_Command(unsigned char datas)
+  59          {
+  60   1        unsigned char i,count;
+  61   1          Set_Pro();//??????
+  62   1          for(i = 0; i < 7; i++)             //???????0x01 12345678
+  63   1         {
+  64   2            buf[ i ] = Write_DSFID[ i ];
+  65   2         }
+  66   1         buf[7]=datas;
+  67   1         count=buf[0]-8;
+  68   1         RequestCommand(buf,count,0x00,0);//?????? 
+  69   1      }
+  70          
+  71          //????????
+  72          void Get_Info_Command()
+  73          {
+  74   1        unsigned char i,count;
+  75   1          Set_Pro();//??????
+  76   1          for(i = 0; i < 7; i++)             //???????0x01 12345678
+  77   1         {
+  78   2            buf[ i ] = Get_info[ i ];
+  79   2         }   
+  80   1         count=buf[0]-8;
+  81   1         RequestCommand(buf,count,0x00,0);//?????? 
+  82   1      }
+  83          
+  84          //?????????
+  85          void Get_sec_Command(unsigned char block,unsigned char datas)
+  86          {
+  87   1         unsigned char i,count;
+  88   1         Set_Pro();//??????
+  89   1         for(i = 0; i < 7; i++)             //???????0x01 12345678
+  90   1         {
+  91   2            buf[ i ] = Get_sec[ i ];
+  92   2         }
+  93   1         buf[7]=block;
+  94   1         buf[8]=datas;
+  95   1        
+  96   1         count=buf[0]-8;
+  97   1         RequestCommand(buf,count,0x00,0);//?????? 
+  98   1      }
+  99          
+ 100          //??????
+ 101          void Write_Block_Command(unsigned char block,unsigned char datas[2])
+ 102          {
+ 103   1          unsigned char i,count;
+ 104   1          Set_Pro();//??????
+ 105   1          for(i = 0; i < 7; i++)             //???????0x01 12345678
+ 106   1         {
+ 107   2            buf[ i ] = Write_Sig[ i ];
+ 108   2         }
+ 109   1         buf[7]=block;
+ 110   1         buf[8]=datas[0];
+ 111   1         buf[9]=datas[1];
+ 112   1         count=buf[0]-8;
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/14/2019 22:22:17 PAGE 3   
+
+ 113   1         RequestCommand(buf,count,0x00,0);//?????? 
+ 114   1      }
+ 115          //??????
+ 116          void Read_Block_Command(unsigned char block)
+ 117          {
+ 118   1        unsigned char i,count;
+ 119   1        Set_Pro();//??????
+ 120   1        for(i = 0; i < 7; i++)              //???????0x01
+ 121   1        {
+ 122   2                buf[ i ] = Read_Sig[ i ];
+ 123   2        }
+ 124   1        buf[8]=block;
+ 125   1        count=buf[0]-8;
+ 126   1        RequestCommand(buf,count,0x00,0);//?????? 
+ 127   1      }
+ 128          
+ 129          /*********************************************************************************************************
+             -*********
+ 130          * 函数名称：FindTags()
+ 131          * 功    能：根据指定卷标协议类型，设置TRF7960配置各相关寄存器后，进行寻卡操作。
+ 132          * 入口参数：protocol       指定协议类型
+ 133          * 出口参数：无
+ 134          * 说    明：该函数是一个死循环函数，所有的脱机演示执行过程均在此完成。
+ 135          **********************************************************************************************************
+             -*********/
+ 136          void FindTags(void)
+ 137          {
+ 138   1          unsigned char command[10];                      //定义命令数据暂存缓冲器数组
+ 139   1          unsigned char i, count;
+ 140   1          while(1)
+ 141   1          {
+ 142   2                  command[0] = ChipStateControl;          // ??RF??,??5V????
+ 143   2                  command[1] = 0x21;
+ 144   2                  command[2] = ISOControl;                // ????ISO15693?????:????26.48kbps ???? 1/4(????)
+ 145   2                  command[3] = 0x02;
+ 146   2                  WriteSingle(command, 4);                // ?4??????TRF7960????
+ 147   2      
+ 148   2                  delay_ms(5);
+ 149   2                  flags = 0x06;                           // 16(slot)???
+ 150   2                  //flags = 0x26;
+ 151   2      
+ 152   2                  command[0] = 0x04;
+ 153   2                  
+ 154   2                  count = buf[0] - 9;
+ 155   2                  InventoryRequest(command, 0);           // ????????(?????)      
+ 156   2      
+ 157   2                  command[0] = ChipStateControl;          // ??RF????
+ 158   2                  command[1] = 0x01;
+ 159   2                  WriteSingle(command, 2);
+ 160   2                  delay_ms(1);
+ 161   2      
+ 162   2                  command[0] = IRQStatus;                 // ??????
+ 163   2                  command[1] = IRQMask;               
+ 164   2      
+ 165   2                                            
+ 166   2              ReadCont(command, 2);                //??IRQ????????????
+ 167   2          
+ 168   2              delay_ms(10);
+ 169   2          }   /* while */
+ 170   1        
+ 171   1      //    while(1)
+ 172   1      //    {
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/14/2019 22:22:17 PAGE 4   
+
+ 173   1      //            command[0] = ChipStateControl;          // ??RF??,??5V????
+ 174   1      //            command[1] = 0x21;
+ 175   1      //            command[2] = ISOControl;                // ????ISO14443A?????:???106kbps
+ 176   1      //            command[3] = 0x08;
+ 177   1      //            WriteSingle(command, 4);
+ 178   1      //            delay_ms(5);
+ 179   1      //            
+ 180   1      //            AnticollisionSequenceA(0x00);           //??ISO14443A???????
+ 181   1      //            
+ 182   1      //            command[0] = ChipStateControl;          // ??????
+ 183   1      //            command[1] = 0x01;
+ 184   1      //            WriteSingle(command, 2);                // ??RF???? 
+ 185   1      //            delay_ms(1);
+ 186   1      
+ 187   1      //            command[0] = IRQStatus;                 // ?????? 
+ 188   1      //            command[1] = IRQMask;   
+ 189   1      //        
+ 190   1      ////            if(SPIMODE)
+ 191   1      //                ReadCont(command, 2);               //??IRQ????????????
+ 192   1      ////            else
+ 193   1      ////                ReadSingle(command, 1); 
+ 194   1      //    }
+ 195   1      
+ 196   1      
+ 197   1      //      while(1)
+ 198   1      //      {
+ 199   1      //            command[0] = ChipStateControl;
+ 200   1      //            command[1] = 0x21;                      // ??RF??,??5V????
+ 201   1      //            WriteSingle(command, 2);
+ 202   1      //        
+ 203   1      //            command[0] = ISOControl;                // ????ISO14443B?????:???106kbps
+ 204   1      //            command[1] = 0x0C;
+ 205   1      //            WriteSingle(command, 2);
+ 206   1      
+ 207   1      //            delay_ms(5);
+ 208   1      //            AnticollisionSequenceB(0xB1, 0x04);     //??ISO14443A???????(0x04??16?slots)
+ 209   1      //            //AnticollisionSequenceB(0xB0, 0x00);   //0x00 ?????slot
+ 210   1      
+ 211   1      //            command[0] = ChipStateControl;  
+ 212   1      //            command[1] = 0x01;
+ 213   1      //            WriteSingle(command, 2);                // ??RF???? 
+ 214   1      //            delay_ms(1);
+ 215   1      
+ 216   1      //            command[0] = IRQStatus;
+ 217   1      //            command[1] = IRQMask;   
+ 218   1      //        
+ 219   1      ////            if(SPIMODE)                             //??IRQ????????????
+ 220   1      //                ReadCont(command, 2);
+ 221   1      ////            else
+ 222   1      ////                ReadSingle(command, 1); 
+ 223   1      //      }
+ 224   1      }   /* FindTags */
+*** WARNING C280 IN LINE 139 OF automatic.c: 'i': unreferenced local variable
+ 225          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    630    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     61      21
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+C51 COMPILER V9.57.0.0   AUTOMATIC                                                         04/14/2019 22:22:17 PAGE 5   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

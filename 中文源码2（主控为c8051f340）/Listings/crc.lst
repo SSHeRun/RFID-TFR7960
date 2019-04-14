@@ -1,0 +1,75 @@
+C51 COMPILER V9.57.0.0   CRC                                                               04/14/2019 22:22:26 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE CRC
+OBJECT MODULE PLACED IN .\Objects\crc.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE crc.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\crc.lst) TABS(2) OBJECT(.\Objects\crc.obj)
+
+line level    source
+
+   1          /**
+   2            * @file crc.h
+   3            * @auther Sherry Hwang
+   4            * @version V1.0
+   5            * @date 26-December-2018
+   6            * @breif The CRC caculation and check
+   7            */
+   8          #include "crc.h"
+   9          /**
+  10            * @file   crc.c
+  11            * @brief  Caculate frames's CRC
+  12            * @param  str The array waiting to be caculated
+  13            * @param  n   The array's length
+  14            * @retval the CRC value of the frames
+  15            */
+  16          unsigned char caculCRC(unsigned char *str,unsigned char n) 
+  17          {
+  18   1          unsigned char i = 0;
+  19   1          unsigned char sum = 0xaa;
+  20   1      
+  21   1          for(i = 0; i < n; i++) 
+  22   1          {
+  23   2              sum += str[i];
+  24   2          }
+  25   1          return sum;
+  26   1      }
+  27          
+  28          /**
+  29            * @file   crc.c
+  30            * @brief  Check frames's CRC
+  31            * @param  str The array waiting to be checked
+  32            * @param  n   The array's length
+  33            * @retval Whether the frames's CRC is right
+  34            */
+  35          bit checkCRC(unsigned char *str,unsigned char n)
+  36          {
+  37   1          //CRC frames[num-2]
+  38   1          unsigned char i = 0;
+  39   1          unsigned char sum = 0;
+  40   1      
+  41   1          for(i = 0; i < n - 2; i++) {
+  42   2              sum += str[i];
+  43   2          }
+  44   1      
+  45   1          if(sum == str[n - 2]) {
+  46   2              return 1;
+  47   2          }
+  48   1          return 0;
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    127    ----
+   CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.57.0.0   CRC                                                               04/14/2019 22:22:26 PAGE 2   
+
+   XDATA SIZE       =   ----       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

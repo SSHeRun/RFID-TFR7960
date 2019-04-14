@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   HOST                                                              03/30/2019 15:23:54 PAGE 1   
+C51 COMPILER V9.57.0.0   HOST                                                              04/12/2019 19:55:10 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE HOST
@@ -50,7 +50,7 @@ line level    source
   36          
   37          void UART0_Init(void)
   38          { 
-  39   1          SCON0 = 0x10;   //8位数据位，1位停止位，使能接收                   
+  39   1          SCON0 |= 0x10;   //8位数据位，1位停止位，使能接收                   
   40   1       
   41   1         if (SYSCLK/BAUDRATE/2/256 < 1)
   42   1         {
@@ -62,7 +62,7 @@ line level    source
   48   1         {
   49   2            TH1 = -(SYSCLK/BAUDRATE/2/4);
   50   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
-C51 COMPILER V9.57.0.0   HOST                                                              03/30/2019 15:23:54 PAGE 2   
+C51 COMPILER V9.57.0.0   HOST                                                              04/12/2019 19:55:10 PAGE 2   
 
   51   2            CKCON |=  0x09;
   52   2         }
@@ -105,7 +105,7 @@ line level    source
   87   2            }
   88   1            while (!TI0);                    // wait until UART0 is ready to transmit
   89   1            TI0 = 0;
-  90   1          SBUF0 = TXchar;                         // clear interrupt flag
+  90   1            SBUF0 = TXchar;                         // clear interrupt flag
   91   1            return (SBUF0);              // output <c> using UART 0
   92   1      }
   93          
@@ -126,7 +126,7 @@ line level    source
  106   1      }
  107          
  108          /*********************************************************************************************************
-C51 COMPILER V9.57.0.0   HOST                                                              03/30/2019 15:23:54 PAGE 3   
+C51 COMPILER V9.57.0.0   HOST                                                              04/12/2019 19:55:10 PAGE 3   
 
              -*********
  109          * 函数名称：send_cstring()
@@ -190,7 +190,7 @@ line level    source
              -*********
  162          * 函数名称：Get_nibble()
  163          * 功    能：在发送字节函数Put_byte结束后，获取一个十六进制字节
-C51 COMPILER V9.57.0.0   HOST                                                              03/30/2019 15:23:54 PAGE 4   
+C51 COMPILER V9.57.0.0   HOST                                                              04/12/2019 19:55:10 PAGE 4   
 
  164          * 入口参数：无
  165          * 出口参数：rxdata          返回接收到的字节
@@ -239,45 +239,60 @@ line level    source
  204          * 说    明：串口USCI_A0接收向量中断
  205          **********************************************************************************************************
              -*********/
- 206          void RXhandler (void) interrupt 4
- 207          {
- 208   1          if(RI0==1)                            //如果串口接收到数据
- 209   1          {   
- 210   2              rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
- 211   2              RXdone = 1;                                 //置起接收标志位
- 212   2              if(ENABLE == 0)                            //TRF7960在禁止状态下
- 213   2              {
- 214   3                  TRFEnable();                             //使能TRF790
- 215   3                  //BaudSet(0x00);                          //设置波特率
- 216   3                  OSCsel();                           //设置外部晶体振荡器 
- 217   3                     
- 218   3                  InitialSettings();                     //初始化TRF7960
- 219   3                  send_cstring("Reader enabled.");        //向上位机发送信息
- 220   3                  ENABLE = 1;                             //设置TRF7960标志位
-C51 COMPILER V9.57.0.0   HOST                                                              03/30/2019 15:23:54 PAGE 5   
+ 206          //void RXhandler (void) interrupt 4
+ 207          //{
+ 208          //    if(!TI0){          
+ 209          //      RI0=0 ;          
+ 210          //      rxdata=SBUF0 ;  
+ 211          //      if(rxdata!='\0'){   
+ 212          //        SBUF0='t';    
+ 213          //        while(TI0==0);  //??   
+ 214          //        TI0=0;  
+ 215          //        rxdata='\0'; 
+ 216          //      }     
+ 217          //    }      //????     
+ 218          //    else TI0=0 ;
+ 219          //  
+ 220          //    
+C51 COMPILER V9.57.0.0   HOST                                                              04/12/2019 19:55:10 PAGE 5   
 
- 221   3              }
- 222   2             PCON = 0X00;                                   //退出idle和stop的状态
- 223   2      
- 224   2              if(Firstdata)                              //如果是第1次接收到数据
- 225   2              {
- 226   3                  
- 227   3                  IRQOFF();                               //关闭IRQ中断
- 228   3                  StopCounter();                            //停止计数器
- 229   3               
- 230   3                  // /* 利用SP操作，在中断返回后，可调用HostCommands函数 */
- 231   3                  // /*-----------------------------------------------------------------------------*/
- 232   3                  // asm("mov.w #HostCommands,10(SP)");      //调用HostCommands函数
- 233   3                  // /*-----------------------------------------------------------------------------*/
- 234   3              }
- 235   2          }
- 236   1      }
+ 221          
+ 222          //  
+ 223          ////    if(RI0==1)                            //如果串口接收到数据
+ 224          ////    {   
+ 225          ////        rxdata = SBUF0;                         //将接收缓冲区UCA0RXBUF数据赋值给rxdata
+ 226          ////        RXdone = 1;                                 //置起接收标志位
+ 227          ////        if(ENABLE == 0)                            //TRF7960在禁止状态下
+ 228          ////        {
+ 229          ////            TRFEnable();                             //使能TRF790
+ 230          ////            //BaudSet(0x00);                          //设置波特率
+ 231          ////            OSCsel();                           //设置外部晶体振荡器 
+ 232          ////               
+ 233          ////            InitialSettings();                     //初始化TRF7960
+ 234          ////            send_cstring("Reader enabled.");        //向上位机发送信息
+ 235          ////            ENABLE = 1;                             //设置TRF7960标志位
+ 236          ////        }
+ 237          ////       PCON = 0X00;                                   //退出idle和stop的状态
+ 238          
+ 239          ////        if(Firstdata)                              //如果是第1次接收到数据
+ 240          ////        {
+ 241          ////            
+ 242          ////            IRQOFF();                               //关闭IRQ中断
+ 243          ////            StopCounter();                            //停止计数器
+ 244          ////         
+ 245          ////            // /* 利用SP操作，在中断返回后，可调用HostCommands函数 */
+ 246          ////            // /*-----------------------------------------------------------------------------*/
+ 247          ////            // asm("mov.w #HostCommands,10(SP)");      //调用HostCommands函数
+ 248          ////            // /*-----------------------------------------------------------------------------*/
+ 249          ////        }
+ 250          ////    }
+ 251          //}
 *** WARNING C294 IN LINE 49 OF host.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    371    ----
-   CONSTANT SIZE    =     16    ----
+   CODE SIZE        =    255    ----
+   CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      3       3
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

@@ -1,0 +1,390 @@
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE HOST
+OBJECT MODULE PLACED IN .\Objects\host.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE host.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\host.lst) TABS(2) OBJECT(.\Objects\host.obj)
+
+line level    source
+
+   1          /*********************************************************************************************************
+             -***********
+   2          * 文 件 名：HOST.C
+   3          * 功    能：串口相关的功能函数以及设置
+   4          *
+   5          * 作    者：EMDOOR
+   6          * 日    期：2011-9-29
+   7          **********************************************************************************************************
+             -***********/
+   8          #include <C8051F340.h>
+   9          #include <hardware.h>
+  10          #include <communicate.h>
+  11          #include <anticollision.h>
+  12          #include <globals.h>
+  13          #include <host.h>
+  14          #include <crc.h>
+  15          
+  16          unsigned char   RXdone;                             //接收完整数据标志位，若接收完成，置该标志位1
+  17          
+  18          unsigned char   Firstdata = 1;                      //设置串口同步标志位
+  19          unsigned char   ENABLE;                             //TRF7960??????????,1??;0????
+  20          #define BAUDRATE           9600  // UART波特率设置
+  21          #define SYSCLK             12000000   // 内部的晶振频率
+  22          //#define BAUDRATE           115200      // UART波特率设置
+  23          //#define SYSCLK             12000000    // 内部的晶振频率
+  24          
+  25          unsigned char frames[8] = {0x00,0x00,0x00,0x00,0x00,0x00};  
+  26          unsigned char num = 0;                      
+  27          unsigned char previousData = 0;
+  28          bit dataCome = 0;
+  29          bit receiveOver = 0;
+  30          
+  31          /*********************************************************************************************************
+             -*********
+  32          * 函数名称：PORT_Init()
+  33          * 功    能：串口初始化设置函数
+  34          * 入口参数：无
+  35          * 出口参数：无   
+  36          *****************************0.***************************************************************************
+             -***********/
+  37          void PORT_Init (void)
+  38          {  
+  39   1         
+  40   1         P0MDOUT  |= 0x10;
+  41   1         XBR0      = 0x01;
+  42   1         XBR1      = 0x40;
+  43   1      }
+  44          
+  45          //-----------------------------------------------------------------------------
+  46          // 系统时钟初始化
+  47          //-----------------------------------------------------------------------------
+  48          void SYSCLK_Init(void)
+  49          {
+  50   1          OSCICN|=0x03 ;     // 配置内部振荡器的的最大频率
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 2   
+
+  51   1          RSTSRC=0x04 ;   // 使能始终丢失检测寄存器
+  52   1      }
+  53          
+  54          void UART0_Init(void)
+  55          { 
+  56   1          SCON0 = 0x10;   //8位数据位，1位停止位，使能接收                   
+  57   1       
+  58   1         if (SYSCLK/BAUDRATE/2/256 < 1)
+  59   1         {
+  60   2            TH1 = -(SYSCLK/BAUDRATE/2);
+  61   2            CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+  62   2            CKCON |=  0x08;
+  63   2         } 
+  64   1         else if (SYSCLK/BAUDRATE/2/256 < 4)
+  65   1         {
+  66   2            TH1 = -(SYSCLK/BAUDRATE/2/4);
+  67   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
+  68   2            CKCON |=  0x01;
+  69   2         }
+  70   1         else if (SYSCLK/BAUDRATE/2/256 < 12)
+  71   1         {
+  72   2            TH1 = -(SYSCLK/BAUDRATE/2/12);
+  73   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 00
+  74   2         } else
+  75   1         {
+  76   2            TH1 = -(SYSCLK/BAUDRATE/2/48);
+  77   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 10
+  78   2            CKCON |=  0x02;
+  79   2         }
+  80   1      
+  81   1         TL1 = TH1;                          // init Timer1
+  82   1         TMOD &= ~0xf0;                      // TMOD: timer 1 in 8-bit autoreload
+  83   1         TMOD |=  0x20;
+  84   1         TR1 = 1;                            // START Timer1
+  85   1         //TI0 = 1;                            // Indicate TX0 ready
+  86   1      }
+  87          
+  88          
+  89          
+  90          /*********************************************************************************************************
+             -*********
+  91          * 函数名称：sendchar()
+  92          * 功    能：向计算器上位机发送一个字符函数
+  93          * 入口参数：TXchar    将要被发送的字符
+  94          * 出口参数：无
+  95          * 说    明：无   
+  96          **********************************************************************************************************
+             -*********/
+  97          sendchar(char TXchar)
+  98          {
+  99   1           
+ 100   1      //      if (TXchar == '\n')  {                // check for newline character
+ 101   1      //         while (!TI0);                 // wait until UART0 is ready to transmit
+ 102   1      //         TI0 = 0;                      // clear interrupt flag
+ 103   1      //         SBUF0 = 0x0d;                 // output carriage return command
+ 104   1      //      }
+ 105   1      //      while (!TI0);                    // wait until UART0 is ready to transmit
+ 106   1      //      TI0 = 0;
+ 107   1      //    SBUF0 = TXchar;                         // clear interrupt flag
+ 108   1      //      return (SBUF0);              // output <c> using UART 0
+ 109   1      
+ 110   1          ES0 = 0 ;   //关UART0中断
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 3   
+
+ 111   1          EA = 0 ;    //关全局中断
+ 112   1          SBUF0 = TXchar ;
+ 113   1          while(TI0 == 0);
+ 114   1          TI0 = 0 ;
+ 115   1          ES0 = 1 ;   //开UART0中断
+ 116   1          EA = 1 ;    //开全局中断
+ 117   1      
+ 118   1      }
+ 119          
+ 120          
+ 121          /*********************************************************************************************************
+             -*********
+ 122          * 函数名称：send_crlf()
+ 123          * 功    能：向计算器上位机发送一个回车+换行符号
+ 124          * 入口参数：无
+ 125          * 出口参数：无
+ 126          * 说    明：无   
+ 127          **********************************************************************************************************
+             -*********/
+ 128          void send_crlf(void)
+ 129          {
+ 130   1          sendchar('\r');                                 //发送回车符号
+ 131   1          sendchar('\n');                                 //发送换行符号
+ 132   1      }
+ 133          
+ 134          /*********************************************************************************************************
+             -*********
+ 135          * 函数名称：send_cstring()
+ 136          * 功    能：向计算器上位机发送一字符串
+ 137          * 入口参数：*pstr       将要被发送的字符串
+ 138          * 出口参数：无
+ 139          * 说    明：无   
+ 140          **********************************************************************************************************
+             -*********/
+ 141          void send_cstring(char *pstr)
+ 142          {
+ 143   1          while(*pstr != '\0')                            //查询是否到达字符串尾
+ 144   1          {
+ 145   2              sendchar(*pstr++);                          //发送字符
+ 146   2          }
+ 147   1      }
+ 148          
+ 149          /*********************************************************************************************************
+             -*********
+ 150          * 函数名称：Nibble2Ascii()
+ 151          * 功    能：半位字节转化成ASCII十六进制码
+ 152          * 入口参数：anibble         将要被转换字节
+ 153          * 出口参数：AsciiOut        转换后的ASCII十六进制码值
+ 154          * 说    明：无   
+ 155          **********************************************************************************************************
+             -*********/
+ 156          unsigned char Nibble2Ascii(unsigned char anibble)
+ 157          {
+ 158   1          unsigned char AsciiOut = anibble;               //定义转换后的变量AsciiOut，并赋值
+ 159   1      
+ 160   1          if(anibble > 9)                                 //如果被转换的半位字节为A-F，则需要加0x07
+ 161   1              AsciiOut = AsciiOut + 0x07;
+ 162   1      
+ 163   1          AsciiOut = AsciiOut + 0x30;                     //其他情况则在转换结果基础上增加偏移量0x30
+ 164   1      
+ 165   1          return(AsciiOut);                               //返回转换后的值
+ 166   1      }
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 4   
+
+ 167          
+ 168          /*********************************************************************************************************
+             -*********
+ 169          * 函数名称：Put_byte()
+ 170          * 功    能：发送字节函数半位字节转化成ASCII十六进制码
+ 171          * 入口参数：abyte         将要被发送字节
+ 172          * 出口参数：无      
+ 173          * 说    明：该函数调用两次Nibble2Ascii，将一个字节拆分成高低四位，先转换再次序发送。
+ 174          **********************************************************************************************************
+             -*********/
+ 175          void send_byte(unsigned char abyte)
+ 176          {
+ 177   1          unsigned char temp1, temp2;
+ 178   1      
+ 179   1          temp1 = (abyte >> 4) & 0x0F;                    //获取高四位字节
+ 180   1          temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
+ 181   1          sendchar(temp2);                                //发送之
+ 182   1      
+ 183   1          temp1 = abyte & 0x0F;                           //获取低四位字节
+ 184   1          temp2 = Nibble2Ascii(temp1);                    //转换成ASCII码
+ 185   1          sendchar(temp2);                                //发送之
+ 186   1      }
+ 187          unsigned char Get_nibble(void)
+ 188          {
+ 189   1          unsigned char reading;                          //????
+ 190   1          //unsigned char rxdata;
+ 191   1          send_cstring("Get_nibble");
+ 192   1          reading = 1;                                    //????1 ????????
+ 193   1          while(reading)                                  //??????
+ 194   1          {                       
+ 195   2              //LPM0; 
+ 196   2              PCON |= 0x01;       //???????,????
+ 197   2              if(rxdata >= 'a')                           //???????
+ 198   2              {
+ 199   3                  rxdata -= 32;
+ 200   3              }
+ 201   2      
+ 202   2              /* ???????,???? */
+ 203   2              /*================================================================================================
+             -====*/
+ 204   2              if(((rxdata >= '0') && (rxdata <= '9')) || ((rxdata >= 'A') && (rxdata <= 'F')))
+ 205   2              {
+ 206   3                  reading = 0;
+ 207   3                  sendchar(rxdata);                       //??????
+ 208   3              
+ 209   3                  if(rxdata > '9')                        //??ASCII?????A-F,??9
+ 210   3                  {       
+ 211   4                      rxdata = (rxdata & 0x0F) + 9;
+ 212   4                  }
+ 213   3              }
+ 214   2              /*================================================================================================
+             -====*/
+ 215   2          }
+ 216   1          
+ 217   1          return(rxdata);                                 //??????                             
+ 218   1      }
+ 219          //void Uart0_Transmit(unsigned char tmp)
+ 220          //{
+ 221          //    ES0 = 0 ;   //关UART0中断
+ 222          //    EA = 0 ;    //关全局中断
+ 223          //    SBUF0 = tmp ;
+ 224          //    while(TI0 == 0);
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 5   
+
+ 225          //    TI0 = 0 ;
+ 226          //    ES0 = 1 ;   //开UART0中断
+ 227          //    EA = 1 ;    //开全局中断
+ 228          //   
+ 229          //}
+ 230          void uartInt(void) interrupt 4 
+ 231          {
+ 232   1        unsigned char temp;
+ 233   1          
+ 234   1        unsigned char ch;
+ 235   1        
+ 236   1        if(TI0)
+ 237   1        {
+ 238   2            TI0=0;
+ 239   2        }
+ 240   1        else
+ 241   1        {   
+ 242   2            RI0 = 0;
+ 243   2            ch = SBUF0;  // receive USART抯 data
+ 244   2            if(ch == 0xaa) 
+ 245   2            {
+ 246   3              dataCome = 1;
+ 247   3              receiveOver = 0;
+ 248   3              num = 0;
+ 249   3            }
+ 250   2            if(dataCome == 1)
+ 251   2            {       
+ 252   3                if( previousData == 0x1B)
+ 253   3                {  
+ 254   4                    frames[num++] = ch;   //save data
+ 255   4                    previousData = 0x00;
+ 256   4                } 
+ 257   3                else
+ 258   3                { 
+ 259   4                    if(ch == 0x1B)
+ 260   4                    {
+ 261   5                        previousData = 0x1B;
+ 262   5                    } 
+ 263   4                    else if(ch != 0xff)
+ 264   4                    {
+ 265   5                        frames[num++] = ch;   //save data
+ 266   5                        previousData = 0x00;
+ 267   5                    } 
+ 268   4                    else   //ch == 0xff
+ 269   4                    {
+ 270   5                        frames[num++] = ch;   //save last data :0xff
+ 271   5                        dataCome = 0;
+ 272   5                        previousData = 0x00;
+ 273   5                        receiveOver = 1;
+ 274   5                    }
+ 275   4                }
+ 276   3            }   
+ 277   2        }
+ 278   1      }
+*** WARNING C280 IN LINE 232 OF host.c: 'temp': unreferenced local variable
+ 279          
+ 280          /**
+ 281            * @file   uart.c
+ 282            * @brief  Send unsigned char array by usart 
+ 283            * @param  str The array waiting to be send
+ 284            * @param  n   The array's length
+ 285            * @retval None
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 6   
+
+ 286            */
+ 287          void PrintData(unsigned char b[],unsigned char n)
+ 288          {
+ 289   1          unsigned char i;
+ 290   1          //LED1=0;
+ 291   1          send_byte(0xaa); //frame start
+ 292   1          for(i = 0 ; i< n ; i++)
+ 293   1          {
+ 294   2              if(b[i] == 0xFF || b[i] == 0x1B)
+ 295   2              {
+ 296   3                  send_byte(0x1B);
+ 297   3              }
+ 298   2              send_byte(b[i]);
+ 299   2          }
+ 300   1        //  send_byte(caculCRC(b,n));  
+ 301   1          send_byte(0xff);  //frame end
+ 302   1          delay_ms(1000);
+ 303   1          //LED1=1;
+ 304   1          delay_ms(1000);
+ 305   1      
+ 306   1      }
+ 307          
+ 308          //void RXhandler (void) interrupt 4
+ 309          //{
+ 310          //    if(RI0==1)                            //?????????
+ 311          //    {   
+ 312          //        rxdata = SBUF0;                         //??????UCA0RXBUF?????rxdata
+ 313          //        RXdone = 1;                                 //???????
+ 314          //        if(ENABLE == 0)                             //TRF7960??????
+ 315          //        {
+ 316          //            TRFEnable();                            //??TRF790
+ 317          //            //BaudSet(0x00);                          //?????
+ 318          //            OSCsel();                           //????????? 
+ 319          //               
+ 320          //            InitialSettings();                      //???TRF7960
+ 321          //            send_cstring("Reader enabled.");        //????????
+ 322          //            ENABLE = 1;                             //??TRF7960???
+ 323          //        }
+ 324          //       PCON &= ~0X02;
+ 325          
+ 326          //        if(Firstdata)                               //????1??????
+ 327          //        {
+ 328          //            
+ 329          //            IRQOFF();                               //??IRQ??
+ 330          //            StopCounter();                          //?????
+ 331          //         
+ 332          //        }
+ 333          //    }
+ 334          //}
+*** WARNING C294 IN LINE 60 OF host.c: unreachable code
+*** WARNING C294 IN LINE 72 OF host.c: unreachable code
+*** WARNING C290 IN LINE 118 OF host.c: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    503    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =     13       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+C51 COMPILER V9.57.0.0   HOST                                                              04/14/2019 22:22:22 PAGE 7   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)

@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    04/03/2019  19:21:58  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    04/14/2019  19:19:15  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -45,23 +45,32 @@ LINK MAP OF MODULE:  .\Objects\15693 (ANTICOLLISION)
 
             * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
             XDATA   0000H     0133H     UNIT         ?XD?MAIN
-            XDATA   0133H     0057H     UNIT         _XDATA_GROUP_
-            XDATA   018AH     001DH     UNIT         ?XD?AUTOMATIC
-            XDATA   01A7H     000EH     UNIT         ?XD?_ANTICOLLISIONLOOPA?ISO14443
-            XDATA   01B5H     000EH     UNIT         ?XD?ISO14443
-            XDATA   01C3H     000BH     UNIT         ?XD?_REQUEST14443A?ISO14443
-            XDATA   01CEH     0008H     UNIT         ?XD?_ANTICOLLISIONSEQUENCEB?ISO14443
-            XDATA   01D6H     0006H     UNIT         ?XD?_SELECTCOMMAND?ISO14443
-            XDATA   01DCH     0004H     UNIT         ?XD?_ANTICOLLISIONSEQUENCEA?ISO14443
-            XDATA   01E0H     0003H     UNIT         ?XD?COMMUNICATE
-            XDATA   01E3H     0003H     UNIT         ?XD?HOST
-            XDATA   01E6H     0002H     UNIT         ?XD?ANTICOLLISION
-            XDATA   01E8H     0001H     UNIT         ?XD?_SLOTMARKERCOMMAND?ISO14443
+            XDATA   0133H     0029H     UNIT         ?XD?_INVENTORYREQUEST?ANTICOLLISION
+            XDATA   015CH     001DH     UNIT         ?XD?AUTOMATIC
+            XDATA   0179H     001CH     UNIT         _XDATA_GROUP_
+            XDATA   0195H     000EH     UNIT         ?XD?_ANTICOLLISIONLOOPA?ISO14443
+            XDATA   01A3H     000EH     UNIT         ?XD?ISO14443
+            XDATA   01B1H     000CH     UNIT         ?XD?FINDTAGS?AUTOMATIC
+            XDATA   01BDH     000BH     UNIT         ?XD?_REQUEST14443A?ISO14443
+            XDATA   01C8H     0008H     UNIT         ?XD?_REQUESTCOMMAND?ANTICOLLISION
+            XDATA   01D0H     0008H     UNIT         ?XD?_ANTICOLLISIONSEQUENCEB?ISO14443
+            XDATA   01D8H     0006H     UNIT         ?XD?_SELECTCOMMAND?ISO14443
+            XDATA   01DEH     0005H     UNIT         ?XD?_WRITECONT?COMMUNICATE
+            XDATA   01E3H     0005H     UNIT         ?XD?ANALYSISFRAMES?MAIN
+            XDATA   01E8H     0004H     UNIT         ?XD?_ANTICOLLISIONSEQUENCEA?ISO14443
+            XDATA   01ECH     0003H     UNIT         ?XD?COMMUNICATE
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 2
+
+
+            XDATA   01EFH     0003H     UNIT         ?XD?_SEND_CSTRING?HOST
+            XDATA   01F2H     0003H     UNIT         ?XD?HOST
+            XDATA   01F5H     0002H     UNIT         ?XD?ANTICOLLISION
+            XDATA   01F7H     0002H     UNIT         ?XD?_RAWWRITE?COMMUNICATE
+            XDATA   01F9H     0002H     UNIT         ?XD?_TIMER0_DELAY?HARDWARE
+            XDATA   01FBH     0001H     UNIT         ?XD?RFID_TEST?AUTOMATIC
+            XDATA   01FCH     0001H     UNIT         ?XD?_SLOTMARKERCOMMAND?ISO14443
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 2
-
-
             CODE    0000H     0003H     ABSOLUTE     
             CODE    0003H     0003H     ABSOLUTE     
                     0006H     0005H                  *** GAP ***
@@ -84,31 +93,35 @@ LINK MAP OF MODULE:  .\Objects\15693 (ANTICOLLISION)
             CODE    1A80H     00A6H     UNIT         ?PR?_WRITECONT?COMMUNICATE
             CODE    1B26H     008CH     UNIT         ?C_C51STARTUP
             CODE    1BB2H     0076H     UNIT         ?PR?_TIMER0_DELAY?HARDWARE
-            CODE    1C28H     0074H     UNIT         ?PR?RXHANDLER?HOST
-            CODE    1C9CH     0072H     UNIT         ?PR?FINDTAGS?AUTOMATIC
-            CODE    1D0EH     006FH     UNIT         ?PR?RFID_TEST?AUTOMATIC
-            CODE    1D7DH     006CH     UNIT         ?PR?TIMER0HANDLER?HARDWARE
-            CODE    1DE9H     006BH     UNIT         ?PR?PORT_0?COMMUNICATE
-            CODE    1E54H     0068H     UNIT         ?PR?_SLOTMARKERCOMMAND?ISO14443
-            CODE    1EBCH     0066H     UNIT         ?PR?_RAWWRITE?COMMUNICATE
-            CODE    1F22H     0063H     UNIT         ?PR?MAIN?MAIN
-            CODE    1F85H     005AH     UNIT         ?PR?GET_NIBBLE?HOST
-            CODE    1FDFH     0044H     UNIT         ?C?LDIV
-            CODE    2023H     0033H     UNIT         ?PR?_SEND_CSTRING?HOST
-            CODE    2056H     0030H     UNIT         ?C_INITSEG
-            CODE    2086H     0027H     UNIT         ?PR?ENABLESLOTCOUNTER?ANTICOLLISION
-            CODE    20ADH     0027H     UNIT         ?PR?DISABLESLOTCOUNTER?ANTICOLLISION
-            CODE    20D4H     0020H     UNIT         ?PR?OSCSEL?HARDWARE
-            CODE    20F4H     001EH     UNIT         ?PR?_DELAY_MS?HARDWARE
-            CODE    2112H     001BH     UNIT         ?PR?_SEND_BYTE?HOST
-            CODE    212DH     001AH     UNIT         ?PR?UART0_INIT?HOST
-            CODE    2147H     0018H     UNIT         ?PR?_SENDCHAR?HOST
-            CODE    215FH     0014H     UNIT         ?CO?ANTICOLLISION
-            CODE    2173H     0011H     UNIT         ?PR?_NIBBLE2ASCII?HOST
-            CODE    2184H     0010H     UNIT         ?CO?HOST
-            CODE    2194H     000AH     UNIT         ?PR?PORT_INIT?HOST
-            CODE    219EH     000AH     UNIT         ?PR?SEND_CRLF?HOST
-            CODE    21A8H     0007H     UNIT         ?PR?IRQINIT?HARDWARE
+            CODE    1C28H     0072H     UNIT         ?PR?FINDTAGS?AUTOMATIC
+            CODE    1C9AH     006FH     UNIT         ?PR?RFID_TEST?AUTOMATIC
+            CODE    1D09H     006CH     UNIT         ?PR?TIMER0HANDLER?HARDWARE
+            CODE    1D75H     006BH     UNIT         ?PR?PORT_0?COMMUNICATE
+            CODE    1DE0H     0068H     UNIT         ?PR?_SLOTMARKERCOMMAND?ISO14443
+            CODE    1E48H     0066H     UNIT         ?PR?_RAWWRITE?COMMUNICATE
+            CODE    1EAEH     0061H     UNIT         ?PR?MAIN?MAIN
+            CODE    1F0FH     005AH     UNIT         ?PR?GET_NIBBLE?HOST
+            CODE    1F69H     0046H     UNIT         ?PR?UATR0_ISR?MAIN
+            CODE    1FAFH     0044H     UNIT         ?C?LDIV
+            CODE    1FF3H     0033H     UNIT         ?PR?_SEND_CSTRING?HOST
+            CODE    2026H     0030H     UNIT         ?C_INITSEG
+            CODE    2056H     002FH     UNIT         ?PR?ANALYSISFRAMES?MAIN
+            CODE    2085H     0027H     UNIT         ?PR?ENABLESLOTCOUNTER?ANTICOLLISION
+            CODE    20ACH     0027H     UNIT         ?PR?DISABLESLOTCOUNTER?ANTICOLLISION
+            CODE    20D3H     0020H     UNIT         ?PR?OSCSEL?HARDWARE
+            CODE    20F3H     001EH     UNIT         ?PR?_DELAY_MS?HARDWARE
+            CODE    2111H     001BH     UNIT         ?PR?_SEND_BYTE?HOST
+            CODE    212CH     001AH     UNIT         ?PR?UART0_INIT?HOST
+            CODE    2146H     0018H     UNIT         ?PR?_SENDCHAR?HOST
+            CODE    215EH     0014H     UNIT         ?CO?ANTICOLLISION
+            CODE    2172H     0011H     UNIT         ?PR?_NIBBLE2ASCII?HOST
+            CODE    2183H     0010H     UNIT         ?PR?_UART0_TRANSMIT?MAIN
+            CODE    2193H     000AH     UNIT         ?PR?PORT_INIT?HOST
+            CODE    219DH     000AH     UNIT         ?PR?SEND_CRLF?HOST
+            CODE    21A7H     0007H     UNIT         ?PR?IRQINIT?HARDWARE
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 3
+
+
 
 
 
@@ -118,44 +131,30 @@ OVERLAY MAP OF MODULE:   .\Objects\15693 (ANTICOLLISION)
 SEGMENT                                           XDATA_GROUP
   +--> CALLED SEGMENT                           START    LENGTH
 ---------------------------------------------------------------
-?PR?PORT_0?COMMUNICATE                          0133H    0004H
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 3
-
-
+?PR?PORT_0?COMMUNICATE                          0179H    0004H
   +--> ?PR?_READCONT?COMMUNICATE
   +--> ?PR?_INTERRUPTHANDLERREADER?COMMUNICATE
 
-?PR?_READCONT?COMMUNICATE                       0184H    0005H
+?PR?_READCONT?COMMUNICATE                       0188H    0005H
 
-?PR?_INTERRUPTHANDLERREADER?COMMUNICATE         0137H    0004H
+?PR?_INTERRUPTHANDLERREADER?COMMUNICATE         017DH    0004H
   +--> ?PR?_DIRECTCOMMAND?COMMUNICATE
   +--> ?PR?_READSINGLE?COMMUNICATE
   +--> ?PR?_READCONT?COMMUNICATE
 
-?PR?_DIRECTCOMMAND?COMMUNICATE                  0184H    0004H
+?PR?_DIRECTCOMMAND?COMMUNICATE                  0181H    0004H
 
-?PR?_READSINGLE?COMMUNICATE                     0184H    0005H
+?PR?_READSINGLE?COMMUNICATE                     0181H    0005H
 
 *** NEW ROOT ***************************************************
 
-?PR?TIMER0HANDLER?HARDWARE                      0140H    0002H
+?PR?TIMER0HANDLER?HARDWARE                      0186H    0002H
   +--> ?PR?_READCONT?COMMUNICATE
 
 *** NEW ROOT ***************************************************
 
-?PR?RXHANDLER?HOST                              -----    -----
-  +--> ?PR?OSCSEL?HARDWARE
-  +--> ?PR?INITIALSETTINGS?COMMUNICATE
-  +--> ?CO?HOST
-  +--> ?PR?_SEND_CSTRING?HOST
-
-?PR?INITIALSETTINGS?COMMUNICATE                 014FH    0002H
-  +--> ?PR?_WRITESINGLE?COMMUNICATE
-
-?PR?_WRITESINGLE?COMMUNICATE                    0184H    0006H
-
-?PR?_SEND_CSTRING?HOST                          0184H    0003H
-  +--> ?PR?_SENDCHAR?HOST
+?PR?UATR0_ISR?MAIN                              -----    -----
+  +--> ?PR?_UART0_TRANSMIT?MAIN
 
 *** NEW ROOT ***************************************************
 
@@ -170,62 +169,22 @@ SEGMENT                                           XDATA_GROUP
   +--> ?PR?_DELAY_MS?HARDWARE
   +--> ?PR?IRQINIT?HARDWARE
   +--> ?PR?INITIALSETTINGS?COMMUNICATE
-  +--> ?PR?FINDTAGS?AUTOMATIC
 
-?PR?FINDTAGS?AUTOMATIC                          014FH    000CH
-  +--> ?PR?_WRITESINGLE?COMMUNICATE
-  +--> ?PR?_DELAY_MS?HARDWARE
-  +--> ?PR?_INVENTORYREQUEST?ANTICOLLISION
-  +--> ?PR?_READCONT?COMMUNICATE
-  +--> ?PR?RFID_TEST?AUTOMATIC
-
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 4
-
-
-?PR?_INVENTORYREQUEST?ANTICOLLISION             015BH    0029H
-  +--> ?PR?_WRITESINGLE?COMMUNICATE
-  +--> ?PR?ENABLESLOTCOUNTER?ANTICOLLISION
-  +--> ?PR?_READCONT?COMMUNICATE
-  +--> ?PR?_TIMER0_DELAY?HARDWARE
-  +--> ?PR?_RAWWRITE?COMMUNICATE
-  +--> ?PR?_READSINGLE?COMMUNICATE
-  +--> ?CO?ANTICOLLISION
-  +--> ?PR?_SEND_CSTRING?HOST
-  +--> ?PR?SEND_CRLF?HOST
-  +--> ?PR?_DIRECTCOMMAND?COMMUNICATE
-  +--> ?PR?DISABLESLOTCOUNTER?ANTICOLLISION
-
-?PR?ENABLESLOTCOUNTER?ANTICOLLISION             -----    -----
-  +--> ?PR?_READSINGLE?COMMUNICATE
+?PR?INITIALSETTINGS?COMMUNICATE                 018DH    0002H
   +--> ?PR?_WRITESINGLE?COMMUNICATE
 
-?PR?_TIMER0_DELAY?HARDWARE                      0184H    0002H
+?PR?_WRITESINGLE?COMMUNICATE                    018FH    0006H
 
-?PR?_RAWWRITE?COMMUNICATE                       0184H    0002H
 
-?PR?SEND_CRLF?HOST                              -----    -----
-  +--> ?PR?_SENDCHAR?HOST
 
-?PR?DISABLESLOTCOUNTER?ANTICOLLISION            -----    -----
-  +--> ?PR?_READSINGLE?COMMUNICATE
-  +--> ?PR?_WRITESINGLE?COMMUNICATE
+UNRESOLVED EXTERNAL SYMBOLS:
+   FRAMES
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 4
 
-?PR?RFID_TEST?AUTOMATIC                         015BH    0001H
-  +--> ?PR?_WRITESINGLE?COMMUNICATE
-  +--> ?PR?_REQUESTCOMMAND?ANTICOLLISION
 
-?PR?_REQUESTCOMMAND?ANTICOLLISION               015CH    0008H
-  +--> ?PR?_RAWWRITE?COMMUNICATE
-  +--> ?PR?_WRITECONT?COMMUNICATE
-  +--> ?PR?_TIMER0_DELAY?HARDWARE
-  +--> ?PR?_DELAY_MS?HARDWARE
-  +--> ?PR?_DIRECTCOMMAND?COMMUNICATE
-  +--> ?CO?ANTICOLLISION
-  +--> ?PR?_SEND_CSTRING?HOST
-  +--> ?PR?SEND_CRLF?HOST
-  +--> ?PR?_SENDCHAR?HOST
-
-?PR?_WRITECONT?COMMUNICATE                      0164H    0005H
+   NUM
+   RECEIVEOVER
+   SYSCLK_INIT
 
 
 
@@ -237,52 +196,52 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         MODULE        ANTICOLLISION
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:00A0H         PUBLIC        P2
-  X:01E6H         PUBLIC        rssival
+  X:01F5H         PUBLIC        rssival
   D:00A8H         PUBLIC        IE
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 5
-
-
-  X:01E7H         PUBLIC        Found_tag
+  X:01F6H         PUBLIC        Found_tag
   D:0087H         PUBLIC        PCON
   C:114BH         PUBLIC        _RequestCommand
   D:0088H         PUBLIC        TCON
   C:0A6DH         PUBLIC        _InventoryRequest
-  C:20ADH         PUBLIC        DisableSlotCounter
-  C:2086H         PUBLIC        EnableSlotCounter
+  C:20ACH         PUBLIC        DisableSlotCounter
+  C:2085H         PUBLIC        EnableSlotCounter
   -------         PROC          ENABLESLOTCOUNTER
-  C:2086H         LINE#         36
-  C:2086H         LINE#         37
-  C:2086H         LINE#         38
-  C:208CH         LINE#         39
-  C:2090H         LINE#         40
-  C:209BH         LINE#         41
-  C:20A2H         LINE#         42
+  C:2085H         LINE#         36
+  C:2085H         LINE#         37
+  C:2085H         LINE#         38
+  C:208BH         LINE#         39
+  C:208FH         LINE#         40
+  C:209AH         LINE#         41
+  C:20A1H         LINE#         42
   -------         ENDPROC       ENABLESLOTCOUNTER
   -------         PROC          DISABLESLOTCOUNTER
-  C:20ADH         LINE#         52
-  C:20ADH         LINE#         53
-  C:20ADH         LINE#         54
-  C:20B3H         LINE#         55
-  C:20B7H         LINE#         56
-  C:20C2H         LINE#         57
-  C:20C9H         LINE#         58
+  C:20ACH         LINE#         52
+  C:20ACH         LINE#         53
+  C:20ACH         LINE#         54
+  C:20B2H         LINE#         55
+  C:20B6H         LINE#         56
+  C:20C1H         LINE#         57
+  C:20C8H         LINE#         58
   -------         ENDPROC       DISABLESLOTCOUNTER
   -------         PROC          _INVENTORYREQUEST
-  X:015BH         SYMBOL        mask
-  X:015EH         SYMBOL        lenght
+  X:0133H         SYMBOL        mask
+  X:0136H         SYMBOL        lenght
   -------         DO            
-  X:015FH         SYMBOL        i
-  X:0160H         SYMBOL        j
-  X:0161H         SYMBOL        command
-  X:0163H         SYMBOL        NoSlots
-  X:0164H         SYMBOL        PslotNo
-  X:0167H         SYMBOL        slotNo
-  X:0178H         SYMBOL        NewMask
-  X:0180H         SYMBOL        NewLenght
-  X:0181H         SYMBOL        masksize
+  X:0137H         SYMBOL        i
+  X:0138H         SYMBOL        j
+  X:0139H         SYMBOL        command
+  X:013BH         SYMBOL        NoSlots
+  X:013CH         SYMBOL        PslotNo
+  X:013FH         SYMBOL        slotNo
+  X:0150H         SYMBOL        NewMask
+  X:0158H         SYMBOL        NewLenght
+  X:0159H         SYMBOL        masksize
   D:0002H         SYMBOL        size
-  X:0182H         SYMBOL        k
+  X:015AH         SYMBOL        k
   -------         ENDDO         
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 5
+
+
   C:0A6DH         LINE#         71
   C:0A7BH         LINE#         72
   C:0A7BH         LINE#         73
@@ -299,9 +258,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0AB1H         LINE#         93
   C:0AB1H         LINE#         94
   C:0AB4H         LINE#         95
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 6
-
-
   C:0AB8H         LINE#         96
   C:0AC3H         LINE#         97
   C:0AC3H         LINE#         100
@@ -343,6 +299,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0BD2H         LINE#         157
   C:0BD9H         LINE#         158
   C:0BDCH         LINE#         160
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 6
+
+
   C:0BE3H         LINE#         161
   C:0BE6H         LINE#         164
   C:0BEDH         LINE#         165
@@ -359,9 +318,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0C21H         LINE#         180
   C:0C28H         LINE#         181
   C:0C28H         LINE#         182
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 7
-
-
   C:0C2BH         LINE#         187
   C:0C34H         LINE#         188
   C:0C37H         LINE#         189
@@ -403,12 +359,15 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDPROC       _INVENTORYREQUEST
   -------         PROC          _REQUESTCOMMAND
   D:0001H         SYMBOL        pbuf
-  X:015FH         SYMBOL        lenght
-  X:0160H         SYMBOL        brokenBits
-  X:0161H         SYMBOL        noCRC
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 7
+
+
+  X:01CBH         SYMBOL        lenght
+  X:01CCH         SYMBOL        brokenBits
+  X:01CDH         SYMBOL        noCRC
   -------         DO            
-  X:0162H         SYMBOL        index
-  X:0163H         SYMBOL        command
+  X:01CEH         SYMBOL        index
+  X:01CFH         SYMBOL        command
   -------         ENDDO         
   C:114BH         LINE#         251
   C:1150H         LINE#         252
@@ -419,9 +378,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:1166H         LINE#         261
   C:116BH         LINE#         263
   C:1173H         LINE#         264
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 8
-
-
   C:1185H         LINE#         265
   C:1196H         LINE#         268
   C:119FH         LINE#         269
@@ -463,6 +419,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:124BH         LINE#         325
   C:124DH         LINE#         328
   C:1253H         LINE#         329
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 8
+
+
   C:125AH         LINE#         330
   C:125DH         LINE#         336
   C:1296H         LINE#         337
@@ -479,9 +438,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:12C8H         LINE#         355
   C:12C8H         LINE#         356
   C:12D0H         LINE#         357
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 9
-
-
   C:12D0H         LINE#         358
   C:12D4H         LINE#         359
   C:12D4H         LINE#         360
@@ -512,63 +468,63 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
 
   -------         MODULE        AUTOMATIC
   C:0000H         SYMBOL        _ICE_DUMMY_
-  X:018AH         PUBLIC        Read_Sig
-  X:0192H         PUBLIC        Write_Sig
-  C:1C9CH         PUBLIC        FindTags
-  C:1D0EH         PUBLIC        RFID_test
-  X:019EH         PUBLIC        Set_pro
+  X:015CH         PUBLIC        Read_Sig
+  X:0164H         PUBLIC        Write_Sig
+  C:1C28H         PUBLIC        FindTags
+  C:1C9AH         PUBLIC        RFID_test
+  X:0170H         PUBLIC        Set_pro
   -------         PROC          RFID_TEST
   -------         DO            
   D:0007H         SYMBOL        i
-  X:015BH         SYMBOL        count
+  X:01FBH         SYMBOL        count
   -------         ENDDO         
-  C:1D0EH         LINE#         25
-  C:1D0EH         LINE#         26
-  C:1D0EH         LINE#         29
-  C:1D10H         LINE#         30
-  C:1D10H         LINE#         31
-  C:1D28H         LINE#         32
-  C:1D2DH         LINE#         34
-  C:1D39H         LINE#         35
-  C:1D42H         LINE#         44
-  C:1D44H         LINE#         45
-  C:1D44H         LINE#         46
-  C:1D5CH         LINE#         47
-  C:1D61H         LINE#         69
-  C:1D6DH         LINE#         70
+  C:1C9AH         LINE#         25
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 9
+
+
+  C:1C9AH         LINE#         26
+  C:1C9AH         LINE#         29
+  C:1C9CH         LINE#         30
+  C:1C9CH         LINE#         31
+  C:1CB4H         LINE#         32
+  C:1CB9H         LINE#         34
+  C:1CC5H         LINE#         35
+  C:1CCEH         LINE#         44
+  C:1CD0H         LINE#         45
+  C:1CD0H         LINE#         46
+  C:1CE8H         LINE#         47
+  C:1CEDH         LINE#         69
+  C:1CF9H         LINE#         70
   -------         ENDPROC       RFID_TEST
   -------         PROC          FINDTAGS
   -------         DO            
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 10
-
-
-  X:014FH         SYMBOL        command
-  X:0159H         SYMBOL        i
-  X:015AH         SYMBOL        count
+  X:01B1H         SYMBOL        command
+  X:01BBH         SYMBOL        i
+  X:01BCH         SYMBOL        count
   -------         ENDDO         
-  C:1C9CH         LINE#         84
-  C:1C9CH         LINE#         85
-  C:1C9CH         LINE#         88
-  C:1C9CH         LINE#         89
-  C:1C9CH         LINE#         90
-  C:1CA1H         LINE#         91
-  C:1CA5H         LINE#         92
-  C:1CA9H         LINE#         93
-  C:1CACH         LINE#         94
-  C:1CB7H         LINE#         96
-  C:1CBEH         LINE#         97
-  C:1CC4H         LINE#         100
-  C:1CCAH         LINE#         102
-  C:1CD5H         LINE#         104
-  C:1CDAH         LINE#         105
-  C:1CDDH         LINE#         106
-  C:1CE7H         LINE#         107
-  C:1CEEH         LINE#         109
-  C:1CF4H         LINE#         110
-  C:1CF7H         LINE#         113
-  C:1D02H         LINE#         115
-  C:1D05H         LINE#         118
-  C:1D0CH         LINE#         119
+  C:1C28H         LINE#         84
+  C:1C28H         LINE#         85
+  C:1C28H         LINE#         88
+  C:1C28H         LINE#         89
+  C:1C28H         LINE#         90
+  C:1C2DH         LINE#         91
+  C:1C31H         LINE#         92
+  C:1C35H         LINE#         93
+  C:1C38H         LINE#         94
+  C:1C43H         LINE#         96
+  C:1C4AH         LINE#         97
+  C:1C50H         LINE#         100
+  C:1C56H         LINE#         102
+  C:1C61H         LINE#         104
+  C:1C66H         LINE#         105
+  C:1C69H         LINE#         106
+  C:1C73H         LINE#         107
+  C:1C7AH         LINE#         109
+  C:1C80H         LINE#         110
+  C:1C83H         LINE#         113
+  C:1C8EH         LINE#         115
+  C:1C91H         LINE#         118
+  C:1C98H         LINE#         119
   -------         ENDPROC       FINDTAGS
   -------         ENDMOD        AUTOMATIC
 
@@ -576,32 +532,32 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0080H         PUBLIC        P0
   C:1675H         PUBLIC        _ReadCont
-  C:1EBCH         PUBLIC        _RAWwrite
+  C:1E48H         PUBLIC        _RAWwrite
   C:19F3H         PUBLIC        _DirectCommand
   C:1A80H         PUBLIC        _WriteCont
   C:000EH         PUBLIC        InitialSettings
-  X:01E0H         SYMBOL        mask
+  X:01ECH         SYMBOL        mask
   D:0087H         PUBLIC        PCON
   D:0088H         PUBLIC        TCON
-  C:1DE9H         PUBLIC        Port_0
-  X:01E2H         SYMBOL        temp
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 10
+
+
+  C:1D75H         PUBLIC        Port_0
+  X:01EEH         SYMBOL        temp
   C:177AH         PUBLIC        _ReadSingle
   C:06C2H         PUBLIC        _InterruptHandlerReader
   C:1930H         PUBLIC        _WriteSingle
   -------         PROC          _WRITESINGLE
-  X:0184H         SYMBOL        pbuf
-  X:0187H         SYMBOL        lenght
+  X:018FH         SYMBOL        pbuf
+  X:0192H         SYMBOL        lenght
   -------         DO            
-  X:0188H         SYMBOL        i
-  X:0189H         SYMBOL        j
+  X:0193H         SYMBOL        i
+  X:0194H         SYMBOL        j
   -------         ENDDO         
   C:1930H         LINE#         36
   C:193EH         LINE#         37
   C:193EH         LINE#         41
   C:1941H         LINE#         42
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 11
-
-
   C:1944H         LINE#         43
   C:1950H         LINE#         44
   C:1950H         LINE#         45
@@ -625,10 +581,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:19D7H         LINE#         67
   -------         ENDPROC       _WRITESINGLE
   -------         PROC          _WRITECONT
-  X:0164H         SYMBOL        pbuf
-  X:0167H         SYMBOL        lenght
+  X:01DEH         SYMBOL        pbuf
+  X:01E1H         SYMBOL        lenght
   -------         DO            
-  X:0168H         SYMBOL        j
+  X:01E2H         SYMBOL        j
   -------         ENDDO         
   C:1A80H         LINE#         77
   C:1A8EH         LINE#         78
@@ -643,6 +599,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:1AC6H         LINE#         97
   C:1AE1H         LINE#         98
   C:1AE6H         LINE#         100
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 11
+
+
   C:1AE9H         LINE#         102
   C:1AECH         LINE#         103
   C:1AEFH         LINE#         104
@@ -659,13 +618,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDPROC       L?0113
   C:176AH         SYMBOL        L?0114
   -------         PROC          _READSINGLE
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 12
-
-
-  X:0184H         SYMBOL        pbuf
-  X:0187H         SYMBOL        lenght
+  X:0181H         SYMBOL        pbuf
+  X:0184H         SYMBOL        lenght
   -------         DO            
-  X:0188H         SYMBOL        j
+  X:0185H         SYMBOL        j
   -------         ENDDO         
   C:177AH         LINE#         124
   C:1788H         LINE#         125
@@ -703,11 +659,14 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         PROC          L?0109
   -------         ENDPROC       L?0109
   C:1650H         SYMBOL        L?0110
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 12
+
+
   -------         PROC          _READCONT
-  X:0184H         SYMBOL        pbuf
-  X:0187H         SYMBOL        lenght
+  X:0188H         SYMBOL        pbuf
+  X:018BH         SYMBOL        lenght
   -------         DO            
-  X:0188H         SYMBOL        j
+  X:018CH         SYMBOL        j
   -------         ENDDO         
   C:1675H         LINE#         175
   C:1683H         LINE#         176
@@ -719,9 +678,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:16B1H         LINE#         186
   C:16CCH         LINE#         187
   C:16D1H         LINE#         189
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 13
-
-
   C:16D4H         LINE#         191
   C:16D7H         LINE#         192
   C:16DAH         LINE#         193
@@ -749,9 +705,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDPROC       L?0111
   C:19E5H         SYMBOL        L?0112
   -------         PROC          _DIRECTCOMMAND
-  X:0184H         SYMBOL        pbuf
+  X:0181H         SYMBOL        pbuf
   -------         DO            
-  X:0187H         SYMBOL        j
+  X:0184H         SYMBOL        j
   -------         ENDDO         
   C:19F3H         LINE#         224
   C:19FEH         LINE#         225
@@ -763,6 +719,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:1A2CH         LINE#         235
   C:1A47H         LINE#         236
   C:1A4CH         LINE#         238
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 13
+
+
   C:1A4FH         LINE#         240
   C:1A52H         LINE#         241
   C:1A55H         LINE#         242
@@ -775,37 +734,34 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDPROC       _DIRECTCOMMAND
   -------         PROC          _RAWWRITE
   D:0001H         SYMBOL        pbuf
-  X:0184H         SYMBOL        lenght
+  X:01F7H         SYMBOL        lenght
   -------         DO            
-  X:0185H         SYMBOL        j
+  X:01F8H         SYMBOL        j
   -------         ENDDO         
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 14
-
-
-  C:1EBCH         LINE#         262
-  C:1EC1H         LINE#         263
-  C:1EC1H         LINE#         267
-  C:1EC4H         LINE#         268
-  C:1ECDH         LINE#         269
-  C:1ECDH         LINE#         270
-  C:1ED0H         LINE#         271
-  C:1ED0H         LINE#         272
-  C:1EE0H         LINE#         273
-  C:1EE5H         LINE#         275
-  C:1EE8H         LINE#         277
-  C:1EEBH         LINE#         278
-  C:1EEEH         LINE#         279
-  C:1EFCH         LINE#         280
-  C:1F06H         LINE#         281
-  C:1F0FH         LINE#         283
-  C:1F16H         LINE#         284
-  C:1F1CH         LINE#         285
-  C:1F1EH         LINE#         287
-  C:1F21H         LINE#         289
+  C:1E48H         LINE#         262
+  C:1E4DH         LINE#         263
+  C:1E4DH         LINE#         267
+  C:1E50H         LINE#         268
+  C:1E59H         LINE#         269
+  C:1E59H         LINE#         270
+  C:1E5CH         LINE#         271
+  C:1E5CH         LINE#         272
+  C:1E6CH         LINE#         273
+  C:1E71H         LINE#         275
+  C:1E74H         LINE#         277
+  C:1E77H         LINE#         278
+  C:1E7AH         LINE#         279
+  C:1E88H         LINE#         280
+  C:1E92H         LINE#         281
+  C:1E9BH         LINE#         283
+  C:1EA2H         LINE#         284
+  C:1EA8H         LINE#         285
+  C:1EAAH         LINE#         287
+  C:1EADH         LINE#         289
   -------         ENDPROC       _RAWWRITE
   -------         PROC          INITIALSETTINGS
   -------         DO            
-  X:014FH         SYMBOL        command
+  X:018DH         SYMBOL        command
   -------         ENDDO         
   C:000EH         LINE#         298
   C:000EH         LINE#         299
@@ -814,15 +770,18 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0018H         LINE#         305
   -------         ENDPROC       INITIALSETTINGS
   -------         PROC          _INTERRUPTHANDLERREADER
-  X:0137H         SYMBOL        Register
+  X:017DH         SYMBOL        Register
   -------         DO            
-  X:013AH         SYMBOL        len
+  X:0180H         SYMBOL        len
   -------         ENDDO         
   C:06C2H         LINE#         327
   C:06CDH         LINE#         328
   C:06CDH         LINE#         335
   C:06D4H         LINE#         336
   C:06D4H         LINE#         337
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 14
+
+
   C:06D4H         LINE#         341
   C:06D7H         LINE#         343
   C:06DBH         LINE#         344
@@ -839,9 +798,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0704H         LINE#         361
   C:070FH         LINE#         363
   C:0719H         LINE#         370
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 15
-
-
   C:071DH         LINE#         371
   C:0721H         LINE#         372
   C:072AH         LINE#         374
@@ -883,6 +839,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0877H         LINE#         424
   C:087AH         LINE#         425
   C:088FH         LINE#         426
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 15
+
+
   C:088FH         LINE#         427
   C:0894H         LINE#         428
   C:08AAH         LINE#         429
@@ -899,9 +858,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:08E3H         LINE#         446
   C:08E6H         LINE#         447
   C:08FAH         LINE#         448
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 16
-
-
   C:0910H         LINE#         450
   C:0938H         LINE#         451
   C:094DH         LINE#         453
@@ -943,6 +899,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0A30H         LINE#         501
   C:0A36H         LINE#         502
   C:0A36H         LINE#         503
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 16
+
+
   C:0A39H         LINE#         504
   C:0A3EH         LINE#         505
   C:0A3FH         LINE#         507
@@ -959,9 +918,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0A63H         LINE#         528
   C:0A66H         LINE#         530
   C:0A66H         LINE#         531
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 17
-
-
   C:0A66H         LINE#         534
   C:0A69H         LINE#         536
   C:0A6CH         LINE#         537
@@ -969,76 +925,76 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDPROC       _INTERRUPTHANDLERREADER
   -------         PROC          PORT_0
   -------         DO            
-  X:0133H         SYMBOL        Register
-  C:1E36H         SYMBOL        FINISH
+  X:0179H         SYMBOL        Register
+  C:1DC2H         SYMBOL        FINISH
   -------         ENDDO         
-  C:1DE9H         LINE#         547
-  C:1E06H         LINE#         551
-  C:1E09H         LINE#         554
-  C:1E09H         LINE#         555
-  C:1E0CH         LINE#         556
-  C:1E12H         LINE#         557
-  C:1E15H         LINE#         558
-  C:1E20H         LINE#         559
-  C:1E28H         LINE#         560
-  C:1E28H         LINE#         561
-  C:1E28H         LINE#         562
-  C:1E28H         LINE#         564
-  C:1E31H         LINE#         566
-  C:1E36H         LINE#         567
-  C:1E36H         LINE#         568
-  C:1E39H         LINE#         570
+  C:1D75H         LINE#         547
+  C:1D92H         LINE#         551
+  C:1D95H         LINE#         554
+  C:1D95H         LINE#         555
+  C:1D98H         LINE#         556
+  C:1D9EH         LINE#         557
+  C:1DA1H         LINE#         558
+  C:1DACH         LINE#         559
+  C:1DB4H         LINE#         560
+  C:1DB4H         LINE#         561
+  C:1DB4H         LINE#         562
+  C:1DB4H         LINE#         564
+  C:1DBDH         LINE#         566
+  C:1DC2H         LINE#         567
+  C:1DC2H         LINE#         568
+  C:1DC5H         LINE#         570
   -------         ENDPROC       PORT_0
   -------         ENDMOD        COMMUNICATE
 
   -------         MODULE        HARDWARE
   C:0000H         SYMBOL        _ICE_DUMMY_
-  C:21A8H         PUBLIC        IRQInit
+  C:21A7H         PUBLIC        IRQInit
   C:1BB2H         PUBLIC        _Timer0_Delay
   D:00E4H         PUBLIC        IT01CF
-  C:1D7DH         PUBLIC        Timer0handler
-  C:20D4H         PUBLIC        OSCsel
+  C:1D09H         PUBLIC        Timer0handler
+  C:20D3H         PUBLIC        OSCsel
   D:0087H         PUBLIC        PCON
   D:0089H         PUBLIC        TMOD
   D:0088H         PUBLIC        TCON
   D:00A9H         PUBLIC        CLKSEL
   D:00B2H         PUBLIC        OSCICN
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 17
+
+
   B:00A8H.1       PUBLIC        ET0
   B:0088H.5       PUBLIC        TF0
   D:00B9H         PUBLIC        CLKMUL
   D:008CH         PUBLIC        TH0
   D:008AH         PUBLIC        TL0
-  C:20F4H         PUBLIC        _delay_ms
+  C:20F3H         PUBLIC        _delay_ms
   B:0088H.4       PUBLIC        TR0
   D:008EH         PUBLIC        CKCON
   -------         PROC          IRQINIT
-  C:21A8H         LINE#         25
-  C:21A8H         LINE#         26
-  C:21A8H         LINE#         27
-  C:21ABH         LINE#         28
-  C:21AEH         LINE#         30
+  C:21A7H         LINE#         25
+  C:21A7H         LINE#         26
+  C:21A7H         LINE#         27
+  C:21AAH         LINE#         28
+  C:21ADH         LINE#         30
   -------         ENDPROC       IRQINIT
   -------         PROC          _DELAY_MS
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 18
-
-
   D:0006H         SYMBOL        n_ms
   -------         DO            
   D:0004H         SYMBOL        ii1
   D:0006H         SYMBOL        ii0
   -------         ENDDO         
-  C:20F4H         LINE#         40
-  C:20F4H         LINE#         41
-  C:20F4H         LINE#         44
-  C:20FDH         LINE#         45
-  C:20FDH         LINE#         46
-  C:2101H         LINE#         47
-  C:2106H         LINE#         48
-  C:210AH         LINE#         49
-  C:2111H         LINE#         51
+  C:20F3H         LINE#         40
+  C:20F3H         LINE#         41
+  C:20F3H         LINE#         44
+  C:20FCH         LINE#         45
+  C:20FCH         LINE#         46
+  C:2100H         LINE#         47
+  C:2105H         LINE#         48
+  C:2109H         LINE#         49
+  C:2110H         LINE#         51
   -------         ENDPROC       _DELAY_MS
   -------         PROC          _TIMER0_DELAY
-  X:0184H         SYMBOL        ms
+  X:01F9H         SYMBOL        ms
   C:1BB2H         LINE#         61
   C:1BBAH         LINE#         63
   C:1BBAH         LINE#         64
@@ -1055,159 +1011,154 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         DO            
   D:0006H         SYMBOL        i
   -------         ENDDO         
-  C:20D4H         LINE#         81
-  C:20D4H         LINE#         82
-  C:20D4H         LINE#         83
-  C:20D7H         LINE#         84
-  C:20DAH         LINE#         85
-  C:20DDH         LINE#         86
-  C:20E8H         LINE#         87
-  C:20EBH         LINE#         88
-  C:20F0H         LINE#         89
-  C:20F3H         LINE#         90
+  C:20D3H         LINE#         81
+  C:20D3H         LINE#         82
+  C:20D3H         LINE#         83
+  C:20D6H         LINE#         84
+  C:20D9H         LINE#         85
+  C:20DCH         LINE#         86
+  C:20E7H         LINE#         87
+  C:20EAH         LINE#         88
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 18
+
+
+  C:20EFH         LINE#         89
+  C:20F2H         LINE#         90
   -------         ENDPROC       OSCSEL
   -------         PROC          TIMER0HANDLER
   -------         DO            
-  X:0140H         SYMBOL        Register
+  X:0186H         SYMBOL        Register
   -------         ENDDO         
-  C:1D7DH         LINE#         99
-  C:1D9AH         LINE#         102
-  C:1D9DH         LINE#         106
-  C:1DA3H         LINE#         107
-  C:1DA6H         LINE#         108
-  C:1DB1H         LINE#         111
-  C:1DB8H         LINE#         112
-  C:1DBEH         LINE#         113
-  C:1DC5H         LINE#         115
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 19
-
-
-  C:1DCBH         LINE#         118
-  C:1DCEH         LINE#         119
+  C:1D09H         LINE#         99
+  C:1D26H         LINE#         102
+  C:1D29H         LINE#         106
+  C:1D2FH         LINE#         107
+  C:1D32H         LINE#         108
+  C:1D3DH         LINE#         111
+  C:1D44H         LINE#         112
+  C:1D4AH         LINE#         113
+  C:1D51H         LINE#         115
+  C:1D57H         LINE#         118
+  C:1D5AH         LINE#         119
   -------         ENDPROC       TIMER0HANDLER
   -------         ENDMOD        HARDWARE
 
   -------         MODULE        HOST
   C:0000H         SYMBOL        _ICE_DUMMY_
-  D:00C7H         PUBLIC        P4
-  C:2023H         PUBLIC        _send_cstring
+  C:1FF3H         PUBLIC        _send_cstring
   D:00A4H         PUBLIC        P0MDOUT
-  C:1C28H         PUBLIC        RXhandler
-  D:00A8H         PUBLIC        IE
   D:00E1H         PUBLIC        XBR0
   D:00E2H         PUBLIC        XBR1
-  X:01E3H         PUBLIC        Firstdata
-  X:01E4H         PUBLIC        ENABLE
+  X:01F2H         PUBLIC        Firstdata
+  X:01F3H         PUBLIC        ENABLE
   D:0087H         PUBLIC        PCON
   D:0089H         PUBLIC        TMOD
-  D:0088H         PUBLIC        TCON
-  C:219EH         PUBLIC        send_crlf
-  C:2194H         PUBLIC        PORT_Init
-  C:2112H         PUBLIC        _send_byte
-  B:0098H.0       PUBLIC        RI0
-  C:2147H         PUBLIC        _sendchar
+  C:219DH         PUBLIC        send_crlf
+  C:2193H         PUBLIC        PORT_Init
+  C:2111H         PUBLIC        _send_byte
+  C:2146H         PUBLIC        _sendchar
   B:0098H.1       PUBLIC        TI0
   D:008DH         PUBLIC        TH1
   D:008BH         PUBLIC        TL1
-  X:01E5H         PUBLIC        RXdone
+  X:01F4H         PUBLIC        RXdone
   B:0088H.6       PUBLIC        TR1
   D:0099H         PUBLIC        SBUF0
-  C:212DH         PUBLIC        UART0_Init
+  C:212CH         PUBLIC        UART0_Init
   D:0098H         PUBLIC        SCON0
-  C:2173H         PUBLIC        _Nibble2Ascii
+  C:2172H         PUBLIC        _Nibble2Ascii
   D:008EH         PUBLIC        CKCON
-  C:1F85H         PUBLIC        Get_nibble
+  C:1F0FH         PUBLIC        Get_nibble
   -------         PROC          PORT_INIT
-  C:2194H         LINE#         28
-  C:2194H         LINE#         29
-  C:2194H         LINE#         31
-  C:2197H         LINE#         32
-  C:219AH         LINE#         33
-  C:219DH         LINE#         34
+  C:2193H         LINE#         28
+  C:2193H         LINE#         29
+  C:2193H         LINE#         31
+  C:2196H         LINE#         32
+  C:2199H         LINE#         33
+  C:219CH         LINE#         34
   -------         ENDPROC       PORT_INIT
   -------         PROC          UART0_INIT
-  C:212DH         LINE#         37
-  C:212DH         LINE#         38
-  C:212DH         LINE#         39
-  C:2130H         LINE#         41
-  C:2130H         LINE#         42
-  C:2130H         LINE#         43
-  C:2133H         LINE#         44
-  C:2136H         LINE#         45
-  C:2139H         LINE#         46
-  C:2139H         LINE#         47
-  C:2139H         LINE#         48
-  C:2139H         LINE#         49
-  C:2139H         LINE#         50
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 20
+  C:212CH         LINE#         37
+  C:212CH         LINE#         38
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 19
 
 
-  C:2139H         LINE#         51
-  C:2139H         LINE#         52
-  C:2139H         LINE#         53
-  C:2139H         LINE#         54
-  C:2139H         LINE#         55
-  C:2139H         LINE#         56
-  C:2139H         LINE#         57
-  C:2139H         LINE#         58
-  C:2139H         LINE#         59
-  C:2139H         LINE#         60
-  C:2139H         LINE#         61
-  C:2139H         LINE#         62
-  C:2139H         LINE#         64
-  C:213CH         LINE#         65
-  C:213FH         LINE#         66
-  C:2142H         LINE#         67
-  C:2144H         LINE#         68
-  C:2146H         LINE#         69
+  C:212CH         LINE#         39
+  C:212FH         LINE#         41
+  C:212FH         LINE#         42
+  C:212FH         LINE#         43
+  C:2132H         LINE#         44
+  C:2135H         LINE#         45
+  C:2138H         LINE#         46
+  C:2138H         LINE#         47
+  C:2138H         LINE#         48
+  C:2138H         LINE#         49
+  C:2138H         LINE#         50
+  C:2138H         LINE#         51
+  C:2138H         LINE#         52
+  C:2138H         LINE#         53
+  C:2138H         LINE#         54
+  C:2138H         LINE#         55
+  C:2138H         LINE#         56
+  C:2138H         LINE#         57
+  C:2138H         LINE#         58
+  C:2138H         LINE#         59
+  C:2138H         LINE#         60
+  C:2138H         LINE#         61
+  C:2138H         LINE#         62
+  C:2138H         LINE#         64
+  C:213BH         LINE#         65
+  C:213EH         LINE#         66
+  C:2141H         LINE#         67
+  C:2143H         LINE#         68
+  C:2145H         LINE#         69
   -------         ENDPROC       UART0_INIT
   -------         PROC          _SENDCHAR
   D:0007H         SYMBOL        TXchar
-  C:2147H         LINE#         80
-  C:2147H         LINE#         81
-  C:2147H         LINE#         83
-  C:214BH         LINE#         84
-  C:214EH         LINE#         85
-  C:2150H         LINE#         86
-  C:2153H         LINE#         87
-  C:2153H         LINE#         88
-  C:2156H         LINE#         89
-  C:2158H         LINE#         90
-  C:215AH         LINE#         91
-  C:215EH         LINE#         92
+  C:2146H         LINE#         80
+  C:2146H         LINE#         81
+  C:2146H         LINE#         83
+  C:214AH         LINE#         84
+  C:214DH         LINE#         85
+  C:214FH         LINE#         86
+  C:2152H         LINE#         87
+  C:2152H         LINE#         88
+  C:2155H         LINE#         89
+  C:2157H         LINE#         90
+  C:2159H         LINE#         91
+  C:215DH         LINE#         92
   -------         ENDPROC       _SENDCHAR
   -------         PROC          SEND_CRLF
-  C:219EH         LINE#         102
-  C:219EH         LINE#         103
-  C:219EH         LINE#         104
-  C:21A3H         LINE#         105
+  C:219DH         LINE#         102
+  C:219DH         LINE#         103
+  C:219DH         LINE#         104
+  C:21A2H         LINE#         105
   -------         ENDPROC       SEND_CRLF
   -------         PROC          _SEND_CSTRING
-  X:0184H         SYMBOL        pstr
-  C:2023H         LINE#         115
-  C:202EH         LINE#         116
-  C:202EH         LINE#         117
-  C:203EH         LINE#         118
-  C:203EH         LINE#         119
-  C:2053H         LINE#         120
-  C:2055H         LINE#         121
+  X:01EFH         SYMBOL        pstr
+  C:1FF3H         LINE#         115
+  C:1FFEH         LINE#         116
+  C:1FFEH         LINE#         117
+  C:200EH         LINE#         118
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 20
+
+
+  C:200EH         LINE#         119
+  C:2023H         LINE#         120
+  C:2025H         LINE#         121
   -------         ENDPROC       _SEND_CSTRING
   -------         PROC          _NIBBLE2ASCII
   D:0007H         SYMBOL        anibble
   -------         DO            
   D:0006H         SYMBOL        AsciiOut
   -------         ENDDO         
-  C:2173H         LINE#         130
-  C:2173H         LINE#         131
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 21
-
-
-  C:2173H         LINE#         132
-  C:2175H         LINE#         134
-  C:217BH         LINE#         135
-  C:217FH         LINE#         137
-  C:2182H         LINE#         139
-  C:2183H         LINE#         140
+  C:2172H         LINE#         130
+  C:2172H         LINE#         131
+  C:2172H         LINE#         132
+  C:2174H         LINE#         134
+  C:217AH         LINE#         135
+  C:217EH         LINE#         137
+  C:2181H         LINE#         139
+  C:2182H         LINE#         140
   -------         ENDPROC       _NIBBLE2ASCII
   -------         PROC          _SEND_BYTE
   D:0005H         SYMBOL        abyte
@@ -1215,68 +1166,45 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   D:0007H         SYMBOL        temp1
   D:0006H         SYMBOL        temp2
   -------         ENDDO         
-  C:2112H         LINE#         149
-  C:2114H         LINE#         150
-  C:2114H         LINE#         153
-  C:2119H         LINE#         154
-  C:211EH         LINE#         155
-  C:2121H         LINE#         157
-  C:2125H         LINE#         158
-  C:212AH         LINE#         159
+  C:2111H         LINE#         149
+  C:2113H         LINE#         150
+  C:2113H         LINE#         153
+  C:2118H         LINE#         154
+  C:211DH         LINE#         155
+  C:2120H         LINE#         157
+  C:2124H         LINE#         158
+  C:2129H         LINE#         159
   -------         ENDPROC       _SEND_BYTE
   -------         PROC          GET_NIBBLE
   -------         DO            
   D:0005H         SYMBOL        reading
   -------         ENDDO         
-  C:1F85H         LINE#         168
-  C:1F85H         LINE#         169
-  C:1F85H         LINE#         172
-  C:1F87H         LINE#         173
-  C:1F8AH         LINE#         174
-  C:1F8AH         LINE#         176
-  C:1F8DH         LINE#         177
-  C:1F98H         LINE#         178
-  C:1F98H         LINE#         179
-  C:1F9CH         LINE#         180
-  C:1F9CH         LINE#         184
-  C:1FC0H         LINE#         185
-  C:1FC0H         LINE#         186
-  C:1FC2H         LINE#         187
-  C:1FC5H         LINE#         189
-  C:1FD1H         LINE#         190
-  C:1FD1H         LINE#         191
-  C:1FD7H         LINE#         192
-  C:1FD7H         LINE#         193
-  C:1FD7H         LINE#         195
-  C:1FD9H         LINE#         197
-  C:1FDEH         LINE#         198
+  C:1F0FH         LINE#         168
+  C:1F0FH         LINE#         169
+  C:1F0FH         LINE#         172
+  C:1F11H         LINE#         173
+  C:1F14H         LINE#         174
+  C:1F14H         LINE#         176
+  C:1F17H         LINE#         177
+  C:1F22H         LINE#         178
+  C:1F22H         LINE#         179
+  C:1F26H         LINE#         180
+  C:1F26H         LINE#         184
+  C:1F4AH         LINE#         185
+  C:1F4AH         LINE#         186
+  C:1F4CH         LINE#         187
+  C:1F4FH         LINE#         189
+  C:1F5BH         LINE#         190
+  C:1F5BH         LINE#         191
+  C:1F61H         LINE#         192
+  C:1F61H         LINE#         193
+  C:1F61H         LINE#         195
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 21
+
+
+  C:1F63H         LINE#         197
+  C:1F68H         LINE#         198
   -------         ENDPROC       GET_NIBBLE
-  -------         PROC          RXHANDLER
-  C:1C28H         LINE#         206
-  C:1C45H         LINE#         208
-  C:1C48H         LINE#         209
-  C:1C48H         LINE#         210
-  C:1C4EH         LINE#         211
-  C:1C54H         LINE#         212
-  C:1C5AH         LINE#         213
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 22
-
-
-  C:1C5AH         LINE#         214
-  C:1C5DH         LINE#         216
-  C:1C60H         LINE#         218
-  C:1C63H         LINE#         219
-  C:1C6CH         LINE#         220
-  C:1C72H         LINE#         221
-  C:1C72H         LINE#         222
-  C:1C75H         LINE#         224
-  C:1C7BH         LINE#         225
-  C:1C7BH         LINE#         227
-  C:1C7EH         LINE#         228
-  C:1C81H         LINE#         234
-  C:1C81H         LINE#         235
-  C:1C81H         LINE#         236
-  -------         ENDPROC       RXHANDLER
   -------         ENDMOD        HOST
 
   -------         MODULE        ISO14443
@@ -1288,18 +1216,18 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   D:0087H         PUBLIC        PCON
   D:0088H         PUBLIC        TCON
   C:0026H         PUBLIC        _AnticollisionLoopA
-  X:01B5H         PUBLIC        completeUID
-  C:1E54H         PUBLIC        _SlotMarkerCommand
+  X:01A3H         PUBLIC        completeUID
+  C:1DE0H         PUBLIC        _SlotMarkerCommand
   C:1871H         PUBLIC        _AnticollisionSequenceA
   C:0F6FH         PUBLIC        _AnticollisionSequenceB
   -------         PROC          L?0187
   -------         ENDPROC       L?0187
   -------         PROC          _SELECTCOMMAND
-  X:01D6H         SYMBOL        select
-  X:01D7H         SYMBOL        UID
+  X:01D8H         SYMBOL        select
+  X:01D9H         SYMBOL        UID
   -------         DO            
-  X:01DAH         SYMBOL        j
-  X:01DBH         SYMBOL        ret
+  X:01DCH         SYMBOL        j
+  X:01DDH         SYMBOL        ret
   C:164AH         SYMBOL        FINISH
   -------         ENDDO         
   C:14E0H         LINE#         22
@@ -1319,9 +1247,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:154AH         LINE#         43
   C:154EH         LINE#         44
   C:1556H         LINE#         45
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 23
-
-
   C:155AH         LINE#         47
   C:1565H         LINE#         49
   C:156BH         LINE#         50
@@ -1334,6 +1259,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:1584H         LINE#         64
   C:158DH         LINE#         65
   C:158DH         LINE#         66
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 22
+
+
   C:158DH         LINE#         69
   C:1594H         LINE#         70
   C:1594H         LINE#         71
@@ -1374,26 +1302,26 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:164FH         LINE#         112
   -------         ENDPROC       _SELECTCOMMAND
   -------         PROC          _ANTICOLLISIONLOOPA
-  X:01A7H         SYMBOL        select
-  X:01A8H         SYMBOL        NVB
-  X:01A9H         SYMBOL        UID
+  X:0195H         SYMBOL        select
+  X:0196H         SYMBOL        NVB
+  X:0197H         SYMBOL        UID
   -------         DO            
-  X:01ACH         SYMBOL        i
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 24
-
-
+  X:019AH         SYMBOL        i
   D:0005H         SYMBOL        lenght
-  X:01ADH         SYMBOL        newUID
-  X:01B1H         SYMBOL        more
-  X:01B2H         SYMBOL        NvBytes
-  X:01B3H         SYMBOL        NvBits
+  X:019BH         SYMBOL        newUID
+  X:019FH         SYMBOL        more
+  X:01A0H         SYMBOL        NvBytes
+  X:01A1H         SYMBOL        NvBits
   D:0007H         SYMBOL        Xbits
-  X:01B4H         SYMBOL        found
+  X:01A2H         SYMBOL        found
   -------         ENDDO         
   C:0026H         LINE#         123
   C:0037H         LINE#         124
   C:0037H         LINE#         125
   C:003CH         LINE#         126
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 23
+
+
   C:0042H         LINE#         128
   C:0047H         LINE#         129
   C:004BH         LINE#         130
@@ -1439,9 +1367,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0146H         LINE#         186
   C:014BH         LINE#         187
   C:015BH         LINE#         188
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 25
-
-
   C:015BH         LINE#         189
   C:015EH         LINE#         191
   C:0165H         LINE#         192
@@ -1454,6 +1379,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:017AH         LINE#         207
   C:0184H         LINE#         208
   C:0184H         LINE#         210
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 24
+
+
   C:0189H         LINE#         211
   C:01B0H         LINE#         212
   C:01B5H         LINE#         214
@@ -1499,9 +1427,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:03AEH         LINE#         259
   C:03F2H         LINE#         261
   C:0411H         LINE#         262
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 26
-
-
   C:041AH         LINE#         263
   C:041AH         LINE#         265
   C:041AH         LINE#         266
@@ -1514,6 +1439,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0468H         LINE#         274
   C:0468H         LINE#         276
   C:046EH         LINE#         277
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 25
+
+
   C:0471H         LINE#         279
   C:0471H         LINE#         280
   C:0479H         LINE#         281
@@ -1559,9 +1487,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0608H         LINE#         334
   C:060AH         LINE#         335
   C:060AH         LINE#         336
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 27
-
-
   C:060AH         LINE#         337
   C:0611H         LINE#         338
   C:0611H         LINE#         339
@@ -1574,6 +1499,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:062AH         LINE#         346
   C:062FH         LINE#         347
   C:062FH         LINE#         351
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 26
+
+
   C:0637H         LINE#         352
   C:0637H         LINE#         353
   C:063DH         LINE#         354
@@ -1601,12 +1529,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:06C1H         LINE#         384
   -------         ENDPROC       _ANTICOLLISIONLOOPA
   -------         PROC          _ANTICOLLISIONSEQUENCEA
-  X:01DCH         SYMBOL        REQA
+  X:01E8H         SYMBOL        REQA
   -------         DO            
   D:0007H         SYMBOL        i
-  X:01DDH         SYMBOL        select
-  X:01DEH         SYMBOL        NVB
-  X:01DFH         SYMBOL        num_singlebits
+  X:01E9H         SYMBOL        select
+  X:01EAH         SYMBOL        NVB
+  X:01EBH         SYMBOL        num_singlebits
   -------         ENDDO         
   C:1871H         LINE#         394
   C:1876H         LINE#         395
@@ -1619,9 +1547,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:189DH         LINE#         404
   C:18A1H         LINE#         405
   C:18ACH         LINE#         407
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 28
-
-
   C:18B2H         LINE#         408
   C:18B6H         LINE#         409
   C:18C1H         LINE#         413
@@ -1634,6 +1559,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:18F4H         LINE#         453
   C:18FEH         LINE#         454
   C:190FH         LINE#         455
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 27
+
+
   C:1912H         LINE#         456
   C:1914H         LINE#         458
   C:1914H         LINE#         459
@@ -1645,16 +1573,16 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:192FH         LINE#         466
   -------         ENDPROC       _ANTICOLLISIONSEQUENCEA
   -------         PROC          _REQUEST14443A
-  X:01C3H         SYMBOL        pbuf
-  X:01C6H         SYMBOL        lenght
-  X:01C7H         SYMBOL        BitRate
+  X:01BDH         SYMBOL        pbuf
+  X:01C0H         SYMBOL        lenght
+  X:01C1H         SYMBOL        BitRate
   -------         DO            
-  X:01C8H         SYMBOL        index
-  X:01C9H         SYMBOL        j
-  X:01CAH         SYMBOL        command
-  X:01CBH         SYMBOL        RXBitRate
+  X:01C2H         SYMBOL        index
+  X:01C3H         SYMBOL        j
+  X:01C4H         SYMBOL        command
+  X:01C5H         SYMBOL        RXBitRate
   D:0006H         SYMBOL        TXBitRate
-  X:01CCH         SYMBOL        reg
+  X:01C6H         SYMBOL        reg
   -------         ENDDO         
   C:0D83H         LINE#         477
   C:0D91H         LINE#         478
@@ -1679,9 +1607,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0E3EH         LINE#         508
   C:0E4AH         LINE#         509
   C:0E4AH         LINE#         511
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 29
-
-
   C:0E4DH         LINE#         512
   C:0E55H         LINE#         513
   C:0E55H         LINE#         514
@@ -1694,6 +1619,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0E65H         LINE#         522
   C:0E6BH         LINE#         523
   C:0E6BH         LINE#         525
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 28
+
+
   C:0E7CH         LINE#         526
   C:0E90H         LINE#         527
   C:0E97H         LINE#         528
@@ -1739,44 +1667,44 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0F69H         LINE#         584
   C:0F6CH         LINE#         585
   C:0F6EH         LINE#         586
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 30
-
-
   -------         ENDPROC       _REQUEST14443A
   -------         PROC          _SLOTMARKERCOMMAND
-  X:01E8H         SYMBOL        number
-  C:1E54H         LINE#         595
-  C:1E59H         LINE#         596
-  C:1E59H         LINE#         597
-  C:1E5FH         LINE#         598
-  C:1E63H         LINE#         599
-  C:1E67H         LINE#         600
-  C:1E6AH         LINE#         601
-  C:1E6EH         LINE#         602
-  C:1E79H         LINE#         604
-  C:1E7FH         LINE#         605
-  C:1E8DH         LINE#         606
-  C:1E90H         LINE#         608
-  C:1E95H         LINE#         609
-  C:1E9FH         LINE#         611
-  C:1EA2H         LINE#         612
-  C:1EA5H         LINE#         614
-  C:1EACH         LINE#         615
-  C:1EACH         LINE#         617
-  C:1EB3H         LINE#         618
-  C:1EB6H         LINE#         623
-  C:1EB9H         LINE#         624
-  C:1EBBH         LINE#         625
+  X:01FCH         SYMBOL        number
+  C:1DE0H         LINE#         595
+  C:1DE5H         LINE#         596
+  C:1DE5H         LINE#         597
+  C:1DEBH         LINE#         598
+  C:1DEFH         LINE#         599
+  C:1DF3H         LINE#         600
+  C:1DF6H         LINE#         601
+  C:1DFAH         LINE#         602
+  C:1E05H         LINE#         604
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 29
+
+
+  C:1E0BH         LINE#         605
+  C:1E19H         LINE#         606
+  C:1E1CH         LINE#         608
+  C:1E21H         LINE#         609
+  C:1E2BH         LINE#         611
+  C:1E2EH         LINE#         612
+  C:1E31H         LINE#         614
+  C:1E38H         LINE#         615
+  C:1E38H         LINE#         617
+  C:1E3FH         LINE#         618
+  C:1E42H         LINE#         623
+  C:1E45H         LINE#         624
+  C:1E47H         LINE#         625
   -------         ENDPROC       _SLOTMARKERCOMMAND
   -------         PROC          _ANTICOLLISIONSEQUENCEB
-  X:01CEH         SYMBOL        command
-  X:01CFH         SYMBOL        slots
+  X:01D0H         SYMBOL        command
+  X:01D1H         SYMBOL        slots
   -------         DO            
-  X:01D0H         SYMBOL        i
-  X:01D1H         SYMBOL        collision
-  X:01D2H         SYMBOL        j
-  X:01D3H         SYMBOL        found
-  X:01D4H         SYMBOL        k
+  X:01D2H         SYMBOL        i
+  X:01D3H         SYMBOL        collision
+  X:01D4H         SYMBOL        j
+  X:01D5H         SYMBOL        found
+  X:01D6H         SYMBOL        k
   -------         ENDDO         
   C:0F6FH         LINE#         635
   C:0F77H         LINE#         636
@@ -1799,9 +1727,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:0FC4H         LINE#         666
   C:0FCBH         LINE#         667
   C:0FCBH         LINE#         669
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 31
-
-
   C:0FD3H         LINE#         671
   C:0FDAH         LINE#         672
   C:0FE1H         LINE#         674
@@ -1814,6 +1739,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:100CH         LINE#         683
   C:100FH         LINE#         685
   C:1016H         LINE#         686
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 30
+
+
   C:1019H         LINE#         691
   C:101CH         LINE#         692
   C:101EH         LINE#         694
@@ -1859,9 +1787,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:111EH         LINE#         755
   C:1125H         LINE#         756
   C:1128H         LINE#         758
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 32
-
-
   C:112BH         LINE#         760
   C:1131H         LINE#         761
   C:1131H         LINE#         762
@@ -1874,11 +1799,16 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   C:1144H         LINE#         772
   -------         ENDPROC       _ANTICOLLISIONSEQUENCEB
   -------         ENDMOD        ISO14443
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 31
+
+
 
   -------         MODULE        MAIN
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0080H         PUBLIC        P0
   D:00C7H         PUBLIC        P4
+  B:00A8H.7       PUBLIC        EA
+  C:2183H         PUBLIC        _Uart0_Transmit
   X:0000H         PUBLIC        rxdata
   X:0001H         PUBLIC        i_reg
   D:00A4H         PUBLIC        P0MDOUT
@@ -1886,54 +1816,112 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   X:0002H         PUBLIC        flags
   D:00AEH         PUBLIC        P4MDOUT
   D:00D9H         PUBLIC        PCA0MD
-  C:1F22H         PUBLIC        main
+  C:1EAEH         PUBLIC        main
   D:00F1H         PUBLIC        P0MDIN
   D:00F5H         PUBLIC        P4MDIN
   X:0003H         PUBLIC        CollPoss
   X:0004H         PUBLIC        RXErrorFlag
+  C:1F69H         PUBLIC        UATR0_ISR
   X:0005H         PUBLIC        buf
   X:0131H         PUBLIC        RXflag
+  B:00A8H.4       PUBLIC        ES0
+  B:0098H.0       PUBLIC        RI0
+  C:2056H         PUBLIC        analysisFrames
+  B:0098H.1       PUBLIC        TI0
+  D:0099H         PUBLIC        SBUF0
   X:0132H         PUBLIC        RXTXstate
+  -------         PROC          ANALYSISFRAMES
+  -------         DO            
+  X:01E3H         SYMBOL        arr
+  X:01E7H         SYMBOL        numOfTags
+  -------         ENDDO         
+  C:2056H         LINE#         38
+  C:2056H         LINE#         39
+  C:2056H         LINE#         41
+  C:205BH         LINE#         42
+  C:206FH         LINE#         43
+  C:2071H         LINE#         47
+  C:2071H         LINE#         48
+  C:2078H         LINE#         49
+  C:2078H         LINE#         50
+  C:207BH         LINE#         53
+  C:207BH         LINE#         54
+  C:207BH         LINE#         55
+  C:207BH         LINE#         60
+  C:207BH         LINE#         61
+  C:2084H         LINE#         67
+  -------         ENDPROC       ANALYSISFRAMES
   -------         PROC          MAIN
-  C:1F22H         LINE#         33
-  C:1F22H         LINE#         34
-  C:1F22H         LINE#         36
-  C:1F25H         LINE#         37
-  C:1F28H         LINE#         39
-  C:1F2BH         LINE#         40
-  C:1F2EH         LINE#         41
-  C:1F31H         LINE#         45
-  C:1F34H         LINE#         46
-  C:1F37H         LINE#         47
-  C:1F3EH         LINE#         48
-  C:1F41H         LINE#         49
-  C:1F48H         LINE#         50
-  C:1F4BH         LINE#         51
-  C:1F4EH         LINE#         53
-  C:1F51H         LINE#         54
-  C:1F54H         LINE#         55
-  C:1F57H         LINE#         56
-  C:1F5AH         LINE#         57
-  C:1F5DH         LINE#         59
-  C:1F60H         LINE#         60
-  C:1F67H         LINE#         61
-  C:1F6AH         LINE#         62
-  C:1F71H         LINE#         64
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 33
+  C:1EAEH         LINE#         76
+  C:1EAEH         LINE#         77
+  C:1EAEH         LINE#         79
+  C:1EB1H         LINE#         80
+  C:1EB4H         LINE#         83
+  C:1EB7H         LINE#         84
+  C:1EBAH         LINE#         85
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 32
 
 
-  C:1F74H         LINE#         65
-  C:1F77H         LINE#         67
-  C:1F7AH         LINE#         68
-  C:1F80H         LINE#         69
-  C:1F80H         LINE#         70
-  C:1F80H         LINE#         72
-  C:1F83H         LINE#         74
+  C:1EBDH         LINE#         86
+  C:1EC0H         LINE#         87
+  C:1EC2H         LINE#         88
+  C:1EC4H         LINE#         93
+  C:1EC7H         LINE#         94
+  C:1ECAH         LINE#         95
+  C:1ED1H         LINE#         96
+  C:1ED4H         LINE#         97
+  C:1EDBH         LINE#         98
+  C:1EDEH         LINE#         99
+  C:1EE1H         LINE#         101
+  C:1EE4H         LINE#         102
+  C:1EE7H         LINE#         103
+  C:1EEAH         LINE#         104
+  C:1EEDH         LINE#         105
+  C:1EF0H         LINE#         107
+  C:1EF3H         LINE#         108
+  C:1EFAH         LINE#         109
+  C:1EFDH         LINE#         110
+  C:1F04H         LINE#         112
+  C:1F07H         LINE#         113
+  C:1F0AH         LINE#         115
+  C:1F0DH         LINE#         117
+  C:1F0DH         LINE#         118
+  C:1F0DH         LINE#         123
   -------         ENDPROC       MAIN
+  -------         PROC          UATR0_ISR
+  -------         DO            
+  D:0007H         SYMBOL        temp
+  -------         ENDDO         
+  C:1F69H         LINE#         129
+  C:1F86H         LINE#         134
+  C:1F89H         LINE#         135
+  C:1F89H         LINE#         136
+  C:1F8BH         LINE#         137
+  C:1F8DH         LINE#         138
+  C:1F90H         LINE#         139
+  C:1F92H         LINE#         141
+  C:1F94H         LINE#         142
+  -------         ENDPROC       UATR0_ISR
+  -------         PROC          _UART0_TRANSMIT
+  D:0007H         SYMBOL        tmp
+  C:2183H         LINE#         146
+  C:2183H         LINE#         147
+  C:2183H         LINE#         148
+  C:2185H         LINE#         149
+  C:2187H         LINE#         150
+  C:2189H         LINE#         151
+  C:218CH         LINE#         152
+  C:218EH         LINE#         153
+  C:2190H         LINE#         154
+  C:2192H         LINE#         156
+  -------         ENDPROC       _UART0_TRANSMIT
   -------         ENDMOD        MAIN
 
   -------         MODULE        ?C?CLDPTR
   C:1319H         PUBLIC        ?C?CLDPTR
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 33
+
+
   -------         ENDMOD        ?C?CLDPTR
 
   -------         MODULE        ?C?CLDOPTR
@@ -1965,7 +1953,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
   -------         ENDMOD        ?C?ILDIX
 
   -------         MODULE        ?C?SLDIV
-  C:1FDFH         PUBLIC        ?C?SLDIV
+  C:1FAFH         PUBLIC        ?C?SLDIV
   -------         ENDMOD        ?C?SLDIV
 
   -------         MODULE        ?C?SLSHR
@@ -1979,9 +1967,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GET_NIBBLE?HOST
 
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/03/2019  19:21:58  PAGE 34
-
-
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_ANTICOLLISIONSEQUENCEA?ISO14443
 
@@ -1991,40 +1976,57 @@ SYMBOL TABLE OF MODULE:  .\Objects\15693 (ANTICOLLISION)
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_ANTICOLLISIONSEQUENCEB?ISO14443
 
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ANALYSISFRAMES?MAIN
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  04/14/2019  19:19:15  PAGE 34
+
+
 *** WARNING L15: MULTIPLE CALL TO SEGMENT
     SEGMENT: ?PR?_READCONT?COMMUNICATE
     CALLER1: ?PR?PORT_0?COMMUNICATE
     CALLER2: ?PR?TIMER0HANDLER?HARDWARE
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?INITIALSETTINGS?COMMUNICATE
-    CALLER1: ?PR?RXHANDLER?HOST
-    CALLER2: ?C_C51STARTUP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  FRAMES
+    MODULE:  .\Objects\main.obj (MAIN)
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_WRITESINGLE?COMMUNICATE
-    CALLER1: ?PR?RXHANDLER?HOST
-    CALLER2: ?C_C51STARTUP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  RECEIVEOVER
+    MODULE:  .\Objects\main.obj (MAIN)
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_READSINGLE?COMMUNICATE
-    CALLER1: ?PR?PORT_0?COMMUNICATE
-    CALLER2: ?C_C51STARTUP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  NUM
+    MODULE:  .\Objects\main.obj (MAIN)
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_READCONT?COMMUNICATE
-    CALLER1: ?PR?TIMER0HANDLER?HARDWARE
-    CALLER2: ?C_C51STARTUP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  SYSCLK_INIT
+    MODULE:  .\Objects\main.obj (MAIN)
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_SEND_CSTRING?HOST
-    CALLER1: ?PR?RXHANDLER?HOST
-    CALLER2: ?C_C51STARTUP
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  NUM
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 205CH
 
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?_DIRECTCOMMAND?COMMUNICATE
-    CALLER1: ?PR?PORT_0?COMMUNICATE
-    CALLER2: ?C_C51STARTUP
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RECEIVEOVER
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 2070H
 
-Program Size: data=9.0 xdata=489 code=8618
-LINK/LOCATE RUN COMPLETE.  11 WARNING(S),  0 ERROR(S)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  FRAMES
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 2072H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RECEIVEOVER
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 2082H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  SYSCLK_INIT
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 1EBBH
+
+Program Size: data=9.0 xdata=509 code=8617
+LINK/LOCATE RUN COMPLETE.  15 WARNING(S),  0 ERROR(S)

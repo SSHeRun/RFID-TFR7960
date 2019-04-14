@@ -1,0 +1,229 @@
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 22:22:25 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*************************************************************************************************
+   2          * 文 件 名：MAIN.C
+   3          * 功    能：RFID阅读器TRF7960系统与计算器连机演示程序。
+   4          *
+   5          * 说    明： TRF7960与C8051F340微控制器之间的通信方式为串行SPI或者并行PAR模式。              
+   6          *                       
+   7          * 作    者：EMDOOR
+   8          * 日    期：2011-9-29
+   9          ***************************************************************************************************/
+  10          #include <c8051f340.h>                            //微控制器头文件定义
+  11          #include <host.h>
+  12          #include <hardware.h>
+  13          #include <automatic.h>
+  14          #include <communicate.h>
+  15          #include <globals.h>   
+  16          #include <crc.h>
+  17          
+  18          char     rxdata;                                    //RS232 接收数据字节
+  19          xdata    unsigned char buf[BUF_LENGTH];             //定义MSP430微控制器与TRF7960通信接收缓冲区
+  20          signed   char RXTXstate;                            //定义发送接收字节寄存器变量
+  21          unsigned char flags;                                //定义存储标志位(在仿冲撞中使用)
+  22          unsigned char RXErrorFlag;                          //定义接收错误标志
+  23          unsigned char RXflag;                               //定义接收书标志位，用来指示缓冲区中是否有数据
+  24          unsigned char i_reg;                                //中断寄存器变量
+  25          unsigned char CollPoss;                             //定义冲撞发生位置变量
+  26          
+  27          extern unsigned char frames[8];  
+  28          extern unsigned char num;
+  29          extern bit receiveOver;
+  30          
+  31          extern bit flag1=0;
+  32          
+  33          void Uart0_Transmit(unsigned char tmp);
+  34          /**
+  35            * @file   main.c
+  36            * @brief  Analysis frames 
+  37            * @param  None
+  38            * @retval None
+  39            */
+  40          void analysisFrames()
+  41          {
+  42   1          unsigned char arr[4];  
+  43   1          unsigned char numOfTags = 0;
+  44   1          unsigned char datas[2];
+  45   1          arr[0] = arr[1] = arr[2] = arr[3] = num;  
+  46   1          receiveOver = 0;
+  47   1        //  if(checkCRC(frames,num))       //data is right
+  48   1        //  {
+  49   1               
+  50   1              do
+  51   1              {
+  52   2                FindTags();
+  53   2              switch(frames[2])
+  54   2              {
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 22:22:25 PAGE 2   
+
+  55   3                case 0x11:
+  56   3                  flag1=1;
+  57   3                  break;
+  58   3                case 0x12:
+  59   3                  flag1=0;
+  60   3                  Read_Block_Command(frames[3]);
+  61   3                  
+  62   3                  break;
+  63   3                case 0x13:
+  64   3                  flag1=0;
+  65   3                  Get_Info_Command();
+  66   3                  break;
+  67   3                case 0x14:
+  68   3                  flag1=0;
+  69   3                  datas[0]=frames[4];
+  70   3                  datas[1]=frames[5];
+  71   3                  Write_Block_Command(frames[3],datas);
+  72   3                  break;
+  73   3                case 0x15:
+  74   3                  flag1=0;
+  75   3                  Write_AFI_Command(frames[3]);
+  76   3                  break;
+  77   3                case 0x16:
+  78   3                  flag1=0;
+  79   3                  Write_DSFID_Command(frames[3]);
+  80   3                  break;
+  81   3                case 0x17:
+  82   3                  flag1=0;
+  83   3                  Get_sec_Command(frames[3],frames[4]);
+  84   3                  break;
+  85   3              }
+  86   2      //            if(frames[2] == 0x11)  //13.56M 15693协议读
+  87   2      //            {
+  88   2      //               FindTags();
+  89   2      //                //???
+  90   2      //                //numOfTags = readBlock(frames[3]);  
+  91   2      //            }
+  92   2      //            else if(frames[2] == 0x12) //13.56M 15693协议写
+  93   2      //            {
+  94   2      //                //???
+  95   2      //                //writeBuf[0] = frames[4];
+  96   2      //                //writeBuf[1] = frames[5];
+  97   2      //                //numOfTags = writeBlock(frames[3]);  
+  98   2      //            }
+  99   2                } while(!numOfTags && !receiveOver);   //Waiting for a tag or next data frame
+ 100   1          //  }
+ 101   1        //  else
+ 102   1        //  { 
+ 103   1              //PrintData(arr,4);  
+ 104   1        //  }
+ 105   1      }
+ 106          
+ 107          /**************************************************************************************************
+ 108          * 函数名称：main()
+ 109          * 功    能：主函数入口。
+ 110          * 入口参数：无
+ 111          * 出口参数：无
+ 112          * 说    明：程序从此函数开始运行。
+ 113          ****************************************************************************************************/
+ 114          void main(void)
+ 115          {
+ 116   1      //==================================================================================================
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 22:22:25 PAGE 3   
+
+ 117   1          PCA0MD   &= ~0x40;
+ 118   1          PCA0MD    = 0x00;   //关闭看门狗
+ 119   1          
+ 120   1      //==================================================================================================  
+ 121   1          OSCsel();  //选择晶体振荡器
+ 122   1          PORT_Init();//初始化串口端口
+ 123   1          SYSCLK_Init();//初始化系统时钟
+*** WARNING C206 IN LINE 123 OF main.c: 'SYSCLK_Init': missing function-prototype
+ 124   1          UART0_Init();  //初始化串口
+ 125   1          EA = 1;
+ 126   1          ES0 = 1;
+ 127   1        
+ 128   1       //使用轮循方法来提高抗干扰能力
+ 129   1        
+ 130   1      /*=================================================================================================*/
+ 131   1          EnableSet(); //设置为输出                                      
+ 132   1          TRFDisable(); //禁止读卡器  
+ 133   1          delay_ms(1);  
+ 134   1          TRFEnable();//使能读卡器   
+ 135   1          delay_ms(1);  
+ 136   1          IRQPinset();                //选择IRQ中断管脚
+ 137   1          IRQInit();
+ 138   1        
+ 139   1          SlaveSelectPortSet();       //c8051f340P0.3Slave Select功能设置
+ 140   1          H_SlaveSelect();            //Slave Select禁止(高)
+ 141   1          SIMOSet();          //设置SIMO为输出
+ 142   1          SOMISIGNALSET();
+ 143   1          CLKPOUTset();       //设置时钟引脚为输出
+ 144   1      
+ 145   1          TRFDisable();
+ 146   1          delay_ms(1);
+ 147   1          TRFEnable();
+ 148   1          delay_ms(1);
+ 149   1        
+ 150   1          InitialSettings();           //初始化设置：设置MSP430时钟频率为6.78MHz及OOK调制模式
+ 151   1          EnableInterrupts();          //使能总中断
+ 152   1          
+ 153   1          OOKdirIN();                  //设置OOK管脚为三态门状态
+ 154   1          
+ 155   1          while(1)                                      
+ 156   1          { 
+ 157   2                                       //寻找各种协议标准卷标卡片
+ 158   2          // FindTags(); 
+ 159   2          while(!receiveOver);  //等待数据接收完毕 receiveOver = 1 退出
+ 160   2          send_cstring(frames);
+ 161   2            analysisFrames();
+ 162   2          }
+ 163   1      }
+ 164          
+ 165          // 串口UART0中断
+ 166          //-----------------------------------------------------------
+ 167          //中断向量0x0023
+ 168          //void UATR0_ISR(void)interrupt 4
+ 169          //{
+ 170          //  unsigned char temp;
+ 171          //    //Rx、Tx共用中断
+ 172          //    //接收中断
+ 173          //    if(!TI0)
+ 174          //    {
+ 175          //        RI0=0 ;
+ 176          //        temp=SBUF0 ;
+ 177          //        Uart0_Transmit(temp);
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 22:22:25 PAGE 4   
+
+ 178          //    }
+ 179          //    //发送中断
+ 180          //    else TI0=0;
+ 181          //}
+ 182          ////-----------------------------------------------------------
+ 183          //// 串口UART0发送
+ 184          ////-----------------------------------------------------------
+ 185          //void Uart0_Transmit(unsigned char tmp)
+ 186          //{
+ 187          //    ES0 = 0 ;   //关UART0中断
+ 188          //    EA = 0 ;    //关全局中断
+ 189          //    SBUF0 = tmp ;
+ 190          //    while(TI0 == 0);
+ 191          //    TI0 = 0 ;
+ 192          //    ES0 = 1 ;   //开UART0中断
+ 193          //    EA = 1 ;    //开全局中断
+ 194          //   
+ 195          //}
+ 196          
+ 197          
+ 198          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    298    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    307       7
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

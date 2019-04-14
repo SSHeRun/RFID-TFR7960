@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   MAIN                                                              03/30/2019 22:05:50 PAGE 1   
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 19:11:37 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
@@ -22,78 +22,163 @@ line level    source
   12          #include <hardware.h>
   13          #include <automatic.h>
   14          #include <communicate.h>
-  15          #include <globals.h>                 
-  16          
-  17          char     rxdata;                                    //RS232 接收数据字节
-  18          xdata    unsigned char buf[BUF_LENGTH];             //定义MSP430微控制器与TRF7960通信接收缓冲区
-  19          signed   char RXTXstate;                            //定义发送接收字节寄存器变量
-  20          unsigned char flags;                                //定义存储标志位(在仿冲撞中使用)
-  21          unsigned char RXErrorFlag;                          //定义接收错误标志
-  22          unsigned char RXflag;                               //定义接收书标志位，用来指示缓冲区中是否有数据
-  23          unsigned char i_reg;                                //中断寄存器变量
-  24          unsigned char CollPoss;                             //定义冲撞发生位置变量
-  25          
-  26          /**************************************************************************************************
-  27          * 函数名称：main()
-  28          * 功    能：主函数入口。
-  29          * 入口参数：无
-  30          * 出口参数：无
-  31          * 说    明：程序从此函数开始运行。
-  32          ****************************************************************************************************/
-  33          void main(void)
-  34          {
-  35   1      //==================================================================================================
-  36   1          PCA0MD   &= ~0x40;
-  37   1          PCA0MD    = 0x00;   //关闭看门狗
-  38   1      //==================================================================================================  
-  39   1          OSCsel();  //选择晶体振荡器
-  40   1          PORT_Init();//初始化串口端口
-  41   1          UART0_Init();  //初始化串口
-  42   1         
-  43   1       //使用轮循方法来提高抗干扰能力
-  44   1      /*=================================================================================================*/
-  45   1          EnableSet(); //设置为输出                                      
-  46   1          TRFDisable(); //禁止读卡器  
-  47   1          delay_ms(1);  
-  48   1          TRFEnable();//使能读卡器   
-  49   1          delay_ms(1);  
-  50   1          IRQPinset();                //选择IRQ中断管脚
-  51   1          IRQInit();
-  52   1        
-  53   1          SlaveSelectPortSet();       //c8051f340P0.3Slave Select功能设置
-  54   1          H_SlaveSelect();            //Slave Select禁止(高)
-C51 COMPILER V9.57.0.0   MAIN                                                              03/30/2019 22:05:50 PAGE 2   
+  15          #include <globals.h>   
+  16          #include <crc.h>
+*** WARNING C318 IN LINE 16 OF main.c: can't open file 'crc.h'
+  17          
+  18          char     rxdata;                                    //RS232 接收数据字节
+  19          xdata    unsigned char buf[BUF_LENGTH];             //定义MSP430微控制器与TRF7960通信接收缓冲区
+  20          signed   char RXTXstate;                            //定义发送接收字节寄存器变量
+  21          unsigned char flags;                                //定义存储标志位(在仿冲撞中使用)
+  22          unsigned char RXErrorFlag;                          //定义接收错误标志
+  23          unsigned char RXflag;                               //定义接收书标志位，用来指示缓冲区中是否有数据
+  24          unsigned char i_reg;                                //中断寄存器变量
+  25          unsigned char CollPoss;                             //定义冲撞发生位置变量
+  26          
+  27          extern unsigned char frames[8];  
+  28          extern unsigned char num;
+  29          extern bit receiveOver;
+  30          
+  31          void Uart0_Transmit(unsigned char tmp);
+  32          /**
+  33            * @file   main.c
+  34            * @brief  Analysis frames 
+  35            * @param  None
+  36            * @retval None
+  37            */
+  38          void analysisFrames()
+  39          {
+  40   1          unsigned char arr[4];  
+  41   1          unsigned char numOfTags = 0;
+  42   1          arr[0] = arr[1] = arr[2] = arr[3] = num;  
+  43   1          receiveOver = 0;
+  44   1        //  if(checkCRC(frames,num))       //data is right
+  45   1        //  {
+  46   1              do
+  47   1              {
+  48   2                  if(frames[2] == 0x11)  //13.56M 15693协议读
+  49   2                  {
+  50   3                     FindTags();
+  51   3                      //???
+  52   3                      //numOfTags = readBlock(frames[3]);  
+  53   3                  }
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 19:11:37 PAGE 2   
 
-  55   1          SIMOSet();          //设置SIMO为输出
-  56   1          SOMISIGNALSET();
-  57   1          CLKPOUTset();       //设置时钟引脚为输出
-  58   1      
-  59   1          TRFDisable();
-  60   1          delay_ms(1);
-  61   1          TRFEnable();
-  62   1          delay_ms(1);
-  63   1        
-  64   1          InitialSettings();           //初始化设置：设置MSP430时钟频率为6.78MHz及OOK调制模式
-  65   1          EnableInterrupts();          //使能总中断
-  66   1          
-  67   1          OOKdirIN();                  //设置OOK管脚为三态门状态
-  68   1          ENABLE = 1;
-  69   1          while(1)                                      
-  70   1          { 
-  71   2                                       //寻找各种协议标准卷标卡片
-  72   2           FindTags();
-  73   2          
-  74   2          }
-  75   1      }
-  76          
-  77          
-  78          
+  54   2                  else if(frames[2] == 0x12) //13.56M 15693协议写
+  55   2                  {
+  56   3                      //???
+  57   3                      //writeBuf[0] = frames[4];
+  58   3                      //writeBuf[1] = frames[5];
+  59   3                      //numOfTags = writeBlock(frames[3]);  
+  60   3                  }
+  61   2                } while(!numOfTags && !receiveOver);   //Waiting for a tag or next data frame
+  62   1          //  }
+  63   1        //  else
+  64   1        //  { 
+  65   1              //PrintData(arr,4);  
+  66   1        //  }
+  67   1      }
+  68          
+  69          /**************************************************************************************************
+  70          * 函数名称：main()
+  71          * 功    能：主函数入口。
+  72          * 入口参数：无
+  73          * 出口参数：无
+  74          * 说    明：程序从此函数开始运行。
+  75          ****************************************************************************************************/
+  76          void main(void)
+  77          {
+  78   1      //==================================================================================================
+  79   1          PCA0MD   &= ~0x40;
+  80   1          PCA0MD    = 0x00;   //关闭看门狗
+  81   1          
+  82   1      //==================================================================================================  
+  83   1          OSCsel();  //选择晶体振荡器
+  84   1          PORT_Init();//初始化串口端口
+  85   1          SYSCLK_Init();//初始化系统时钟
+*** WARNING C206 IN LINE 85 OF main.c: 'SYSCLK_Init': missing function-prototype
+  86   1          UART0_Init();  //初始化串口
+  87   1          EA = 1;
+  88   1          ES0 = 1;
+  89   1        
+  90   1       //使用轮循方法来提高抗干扰能力
+  91   1        
+  92   1      /*=================================================================================================*/
+  93   1          EnableSet(); //设置为输出                                      
+  94   1          TRFDisable(); //禁止读卡器  
+  95   1          delay_ms(1);  
+  96   1          TRFEnable();//使能读卡器   
+  97   1          delay_ms(1);  
+  98   1          IRQPinset();                //选择IRQ中断管脚
+  99   1          IRQInit();
+ 100   1        
+ 101   1          SlaveSelectPortSet();       //c8051f340P0.3Slave Select功能设置
+ 102   1          H_SlaveSelect();            //Slave Select禁止(高)
+ 103   1          SIMOSet();          //设置SIMO为输出
+ 104   1          SOMISIGNALSET();
+ 105   1          CLKPOUTset();       //设置时钟引脚为输出
+ 106   1      
+ 107   1          TRFDisable();
+ 108   1          delay_ms(1);
+ 109   1          TRFEnable();
+ 110   1          delay_ms(1);
+ 111   1        
+ 112   1          InitialSettings();           //初始化设置：设置MSP430时钟频率为6.78MHz及OOK调制模式
+ 113   1          EnableInterrupts();          //使能总中断
+ 114   1          
+C51 COMPILER V9.57.0.0   MAIN                                                              04/14/2019 19:11:37 PAGE 3   
+
+ 115   1          OOKdirIN();                  //设置OOK管脚为三态门状态
+ 116   1          
+ 117   1          while(1)                                      
+ 118   1          { 
+ 119   2                                       //寻找各种协议标准卷标卡片
+ 120   2          // FindTags(); 
+ 121   2          // while(!receiveOver);  //等待数据接收完毕 receiveOver = 1 退出
+ 122   2          //analysisFrames();
+ 123   2          }
+ 124   1      }
+ 125          
+ 126          // 串口UART0中断
+ 127          //-----------------------------------------------------------
+ 128          //中断向量0x0023
+ 129          void UATR0_ISR(void)interrupt 4
+ 130          {
+ 131   1        unsigned char temp;
+ 132   1          //Rx、Tx共用中断
+ 133   1          //接收中断
+ 134   1          if(!TI0)
+ 135   1          {
+ 136   2              RI0=0 ;
+ 137   2              temp=SBUF0 ;
+ 138   2              Uart0_Transmit(temp);
+ 139   2          }
+ 140   1          //发送中断
+ 141   1          else TI0=0;
+ 142   1      }
+ 143          //-----------------------------------------------------------
+ 144          // 串口UART0发送
+ 145          //-----------------------------------------------------------
+ 146          void Uart0_Transmit(unsigned char tmp)
+ 147          {
+ 148   1          ES0 = 0 ;   //关UART0中断
+ 149   1          EA = 0 ;    //关全局中断
+ 150   1          SBUF0 = tmp ;
+ 151   1          while(TI0 == 0);
+ 152   1          TI0 = 0 ;
+ 153   1          ES0 = 1 ;   //开UART0中断
+ 154   1          EA = 1 ;    //开全局中断
+ 155   1         
+ 156   1      }
+ 157          
+ 158          
+ 159          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     99    ----
+   CODE SIZE        =    230    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    307    ----
+   XDATA SIZE       =    307       5
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
@@ -101,4 +186,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
